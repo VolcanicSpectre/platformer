@@ -37,6 +37,13 @@ class Player:
     
     def event_handler(self, event):   
         if event.type == pygame.KEYDOWN:
+            match event.key:
+                case pygame.K_RIGHT: self.key_pressed["right"] = True
+                case pygame.K_LEFT: self.key_pressed["left"] = True
+                case pygame.K_UP: self.key_pressed["up"] = True
+                case pygame.K_DOWN: self.key_pressed["down"] = True
+            
+            
             if event.key == pygame.K_RIGHT:
                 self.key_pressed["right"] = True
             if event.key == pygame.K_LEFT:
