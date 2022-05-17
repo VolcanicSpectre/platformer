@@ -43,20 +43,12 @@ class Player:
                 case pygame.K_UP: self.key_pressed["up"] = True
                 case pygame.K_DOWN: self.key_pressed["down"] = True
             
-            
-            if event.key == pygame.K_RIGHT:
-                self.key_pressed["right"] = True
-            if event.key == pygame.K_LEFT:
-                self.key_pressed["left"] = True
-            if event.key == pygame.K_UP:
-                self.key_pressed["up"] = True
         elif event.type == pygame.KEYUP:
-            if event.key == pygame.K_RIGHT:
-                self.key_pressed["right"] = False
-            if event.key == pygame.K_LEFT:
-                self.key_pressed["left"] = False
-            if event.key == pygame.K_UP:
-                self.key_pressed["up"] = False
+            match event.key:
+                case pygame.K_RIGHT: self.key_pressed["right"] = False
+                case pygame.K_LEFT: self.key_pressed["left"] = False
+                case pygame.K_UP: self.key_pressed["up"] = False
+                case pygame.K_DOWN: self.key_pressed["down"] = False
     
     def calculate_x_vel(self, dt):
         target_speed = self.max_x_vel * self.x_move_input

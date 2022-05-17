@@ -1,5 +1,5 @@
 import json
-from pygame import *
+import pygame
 import math
 from os import path
 
@@ -7,7 +7,7 @@ class TileSet:
     def __init__(self, tileset_path):
         with open(tileset_path) as f:
             data = json.load(f)
-            self.image = image.load(path.abspath(path.join(tileset_path, "..", data["image"])))
+            self.image = pygame.image.load(path.abspath(path.join(tileset_path, "..", data["image"])))
             self.margin = data["margin"]
             self.spacing = data["spacing"]
             self.tile_width = data["tilewidth"]
@@ -24,7 +24,7 @@ class Tile:
     def __init__(self, pos, custom_properties, image):
         self.pos = pos
         self.image = image
-        self.rect = Rect(pos, (16,16))
+        self.rect = pygame.Rect(pos, (16,16))
         self.collision_type = custom_properties["collision_type"]
 
 class AnimatedTile(Tile):
@@ -67,7 +67,7 @@ def generate_map_data(level_path, chunk_size):
                     if gid != 0:
                         gid -= 1
                         #get the tile image from a tileset
-                        image = tile_set.image.subsurface(Rect((gid % tile_set.tileset_width) * (tile_set.tile_width), (math.floor(gid / tile_set.tileset_width)) * (tile_set.tile_height), 16, 16))
+                        image = tile_set.image.subsurface(pygame.Rect((gid % tile_set.tileset_width) * (tile_set.tile_width), (math.floor(gid / tile_set.tileset_width)) * (tile_set.tile_height), 16, 16))
                         tiles.append(Tile((x*16, y*16), tile_set.tile_properties[gid], image))
             
             chunk_data[(chunk_x, chunk_y)] = tiles
