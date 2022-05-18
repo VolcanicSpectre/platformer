@@ -1,7 +1,6 @@
 import pygame
 from math import copysign
 from functools import partial
-
 from constants import *
 
 sign = partial(copysign, 1)
