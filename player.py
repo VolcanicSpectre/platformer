@@ -2,15 +2,17 @@ import pygame
 from math import copysign
 from functools import partial
 from constants import *
-
+from states import PlayerStates
 sign = partial(copysign, 1)
 
 class Player:
     def __init__(self, x, y):
+        self.state = PlayerStates.IDLE
+        
         self.x, self.y = x, y
         self.size = [8, 16]
         self.vel = pygame.Vector2(0, 0)
-        self.max_x_vel = 4
+        self.MAXRUN = 4
 
         self.x_move_input = 0
         
@@ -24,9 +26,9 @@ class Player:
         
         self.jump_height = 50
         self.jump_distance = 50
-        self.initial_jump_vel = ((2*self.jump_height*self.max_x_vel) / self.jump_distance) * -1
-        self.inital_gravity = ((2*self.jump_height*self.max_x_vel**2) / self.jump_distance**2)
-        self.final_gravity = ((2*self.jump_height*self.max_x_vel**2) / (self.jump_distance ** 2)*1.2)
+        self.initial_jump_vel = ((2*self.jump_height*self.MAXRUN) / self.jump_distance) * -1
+        self.inital_gravity = ((2*self.jump_height*self.MAXRUN**2) / self.jump_distance**2)
+        self.final_gravity = ((2*self.jump_height*self.MAXRUN**2) / (self.jump_distance ** 2)*1.2)
         
         self.air_frame = 0
         self.image = pygame.Surface(self.size.copy())
@@ -50,7 +52,7 @@ class Player:
                 case pygame.K_DOWN: self.key_pressed["down"] = False
     
     def calculate_x_vel(self, dt):
-        target_speed = self.max_x_vel * self.x_move_input
+        target_speed = self.MAXRUN * self.x_move_input
         u = self.velocity.x
         
         if abs(target_speed) > 0.01:
