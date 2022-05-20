@@ -1,6 +1,5 @@
 from abc import abstractclassmethod
 from enum import Enum, auto
-from sre_constants import JUMP
 
 class PlayerStates(Enum):
     NULL = auto()
@@ -11,6 +10,8 @@ class PlayerStates(Enum):
     FALL = auto()
 
 class State:
+    def __init__(self, player): self.player = player
+    
     def handle_inputs(keys): return PlayerStates.NULL
     
     def process(dt): return PlayerStates.NULL
@@ -26,6 +27,12 @@ class MoveState(State):
         return PlayerStates.NULL
 
     def process_physics(dt):
+        dir = self.player.get_direction()
+
+
+class RunState(State):
+    def process_physics(dt):
+        
             
 
 

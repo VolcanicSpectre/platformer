@@ -13,24 +13,22 @@ class Player:
         self.size = [8, 16]
         self.vel = pygame.Vector2(0, 0)
         self.MAXRUN = 4
-
-        self.x_move_input = 0
         
-        self.x_accel = 0.07
-        self.x_deccel = 0.05
+        self.ACCELRUN = 0.07
+        self.DECELRUN = 0.05
         
-        self.turn_power = 0.5
-        self.stop_power = 0.5
-        self.accel_power = 0.5
+        self.TURNPOWER = 0.5
+        self.STOPPOWER = 0.5
+        self.ACCELPOWER = 0.5
         
         
-        self.jump_height = 50
-        self.jump_distance = 50
-        self.initial_jump_vel = ((2*self.jump_height*self.MAXRUN) / self.jump_distance) * -1
-        self.inital_gravity = ((2*self.jump_height*self.MAXRUN**2) / self.jump_distance**2)
-        self.final_gravity = ((2*self.jump_height*self.MAXRUN**2) / (self.jump_distance ** 2)*1.2)
+        self.JUMPHEIGHT = 50
+        self.JUMPDISTANCE = 50
+        self.INIT_JUMP_VEL = ((2*self.jump_height*self.MAXRUN) / self.jump_distance) * -1
+        self.INIT_GRAVITY = ((2*self.jump_height*self.MAXRUN**2) / self.jump_distance**2)
+        self.FINAL_GRAVITY = ((2*self.jump_height*self.MAXRUN**2) / (self.jump_distance ** 2)*1.2)
         
-        self.air_frame = 0
+        self.air_timer = 0
         self.image = pygame.Surface(self.size.copy())
         self.image.fill("red")
         self.rect = pygame.Rect(self.pos[0] , self.pos[1], self.size[0], self.size[1])
@@ -113,3 +111,7 @@ class Player:
         
         self.y += self.velocity.y
         self.rect.y = self.y
+    
+    def get_direction(self):
+        if self.key_pressed["right"]: return 1
+        else: return 0
