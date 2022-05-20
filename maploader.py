@@ -61,10 +61,11 @@ def generate_map_data(level_path, chunk_size):
                     #calculate the x and y coordinates of the tile and then get the gid
                     x = (chunk_x * chunk_size) + (tile_x)
                     y = (chunk_y * chunk_size) + (tile_y)
+                    
                     tile_index = x + (y*map_data["width"])
                     gid = map_data["layers"][tile_layer_index]["data"][tile_index]
                     
-                    if gid != 0:
+                    if gid:
                         gid -= 1
                         #get the tile image from a tileset
                         image = tile_set.image.subsurface(pygame.Rect((gid % tile_set.tileset_width) * (tile_set.tile_width), (math.floor(gid / tile_set.tileset_width)) * (tile_set.tile_height), 16, 16))
