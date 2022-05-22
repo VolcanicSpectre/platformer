@@ -15,6 +15,7 @@ class Player:
         self.x, self.y = x, y
         self.size = [8, 16]
         self.velocity = pygame.Vector2(0, 0)
+        self.direction = pygame.Vector2(0, 0)
         
         self.MAXRUN = 4
         
@@ -68,3 +69,5 @@ class Player:
         if self.key_pressed["right"]: return 1
         elif self.key_pressed["left"]: return -1 
         else: return 0 
+
+    
