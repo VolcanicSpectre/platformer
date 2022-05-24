@@ -2,17 +2,18 @@ import pygame
 from states import States
 
 
-class Player:
-    def __init__(self, x, y):
+class Entity:
+    def __init__(self, x, y, SIZE):
         self.state = States.IDLE
         
-        self.image = pygame.Surface(self.size.copy())
+        self.SIZE = SIZE
+        self.image = pygame.Surface(SIZE.copy())
         self.image.fill("red")
-        self.rect = pygame.Rect(self.pos[0] , self.pos[1], self.size[0], self.size[1])
+        self.rect = pygame.Rect(self.pos[0] , self.pos[1], SIZE[0], SIZE[1])
         self.events = {"right":False , "left":False , "up":False}
         
         self.x, self.y = x, y
-        self.size = [8, 16]
+        
         self.velocity = pygame.Vector2(0, 0)
         
         self.MAXRUN = 4
@@ -52,3 +53,10 @@ class Player:
         if self.key_pressed["right"]: return 1
         elif self.key_pressed["left"]: return -1
         else: return 0
+
+
+
+
+
+def load_assets():
+    pass

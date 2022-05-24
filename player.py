@@ -1,7 +1,7 @@
 import pygame
 from constants import *
 from states import States
-from entity import Entity
+from entity import Entity, load_assets
 
 class Player(Entity):       
     def event_handler(self, event):   
