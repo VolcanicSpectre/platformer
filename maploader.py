@@ -20,6 +20,15 @@ class TileSet:
                 for property in tile["properties"]:
                     self.tile_properties[tile["id"]][property["name"]] = property["value"]
 
+
+class Chunk:
+    def __init__(self, tiles):
+        self.tiles = tiles
+    
+    def update_chunk(self):
+        #TODO add functionality for updating chunk
+        pass
+
 class Tile: 
     def __init__(self, pos, custom_properties, image):
         self.pos = pos
@@ -32,8 +41,8 @@ class AnimatedTile(Tile):
         super().__init__(pos, gid, images)
     
     def update_tile(self):
+        #TODO add functionality for animated tiles
         pass
-
 
 
 
@@ -71,7 +80,7 @@ def generate_map_data(level_path, chunk_size):
                         image = tile_set.image.subsurface(pygame.Rect((gid % tile_set.tileset_width) * (tile_set.tile_width), (math.floor(gid / tile_set.tileset_width)) * (tile_set.tile_height), 16, 16))
                         tiles.append(Tile((x*16, y*16), tile_set.tile_properties[gid], image))
             
-            chunk_data[(chunk_x, chunk_y)] = tiles
+            chunk_data[(chunk_x, chunk_y)] = Chunk(tiles)
     
     for entity in map_data["layers"][entity_layer_index]["objects"]:
         entities.append(entity)
