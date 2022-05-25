@@ -27,7 +27,10 @@ class Level:
         self.draw()
     
     def update(self):
+<<<<<<< Updated upstream
         pass
 
     def draw(self):
+=======
+>>>>>>> Stashed changes
         pass
