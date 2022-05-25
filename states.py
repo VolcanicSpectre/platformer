@@ -87,8 +87,6 @@ class FallState(State):
         return States.NULL
 
 
-
-
 def calculate_x_velocity(entity, dt):
     direction = entity.direction()
     u = entity.velocity.x
