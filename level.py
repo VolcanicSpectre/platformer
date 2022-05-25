@@ -27,10 +27,18 @@ class Level:
         self.draw()
     
     def update(self):
-<<<<<<< Updated upstream
         pass
+    
+
+    def get_visible_chunks(self):
+        chunk_keys = []
+        for y in range(6): # 6= DS_HEIGHT/(CHUNKSIZE*TILESIZE) + 1
+            for x in range(10): # 10= DS_WIDTH/(CHUNKSIZE*TILESIZE) + 1
+                target_x = x + int(self.camera.rect.x/(CHUNK_SIZE*16))
+                target_y = y + int(self.camera.rect.y/(CHUNK_SIZE*16))
+                chunk_keys.append((target_x, target_y))
+        
+        return chunk_keys
 
     def draw(self):
-=======
->>>>>>> Stashed changes
         pass
