@@ -23,8 +23,6 @@ def main(pr=None):
 
 if __name__ == '__main__':
     if DEBUG:
-        
-        print("Test2") 
         with cProfile.Profile() as pr:
             main(pr)
         

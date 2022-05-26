@@ -10,6 +10,7 @@ class Entity:
         self.image = pygame.Surface(SIZE)
         self.image.fill("red")
         self.rect = pygame.Rect(x, y, SIZE[0], SIZE[1])
+        self.old_rect = self.rect.copy()
         self.events = {"right":False , "left":False , "up":False}
         
         self.x, self.y = x, y
@@ -39,6 +40,11 @@ class Entity:
         new_state = self.state.handle_inputs()
         if new_state: self.state = new_state
 
+    def update(self, dt):
+        self.old_rect = self.rect
+        
+        self.update_x(dt) 
+        self.update_y(dt)
     
     def update_x(self, dt):
         new_state = self.state.process_x_movement(dt)

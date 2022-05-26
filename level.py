@@ -2,7 +2,7 @@ import pygame
 from os import path
 
 from constants import *
-
+from functools import lru_cache
 from maploader import generate_map_data
 from camera import Camera
 from player import Player
@@ -35,8 +35,23 @@ class Level:
     
     def update(self):
         pass
-    
 
+    def handle_collisions(self, entity):
+        collisions = self.get_collisions(entity)
+
+    def get_collisions(self, entity):
+        collisions = []
+        for y in range(5): # 5= DS_HEIGHT/(CHUNKSIZE*TILESIZE)
+            for x in range(9): # 19= DS_WIDTH/(CHUNKSIZE*TILESIZE)
+                target_x = x + int(self.camera.rect.x/(CHUNK_SIZE*16))
+                target_y = y + int(self.camera.rect.y/(CHUNK_SIZE*16))
+                
+            
+                for tile in self.chunks[(target_x, target_y)]:
+                    if tile.collision_type and entity.rect.colliderect(tile.rect):
+                        collisions.append(tile.rect)
+                 
+    @lru_cache(maxsize=10)
     def draw_visible_chunks(self):
         for y in range(5): # 6= DS_HEIGHT/(CHUNKSIZE*TILESIZE) + 1
             for x in range(9): # 10= DS_WIDTH/(CHUNKSIZE*TILESIZE) + 1
