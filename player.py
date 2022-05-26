@@ -3,7 +3,7 @@ from constants import *
 from states import States
 from entity import Entity, load_assets
 
-class Player(Entity):       
+class Player(Entity):    
     def event_handler(self, event):   
         if event.type == pygame.KEYDOWN:
             match event.key:

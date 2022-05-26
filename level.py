@@ -1,3 +1,4 @@
+import pygame
 from os import path
 
 from constants import *
@@ -8,9 +9,12 @@ from player import Player
 
 
 class Level:
-    def __init__(self, engine, num):
+    def __init__(self, engine, num, screen, display_surface):
         self.engine = engine
         self.num = num
+        self.screen = screen
+        self.display_surface = display_surface
+        
         self.entities = []
         self.particles = []
 
@@ -20,7 +24,10 @@ class Level:
         
         for entity in entities:
             if entity["name"] == "player":
-                self.player = Player([entity["x"], entity["y"]])
+                self.player = Player(entity["x"], entity["y"], (8,8))
+    
+    def event_handler(self, event):
+        pass
     
     def global_update(self):
         self.update()
@@ -30,15 +37,16 @@ class Level:
         pass
     
 
-    def get_visible_chunks(self):
-        chunk_keys = []
-        for y in range(6): # 6= DS_HEIGHT/(CHUNKSIZE*TILESIZE) + 1
-            for x in range(10): # 10= DS_WIDTH/(CHUNKSIZE*TILESIZE) + 1
+    def draw_visible_chunks(self):
+        for y in range(5): # 6= DS_HEIGHT/(CHUNKSIZE*TILESIZE) + 1
+            for x in range(9): # 10= DS_WIDTH/(CHUNKSIZE*TILESIZE) + 1
                 target_x = x + int(self.camera.rect.x/(CHUNK_SIZE*16))
                 target_y = y + int(self.camera.rect.y/(CHUNK_SIZE*16))
-                chunk_keys.append((target_x, target_y))
-        
-        return chunk_keys
+                
+                for tile in self.chunks[(target_x, target_y)]:
+                    self.display_surface.blit(tile.image, tile.pos)
 
     def draw(self):
-        pass
+        self.draw_visible_chunks()
+        pygame.transform.scale(self.display_surface, (1152, 640), dest_surface=self.screen)
+        pygame.display.flip()

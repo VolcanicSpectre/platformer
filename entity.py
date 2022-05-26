@@ -7,9 +7,9 @@ class Entity:
         self.state = States.IDLE
         
         self.SIZE = SIZE
-        self.image = pygame.Surface(SIZE.copy())
+        self.image = pygame.Surface(SIZE)
         self.image.fill("red")
-        self.rect = pygame.Rect(self.pos[0] , self.pos[1], SIZE[0], SIZE[1])
+        self.rect = pygame.Rect(x, y, SIZE[0], SIZE[1])
         self.events = {"right":False , "left":False , "up":False}
         
         self.x, self.y = x, y
@@ -27,9 +27,9 @@ class Entity:
         
         self.JUMPHEIGHT = 50
         self.JUMPDISTANCE = 50
-        self.INIT_JUMP_VELOCITY = ((2*self.jump_height*self.MAXRUN) / self.jump_distance) * -1
-        self.INIT_GRAVITY = ((2*self.jump_height*self.MAXRUN**2) / self.jump_distance**2)
-        self.FINAL_GRAVITY = ((2*self.jump_height*self.MAXRUN**2) / (self.jump_distance ** 2)*1.2)
+        self.INIT_JUMP_VELOCITY = ((2*self.JUMPHEIGHT*self.MAXRUN) / self.JUMPDISTANCE) * -1
+        self.INIT_GRAVITY = ((2*self.JUMPHEIGHT*self.MAXRUN**2) / self.JUMPDISTANCE**2)
+        self.FINAL_GRAVITY = ((2*self.JUMPHEIGHT*self.MAXRUN**2) / (self.JUMPDISTANCE ** 2)*1.2)
         
         self.air_timer = 0
         

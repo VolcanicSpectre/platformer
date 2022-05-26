@@ -22,6 +22,15 @@ class TileSet:
 class Chunk:
     def __init__(self, tiles):
         self.tiles = tiles
+    def __iter__(self):
+        return iter(self.tiles)
+        
+        
+        self.tile_index += 1
+        
+        if self.tile_index >= len(self.tiles) -1: raise StopIteration
+
+        return self.tile_index
     
     def update_chunk(self):
         #TODO add functionality for updating chunk

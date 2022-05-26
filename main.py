@@ -1,6 +1,7 @@
 import sys
 from os import path
 import pygame
+import cProfile
 from constants import *
 from game import Game
 
@@ -10,16 +11,26 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 display_surface = pygame.Surface([DS_WIDTH , DS_HEIGHT])
 
 
-
-def main():
-    game = Game()
+def main(pr=None):
+    game = Game(pr)
     running = True
-    game.start()
+    game.start(screen, display_surface)
     while running:
         game.update()
+    
+    
+
 
 if __name__ == '__main__':
-        main()
+    if DEBUG:
+        
+        print("Test2") 
+        with cProfile.Profile() as pr:
+            main(pr)
+        
+        
+        
+    else: main()
 
 
 
