@@ -39,6 +39,7 @@ class Level:
     def handle_collisions(self, entity):
         collisions = self.get_collisions(entity)
 
+        for collison 
     def get_collisions(self, entity):
         collisions = []
         for y in range(5): # 5= DS_HEIGHT/(CHUNKSIZE*TILESIZE)
@@ -50,6 +51,7 @@ class Level:
                 for tile in self.chunks[(target_x, target_y)]:
                     if tile.collision_type and entity.rect.colliderect(tile.rect):
                         collisions.append(tile.rect)
+        return collisions
                  
     @lru_cache(maxsize=10)
     def draw_visible_chunks(self):
