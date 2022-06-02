@@ -5,117 +5,125 @@ from functools import partial
 sign = partial(copysign, 1)
 
 
-class States(Enum):
-    NULL = 0
-    IDLE = 1
-    RUN = 2
-    DASH = 3
-    JUMP = 4
-    FALL = 5
-
-
-class State:
+class NULL:
     def __init__(self, entity): self.entity = entity
 
-    def handle_inputs(self, keys): return States.NULL
+    def input_handler(self): return NULL(self.entity)
 
-    def process_x_movement(self, dt): return States.NULL
+    def process_x_movement(self, dt): return NULL(self.entity)
 
-    def process_y_movement(self, dt): return States.NULL
+    def process_y_movement(self, dt): return NULL(self.entity)
 
 
-class IdleState(State):
-    def handle_inputs(self):
+class IDLE(NULL):
+    def input_handler(self):
         if self.entity.direction:
-            return States.RUN
-        if self.entity.events["up"]:
-            return States.JUMP
+            return RUN(self.entity)
 
-        return States.NULL
+        if self.entity.events["up"]:
+            return JUMP(self.entity)
+
+        return self
+
+    def process_x_movement(self, dt):
+        return self
 
     def process_y_movement(self, dt):
         self.entity.velocity.y += self.entity.FINAL_GRAVITY * dt
-        if not self.entity.grounded:
-            return States.FALL
 
-        return States.NULL
+        if not self.entity.air_timer:
+            return FALL(self.entity)
+
+        return self
 
 
-class RunState(State):
-    def handle_inputs(self):
+class RUN(NULL):
+    def input_handler(self):
         if self.entity.events["up"]:
-            return States.JUMP
-        return States.NULL
+            return JUMP(self.entity)
+
+        if not self.entity.direction:
+            return IDLE(self.entity)
+
+        return self
         # TODO add dash
 
     def process_x_movement(self, dt):
 
         if not self.entity.direction:
-            return States.IDLE
+            return IDLE(self.entity)
 
         self.entity.velocity.x = calculate_x_velocity(self.entity, dt)
 
-        return States.NULL
+        return self
 
     def process_y_movement(self, dt):
         self.entity.velocity.y += self.entity.FINAL_GRAVITY * dt
-        if not self.entity.grounded:
-            return States.FALL
+        if not self.entity.air_timer:
+            return FALL(self.entity)
 
-        return States.NULL
+        return self
 
 
-class DashState(RunState):
+class DASH(RUN):
     DASHTIME = 0.4
 
     def __iter__(self):
-        yield DashState.DASHTIME
+        yield DASH.DASHTIME
 
 
-class JumpState(State):
+class JUMP(NULL):
+    def input_handler(self):
+        print(self)
+        return self
+
     def proceess_y_movement(self, dt):
         self.entity.velocity.y += self.entity.INIT_GRAVITY * dt
 
-        if self.entity.grounded:
+        if not self.entity.air_timer:
+
             if self.entity.direction:
-                return States.RUN
+                return RUN(self.entity)
+
             else:
-                return States.IDLE
+                return IDLE(self.entity)
+
+        return self
 
     def process_x_movement(self, dt):
         self.entity.velocity.x = calculate_x_velocity(self.entity, dt)
+        return self
 
-        return States.NULL
 
+class FALL(NULL):
+    def input_handler(self): return self
 
-class FallState(State):
     def proceess_y_movement(self, dt):
         self.entity.velocity.y += self.entity.FINAL_GRAVITY * dt
 
-        if self.entity.grounded:
-            if self.entity.direction:
-                return States.RUN
+        if self.entity.air_timer:
+            if self.entity.entity.entity.direction:
+                return RUN(self.entity)
             else:
-                return States.IDLE
+                return IDLE(self.entity)
 
     def process_x_movement(self, dt):
         self.entity.velocity.x = calculate_x_velocity(self.entity, dt)
 
-        return States.NULL
+        return self
 
 
 def calculate_x_velocity(entity, dt):
-    direction = entity.direction()
     u = entity.velocity.x
-    target_speed = entity.MAXRUN * direction
+    target_speed = entity.MAXRUN * entity.direction
 
     if abs(target_speed) > 0.01:
         a = entity.ACCELRUN
-        if not entity.grounded:
+        if not entity.air_timer:
             a *= 0.01
     else:
         a = entity.DECELRUN
-        if not entity.grounded:
+        if not entity.air_timer:
             a *= 0.6
 
     if (u > target_speed and target_speed > 0.01) or (u < target_speed and target_speed < -0.01):
@@ -130,12 +138,12 @@ def calculate_x_velocity(entity, dt):
 
     v = (a*dt) ** vel_power
 
-    if direction > 0:
+    if entity.direction > 0:
         return min(u + v, target_speed)
-    if direction < 0:
+    if entity.direction < 0:
         return max(u + v*entity.x_move_input, target_speed)
     else:
         if sign(u) == -1:
-            return min(u - (v*-1), target_speed*entity.dir)
+            return min(u - (v*-1), target_speed*entity.direction)
         else:
-            return max(u - v, target_speed*direction)
+            return max(u - v, target_speed*entity.direction)

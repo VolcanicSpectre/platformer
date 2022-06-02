@@ -9,9 +9,8 @@ class Camera:
         self.height = height
 
     def focus(self, target):
-        x = (target.pos[0] - self.rect.x -
-             (DS_WIDTH // 2) - target.rect.w // 2) / 10
-        y = target.pos[1] - self.rect.y - (DS_HEIGHT // 2) - target.rect.h // 2
+        x = (target.x - self.rect.x - (DS_WIDTH // 2) - target.rect.w // 2) / 10
+        y = target.rect.y - self.rect.y - (DS_HEIGHT // 2) - target.rect.h // 2
 
         self.rect.x += x
         self.rect.x = min(max(0, self.rect.x), DS_WIDTH+self.width)

@@ -5,6 +5,7 @@ from constants import *
 from functools import lru_cache
 from maploader import generate_map_data
 from camera import Camera
+from entity import Entity
 from player import Player
 
 
@@ -28,17 +29,44 @@ class Level:
                 self.player = Player(entity["x"], entity["y"], (8, 8))
 
     def event_handler(self, event):
-        pass
+        self.player.event_handler(event)
 
     def global_update(self):
         self.update()
         self.draw()
 
     def update(self):
-        pass
+        print(self.player.state)
+        for entity in self.entities:
+            entity.update()
+            self.handle_collisions(entity)
+
+        self.player.update()
+        self.handle_collisions(self.player)
+        self.camera.focus(self.player)
 
     def handle_collisions(self, entity):
         collisions = self.get_collisions(entity)
+
+        entity.update_x(self.engine.dt)
+        if collisions:
+            for collision in collisions:
+                if entity.rect.right >= collision.rect.left and entity.old_rect.right <= collision.rect.left:
+                    entity.rect.right = collision.rect.left
+                    entity.x = entity.rect.x
+                if entity.rect.left <= collision.rect.right and entity.old_rect.left >= collision.rect.right:
+                    entity.rect.left = collision.rect.right
+                    entity.x = entity.rect.x
+
+        entity.update_y(self.engine.dt)
+        if collisions:
+            for collision in collisions:
+                if entity.rect.bottom >= collision.rect.top and entity.old_rect.bottom <= collision.rect.top:
+                    entity.rect.bottom = collision.rect.top
+                    entity.y = entity.rect.y
+                if entity.rect.top <= collision.rect.bottom and entity.old_rect.top >= collision.rect.bottom:
+                    entity.rect.top = collision.rect.bottom
+                    entity.y = entity.rect.y
 
     def get_collisions(self, entity):
         collisions = []
@@ -53,7 +81,7 @@ class Level:
         return collisions
 
     @lru_cache(maxsize=10)
-    def draw_visible_chunks(self):
+    def draw_visible(self):
         for y in range(5):  # 6= DS_HEIGHT/(CHUNKSIZE*TILESIZE) + 1
             for x in range(9):  # 10= DS_WIDTH/(CHUNKSIZE*TILESIZE) + 1
                 target_x = x + int(self.camera.rect.x/(CHUNK_SIZE*16))
@@ -62,8 +90,14 @@ class Level:
                 for tile in self.chunks[(target_x, target_y)]:
                     self.display_surface.blit(tile.image, tile.pos)
 
+        for entity in self.entities:
+            if entity.rect.contains(self.camera.rect) or entity.rect.colliderect(self.camera.rect):
+                self.display_surface.blit(entity.image, (entity.x, entity.y))
+
+        self.display_surface.blit(self.player.image, (self.player.x, self.player.y))
+
     def draw(self):
-        self.draw_visible_chunks()
+        self.draw_visible()
         pygame.transform.scale(self.display_surface,
                                (1152, 640), dest_surface=self.screen)
         pygame.display.flip()

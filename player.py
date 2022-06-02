@@ -1,6 +1,6 @@
 import pygame
 from constants import *
-from states import States
+from states import NULL, IDLE, RUN, DASH, JUMP, FALL 
 from entity import Entity, load_assets
 
 
@@ -20,7 +20,8 @@ class Player(Entity):
                 case pygame.K_UP: self.events["up"] = False
                 case pygame.K_DOWN: self.events["down"] = False
 
-        new_state = self.state.handle_inputs()
+
+        new_state = self.state.input_handler()
 
         if new_state:
             self.state = new_state

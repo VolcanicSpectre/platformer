@@ -1,10 +1,10 @@
 import pygame
-from states import States
+from states import IDLE 
 
 
 class Entity:
-    def __init__(self, x, y, SIZE):
-        self.state = States.IDLE
+    def __init__(self, x: int, y: int, SIZE: list[int]):
+        self.state = IDLE(self)
 
         self.SIZE = SIZE
         self.image = pygame.Surface(SIZE)
@@ -16,7 +16,7 @@ class Entity:
         self.x, self.y = x, y
 
         self.velocity = pygame.Vector2(0, 0)
-
+        self.direction = 0
         self.MAXRUN = 4
 
         self.ACCELRUN = 0.07
@@ -38,17 +38,14 @@ class Entity:
         self.air_timer = 0
 
     def event_handler(self):
-
         new_state = self.state.handle_inputs()
         if new_state:
             self.state = new_state
 
-    def update(self, dt):
+    def update(self):
         self.old_rect = self.rect
-
-        self.update_x(dt)
-        self.update_y(dt)
-
+        self.update_direction()
+    
     def update_x(self, dt):
         new_state = self.state.process_x_movement(dt)
         if new_state:
@@ -59,14 +56,13 @@ class Entity:
         if new_state:
             self.state = new_state
 
-    @property
-    def direction(self):
-        if self.key_pressed["right"]:
-            return 1
-        elif self.key_pressed["left"]:
-            return -1
+    def update_direction(self):
+        if self.events["right"]:
+            self.direction = 1
+        elif self.events["left"]:
+            self.direction = -1
         else:
-            return 0
+            self.direction = 0
 
 
 def load_assets():

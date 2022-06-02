@@ -22,7 +22,7 @@ class Game:
     def update(self):
         pygame.display.set_caption(
             "{:.2f}".format(self.engine.clock.get_fps()))
-        self.engine.update_dt()
+        self.engine.update()
         self.events()
         if self.current_level != None:
             self.current_level.global_update()
