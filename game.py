@@ -36,7 +36,7 @@ class Game:
                 if DEBUG:
                     stats = pstats.Stats(self.pr)
                     stats.sort_stats(pstats.SortKey.TIME)
-                    stats.dump_stats(filename="s.prof")
+                    stats.dump_stats(filename=DEBUG_FILENAME)
 
                 pygame.quit()
                 exit(0)

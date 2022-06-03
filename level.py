@@ -45,9 +45,8 @@ class Level:
         self.camera.focus(self.player)
 
     def handle_collisions(self, entity):
-        collisions = self.get_collisions(entity)
-
         entity.update_x(self.engine.dt)
+        collisions = self.get_collisions(entity)
         if collisions:
             for collision in collisions:
                 if entity.rect.right >= collision.left and entity.old_rect.right <= collision.left:
@@ -57,7 +56,9 @@ class Level:
                     entity.rect.left = collision.right
                     entity.x = entity.rect.x
 
+        
         entity.update_y(self.engine.dt)
+        collisions = self.get_collisions(entity)
         if collisions:
             for collision in collisions:
                 if entity.rect.bottom >= collision.top and entity.old_rect.bottom >= collision.top:

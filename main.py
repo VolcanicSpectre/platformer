@@ -20,6 +20,7 @@ def main(pr=None):
 
 
 if __name__ == '__main__':
+    print(DEBUG_FILENAME)
     if DEBUG:
         with cProfile.Profile() as pr:
             main(pr)

@@ -22,7 +22,8 @@ class IDLE:
         return self
 
     def process_y_movement(self, dt):
-        self.entity.velocity.y += self.entity.FINAL_GRAVITY * dt
+        self.entity.velocity.y = max(
+            self.entity.FINAL_GRAVITY * dt + self.entity.velocity.y, 2*self.entity.FINAL_GRAVITY * dt)
         if self.entity.air_timer:
             return FALL(self.entity)
 
@@ -46,7 +47,7 @@ class RUN:
     def process_x_movement(self, dt):
         if self.entity.velocity.x == 0 and not self.entity.direction:
             return IDLE(self.entity)
-        
+
         self.entity.velocity.x = calculate_x_velocity(self.entity, dt)
         return self
 
@@ -97,13 +98,13 @@ class FALL:
 
     def process_y_movement(self, dt):
         self.entity.velocity.y += self.entity.FINAL_GRAVITY * dt
-        
+
         if not self.entity.air_timer:
             if self.entity.velocity.x == 0 and not self.entity.direction:
                 return IDLE(self.entity)
             else:
                 return RUN(self.entity)
-        
+
         self.entity.air_timer += dt
         return self
 
