@@ -10,6 +10,7 @@ class IDLE:
         self.entity = entity
 
     def input_handler(self):
+        print(self.entity.direction)
         if self.entity.direction:
             return RUN(self.entity)
 
@@ -37,14 +38,14 @@ class RUN:
         if self.entity.events["up"]:
             return JUMP(self.entity)
 
-        if self.entity.velocity.x == 0 and not self.entity.direction:
+        if not self.entity.direction:
             return IDLE(self.entity)
 
         return self
         # TODO add dash
 
     def process_x_movement(self, dt):
-        if self.entity.velocity.x == 0 and not self.entity.direction:
+        if not self.entity.direction:
             return IDLE(self.entity)
         
         self.entity.velocity.x = calculate_x_velocity(self.entity, dt)
@@ -76,10 +77,11 @@ class JUMP:
         self.entity.velocity.y += self.entity.INIT_GRAVITY * dt
         self.entity.air_timer += dt
         if not self.entity.air_timer:
-            if self.entity.velocity.x == 0 and not self.entity.direction:
-                return IDLE(self.entity)
-            else:
+            if self.entity.direction:
                 return RUN(self.entity)
+
+            else:
+                return IDLE(self.entity)
 
         return self
 
@@ -99,10 +101,10 @@ class FALL:
         self.entity.velocity.y += self.entity.FINAL_GRAVITY * dt
         
         if not self.entity.air_timer:
-            if self.entity.velocity.x == 0 and not self.entity.direction:
-                return IDLE(self.entity)
-            else:
+            if self.entity.direction:
                 return RUN(self.entity)
+            else:
+                return IDLE(self.entity)
         
         self.entity.air_timer += dt
         return self
@@ -116,6 +118,7 @@ class FALL:
 def calculate_x_velocity(entity, dt):
     u = entity.velocity.x
     target_speed = entity.MAXRUN * entity.direction
+
     if abs(target_speed) > 0.01:
         a = entity.ACCELRUN
         if not entity.air_timer:
@@ -140,7 +143,7 @@ def calculate_x_velocity(entity, dt):
     if entity.direction > 0:
         return min(u + v, target_speed)
     if entity.direction < 0:
-        return max(u + v*entity.direction, target_speed)
+        return max(u + v*entity.x_move_input, target_speed)
     else:
         if sign(u) == -1:
             return min(u - (v*-1), target_speed*entity.direction)
