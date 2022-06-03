@@ -36,11 +36,10 @@ class Level:
         self.draw()
 
     def update(self):
-        print(self.player.state)
         for entity in self.entities:
             entity.update()
             self.handle_collisions(entity)
-
+        
         self.player.update()
         self.handle_collisions(self.player)
         self.camera.focus(self.player)
@@ -51,27 +50,28 @@ class Level:
         entity.update_x(self.engine.dt)
         if collisions:
             for collision in collisions:
-                if entity.rect.right >= collision.rect.left and entity.old_rect.right <= collision.rect.left:
-                    entity.rect.right = collision.rect.left
+                if entity.rect.right >= collision.left and entity.old_rect.right <= collision.left:
+                    entity.rect.right = collision.left
                     entity.x = entity.rect.x
-                if entity.rect.left <= collision.rect.right and entity.old_rect.left >= collision.rect.right:
-                    entity.rect.left = collision.rect.right
+                if entity.rect.left <= collision.right and entity.old_rect.left >= collision.right:
+                    entity.rect.left = collision.right
                     entity.x = entity.rect.x
 
         entity.update_y(self.engine.dt)
         if collisions:
             for collision in collisions:
-                if entity.rect.bottom >= collision.rect.top and entity.old_rect.bottom <= collision.rect.top:
-                    entity.rect.bottom = collision.rect.top
+                if entity.rect.bottom >= collision.top and entity.old_rect.bottom <= collision.top:
+                    entity.rect.bottom = collision.top
                     entity.y = entity.rect.y
-                if entity.rect.top <= collision.rect.bottom and entity.old_rect.top >= collision.rect.bottom:
-                    entity.rect.top = collision.rect.bottom
+                    entity.air_timer = 0
+                if entity.rect.top <= collision.bottom and entity.old_rect.top >= collision.bottom:
+                    entity.rect.top = collision.bottom
                     entity.y = entity.rect.y
 
     def get_collisions(self, entity):
         collisions = []
         for y in range(5):  # 5= DS_HEIGHT/(CHUNKSIZE*TILESIZE)
-            for x in range(9):  # 19= DS_WIDTH/(CHUNKSIZE*TILESIZE)
+            for x in range(9):  # 9= DS_WIDTH/(CHUNKSIZE*TILESIZE)
                 target_x = x + int(self.camera.rect.x/(CHUNK_SIZE*16))
                 target_y = y + int(self.camera.rect.y/(CHUNK_SIZE*16))
 
@@ -94,7 +94,8 @@ class Level:
             if entity.rect.contains(self.camera.rect) or entity.rect.colliderect(self.camera.rect):
                 self.display_surface.blit(entity.image, (entity.x, entity.y))
 
-        self.display_surface.blit(self.player.image, (self.player.x, self.player.y))
+        self.display_surface.blit(
+            self.player.image, (self.player.x, self.player.y))
 
     def draw(self):
         self.draw_visible()

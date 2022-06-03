@@ -5,18 +5,12 @@ from functools import partial
 sign = partial(copysign, 1)
 
 
-class NULL:
-    def __init__(self, entity): self.entity = entity
+class IDLE:
+    def __init__(self, entity):
+        self.entity = entity
 
-    def input_handler(self): return NULL(self.entity)
-
-    def process_x_movement(self, dt): return NULL(self.entity)
-
-    def process_y_movement(self, dt): return NULL(self.entity)
-
-
-class IDLE(NULL):
     def input_handler(self):
+        print(self.entity.direction)
         if self.entity.direction:
             return RUN(self.entity)
 
@@ -30,14 +24,16 @@ class IDLE(NULL):
 
     def process_y_movement(self, dt):
         self.entity.velocity.y += self.entity.FINAL_GRAVITY * dt
-
-        if not self.entity.air_timer:
+        if self.entity.air_timer:
             return FALL(self.entity)
 
         return self
 
 
-class RUN(NULL):
+class RUN:
+    def __init__(self, entity):
+        self.entity = entity
+
     def input_handler(self):
         if self.entity.events["up"]:
             return JUMP(self.entity)
@@ -49,17 +45,15 @@ class RUN(NULL):
         # TODO add dash
 
     def process_x_movement(self, dt):
-
         if not self.entity.direction:
             return IDLE(self.entity)
-
+        
         self.entity.velocity.x = calculate_x_velocity(self.entity, dt)
-
         return self
 
     def process_y_movement(self, dt):
         self.entity.velocity.y += self.entity.FINAL_GRAVITY * dt
-        if not self.entity.air_timer:
+        if self.entity.air_timer:
             return FALL(self.entity)
 
         return self
@@ -72,16 +66,17 @@ class DASH(RUN):
         yield DASH.DASHTIME
 
 
-class JUMP(NULL):
+class JUMP:
+    def __init__(self, entity):
+        self.entity = entity
+
     def input_handler(self):
-        print(self)
         return self
 
-    def proceess_y_movement(self, dt):
+    def process_y_movement(self, dt):
         self.entity.velocity.y += self.entity.INIT_GRAVITY * dt
-
+        self.entity.air_timer += dt
         if not self.entity.air_timer:
-
             if self.entity.direction:
                 return RUN(self.entity)
 
@@ -95,17 +90,24 @@ class JUMP(NULL):
         return self
 
 
-class FALL(NULL):
-    def input_handler(self): return self
+class FALL:
+    def __init__(self, entity):
+        self.entity = entity
 
-    def proceess_y_movement(self, dt):
+    def input_handler(self):
+        return self
+
+    def process_y_movement(self, dt):
         self.entity.velocity.y += self.entity.FINAL_GRAVITY * dt
-
-        if self.entity.air_timer:
-            if self.entity.entity.entity.direction:
+        
+        if not self.entity.air_timer:
+            if self.entity.direction:
                 return RUN(self.entity)
             else:
                 return IDLE(self.entity)
+        
+        self.entity.air_timer += dt
+        return self
 
     def process_x_movement(self, dt):
         self.entity.velocity.x = calculate_x_velocity(self.entity, dt)

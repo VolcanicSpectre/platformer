@@ -1,5 +1,5 @@
 import pygame
-from states import IDLE 
+from states import IDLE
 
 
 class Entity:
@@ -37,24 +37,24 @@ class Entity:
 
         self.air_timer = 0
 
-    def event_handler(self):
-        new_state = self.state.handle_inputs()
-        if new_state:
-            self.state = new_state
-
     def update(self):
         self.old_rect = self.rect
         self.update_direction()
-    
+        self.state = self.state.input_handler()
+        
     def update_x(self, dt):
         new_state = self.state.process_x_movement(dt)
         if new_state:
             self.state = new_state
+        self.x += self.velocity.x
+        self.rect.x = self.x
 
     def update_y(self, dt):
         new_state = self.state.process_y_movement(dt)
         if new_state:
             self.state = new_state
+        self.y += self.velocity.y
+        self.rect.y = self.y
 
     def update_direction(self):
         if self.events["right"]:
