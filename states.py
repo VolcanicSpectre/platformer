@@ -1,7 +1,7 @@
 from enum import Enum
 from math import copysign
 from functools import partial
-
+from constants import *
 sign = partial(copysign, 1)
 
 
@@ -23,7 +23,7 @@ class IDLE:
 
     def process_y_movement(self, dt):
         self.entity.velocity.y = max(
-            self.entity.FINAL_GRAVITY * dt + self.entity.velocity.y, 2*self.entity.FINAL_GRAVITY * dt)
+            self.entity.FINAL_GRAVITY + self.entity.velocity.y, 2*self.entity.FINAL_GRAVITY * dt)
         if self.entity.air_timer:
             return FALL(self.entity)
 
@@ -48,22 +48,25 @@ class RUN:
         if self.entity.velocity.x == 0 and not self.entity.direction:
             return IDLE(self.entity)
 
-        self.entity.velocity.x = calculate_x_velocity(self.entity, dt)
+        self.entity.velocity.x = calculate_x_velocity(
+            self.entity, dt) * FPS * dt
         return self
 
     def process_y_movement(self, dt):
-        self.entity.velocity.y += self.entity.FINAL_GRAVITY * dt
+        self.entity.velocity.y += self.entity.FINAL_GRAVITY * FPS * dt
         if self.entity.air_timer:
             return FALL(self.entity)
 
         return self
 
 
-class DASH(RUN):
-    DASHTIME = 0.4
+class DASH:
+    def __init__(self, entity):
+        self.entity = entity
+        self.dash_time = 0.2
 
-    def __iter__(self):
-        yield DASH.DASHTIME
+    def input_handler(self):
+        return self
 
 
 class JUMP:
@@ -74,7 +77,7 @@ class JUMP:
         return self
 
     def process_y_movement(self, dt):
-        self.entity.velocity.y += self.entity.INIT_GRAVITY * dt
+        self.entity.velocity.y += self.entity.INIT_GRAVITY * FPS * dt
         self.entity.air_timer += dt
         if not self.entity.air_timer:
             if self.entity.velocity.x == 0 and not self.entity.direction:
@@ -85,7 +88,8 @@ class JUMP:
         return self
 
     def process_x_movement(self, dt):
-        self.entity.velocity.x = calculate_x_velocity(self.entity, dt)
+        self.entity.velocity.x = calculate_x_velocity(
+            self.entity, dt) * FPS * dt
         return self
 
 
@@ -97,7 +101,7 @@ class FALL:
         return self
 
     def process_y_movement(self, dt):
-        self.entity.velocity.y += self.entity.FINAL_GRAVITY * dt
+        self.entity.velocity.y += self.entity.FINAL_GRAVITY * FPS * dt
 
         if not self.entity.air_timer:
             if self.entity.velocity.x == 0 and not self.entity.direction:
@@ -109,12 +113,14 @@ class FALL:
         return self
 
     def process_x_movement(self, dt):
-        self.entity.velocity.x = calculate_x_velocity(self.entity, dt)
+        self.entity.velocity.x = calculate_x_velocity(
+            self.entity, dt) * FPS * dt
 
         return self
 
 
 def calculate_x_velocity(entity, dt):
+    dt *= 1000
     u = entity.velocity.x
     target_speed = entity.MAXRUN * entity.direction
     if abs(target_speed) > 0.01:
