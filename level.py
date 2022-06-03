@@ -26,7 +26,7 @@ class Level:
 
         for entity in entities:
             if entity["name"] == "player":
-                self.player = Player(entity["x"], entity["y"], (8, 8))
+                self.player = Player(entity["x"]+8, entity["y"]-10, (8, 12))
 
     def event_handler(self, event):
         self.player.event_handler(event)
@@ -39,7 +39,7 @@ class Level:
         for entity in self.entities:
             entity.update()
             self.handle_collisions(entity)
-        
+
         self.player.update()
         self.handle_collisions(self.player)
         self.camera.focus(self.player)
@@ -60,10 +60,12 @@ class Level:
         entity.update_y(self.engine.dt)
         if collisions:
             for collision in collisions:
-                if entity.rect.bottom >= collision.top and entity.old_rect.bottom <= collision.top:
+                if entity.rect.bottom >= collision.top and entity.old_rect.bottom >= collision.top:
                     entity.rect.bottom = collision.top
                     entity.y = entity.rect.y
+                    entity.velocity.y = 0
                     entity.air_timer = 0
+
                 if entity.rect.top <= collision.bottom and entity.old_rect.top >= collision.bottom:
                     entity.rect.top = collision.bottom
                     entity.y = entity.rect.y
@@ -72,22 +74,16 @@ class Level:
         collisions = []
         for y in range(5):  # 5= DS_HEIGHT/(CHUNKSIZE*TILESIZE)
             for x in range(9):  # 9= DS_WIDTH/(CHUNKSIZE*TILESIZE)
-                target_x = x + int(self.camera.rect.x/(CHUNK_SIZE*16))
-                target_y = y + int(self.camera.rect.y/(CHUNK_SIZE*16))
-
-                for tile in self.chunks[(target_x, target_y)]:
+                for tile in self.chunks[(x, y)]:
                     if tile.collision_type and entity.rect.colliderect(tile.rect):
                         collisions.append(tile.rect)
         return collisions
 
-    @lru_cache(maxsize=10)
     def draw_visible(self):
+        self.display_surface.fill((0, 0, 0))
         for y in range(5):  # 6= DS_HEIGHT/(CHUNKSIZE*TILESIZE) + 1
             for x in range(9):  # 10= DS_WIDTH/(CHUNKSIZE*TILESIZE) + 1
-                target_x = x + int(self.camera.rect.x/(CHUNK_SIZE*16))
-                target_y = y + int(self.camera.rect.y/(CHUNK_SIZE*16))
-
-                for tile in self.chunks[(target_x, target_y)]:
+                for tile in self.chunks[(x, y)]:
                     self.display_surface.blit(tile.image, tile.pos)
 
         for entity in self.entities:
