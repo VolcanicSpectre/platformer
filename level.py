@@ -56,7 +56,6 @@ class Level:
                     entity.rect.left = collision.right
                     entity.x = entity.rect.x
 
-        
         entity.update_y(self.engine.dt)
         collisions = self.get_collisions(entity)
         if collisions:
