@@ -36,6 +36,7 @@ class Level:
         self.draw()
 
     def update(self):
+        print(self.player.velocity.x)
         for entity in self.entities:
             entity.update()
             self.handle_collisions(entity)
@@ -56,7 +57,6 @@ class Level:
                     entity.rect.left = collision.right
                     entity.x = entity.rect.x
 
-        
         entity.update_y(self.engine.dt)
         collisions = self.get_collisions(entity)
         if collisions:

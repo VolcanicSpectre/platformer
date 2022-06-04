@@ -1,7 +1,7 @@
 from enum import Enum
 from math import copysign
 from functools import partial
-
+from constants import FPS
 sign = partial(copysign, 1)
 
 
@@ -22,8 +22,7 @@ class IDLE:
         return self
 
     def process_y_movement(self, dt):
-        self.entity.velocity.y = max(
-            self.entity.FINAL_GRAVITY * dt + self.entity.velocity.y, 2*self.entity.FINAL_GRAVITY * dt)
+        self.entity.velocity.y = max((self.entity.FINAL_GRAVITY + self.entity.velocity.y), 2*self.entity.FINAL_GRAVITY)
         if self.entity.air_timer:
             return FALL(self.entity)
 
@@ -52,7 +51,7 @@ class RUN:
         return self
 
     def process_y_movement(self, dt):
-        self.entity.velocity.y += self.entity.FINAL_GRAVITY * dt
+        self.entity.velocity.y += self.entity.FINAL_GRAVITY
         if self.entity.air_timer:
             return FALL(self.entity)
 
@@ -74,7 +73,7 @@ class JUMP:
         return self
 
     def process_y_movement(self, dt):
-        self.entity.velocity.y += self.entity.INIT_GRAVITY * dt
+        self.entity.velocity.y += self.entity.INIT_GRAVITY
         self.entity.air_timer += dt
         if not self.entity.air_timer:
             if self.entity.velocity.x == 0 and not self.entity.direction:
@@ -97,7 +96,7 @@ class FALL:
         return self
 
     def process_y_movement(self, dt):
-        self.entity.velocity.y += self.entity.FINAL_GRAVITY * dt
+        self.entity.velocity.y += self.entity.FINAL_GRAVITY
 
         if not self.entity.air_timer:
             if self.entity.velocity.x == 0 and not self.entity.direction:
@@ -115,35 +114,19 @@ class FALL:
 
 
 def calculate_x_velocity(entity, dt):
-    u = entity.velocity.x
-    target_speed = entity.MAXRUN * entity.direction
-    if abs(target_speed) > 0.01:
-        a = entity.ACCELRUN
-        if not entity.air_timer:
-            a *= 0.01
-    else:
-        a = entity.DECELRUN
-        if not entity.air_timer:
-            a *= 0.6
-
-    if (u > target_speed and target_speed > 0.01) or (u < target_speed and target_speed < -0.01):
-        a = 0
-
-    if abs(target_speed) < 0.01:
+    target_velocity = entity.MAXRUN * entity.direction
+    
+    if abs(target_velocity) < 0.01:
         vel_power = entity.STOPPOWER
-    elif abs(u) > 0 and sign(target_speed) != sign(u):
+    elif abs(entity.velocity.x) > 0 and sign(target_velocity) != sign(entity.velocity.x):
         vel_power = entity.TURNPOWER
     else:
         vel_power = entity.ACCELPOWER
+    
+    accel_rate = pow((entity.ACCELRUN * 1/60), vel_power)
+    return (move_towards(entity.velocity.x, target_velocity, accel_rate))
 
-    v = (a*dt) ** vel_power
 
-    if entity.direction > 0:
-        return min(u + v, target_speed)
-    if entity.direction < 0:
-        return max(u + v*entity.direction, target_speed)
-    else:
-        if sign(u) == -1:
-            return min(u - (v*-1), target_speed*entity.direction)
-        else:
-            return max(u - v, target_speed*entity.direction)
+def move_towards(current, target, max_delta):
+    if current > target: return max(current - max_delta, target)
+    else: return min(current + max_delta, target)

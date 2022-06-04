@@ -10,5 +10,5 @@ class Engine:
 
     def update(self):
         self.clock.tick(FPS)
-        self.dt = (perf_counter() - self.t1)*1000
+        self.dt = (perf_counter() - self.t1)
         self.t1 = perf_counter()
