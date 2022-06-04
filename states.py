@@ -123,7 +123,7 @@ def calculate_x_velocity(entity, dt):
     else:
         vel_power = entity.ACCELPOWER
     
-    accel_rate = pow((entity.ACCELRUN * 1/60), vel_power)
+    accel_rate = pow((entity.ACCELRUN * 1/60), vel_power) * (dt*60)
     return (move_towards(entity.velocity.x, target_velocity, accel_rate))
 
 

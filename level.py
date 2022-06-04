@@ -36,7 +36,6 @@ class Level:
         self.draw()
 
     def update(self):
-        print(self.player.velocity.x)
         for entity in self.entities:
             entity.update()
             self.handle_collisions(entity)
