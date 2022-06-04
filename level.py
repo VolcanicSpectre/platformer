@@ -26,7 +26,7 @@ class Level:
 
         for entity in entities:
             if entity["name"] == "player":
-                self.player = Player(entity["x"]+8, entity["y"]-10, (8, 12))
+                self.player = Player(entity["x"]+8, entity["y"]-80, (8, 12))
 
     def event_handler(self, event):
         self.player.event_handler(event)

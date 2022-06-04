@@ -34,7 +34,7 @@ class Entity:
             (2*self.JUMPHEIGHT*self.MAXRUN**2) / self.JUMPDISTANCE**2)*0.03
         self.FINAL_GRAVITY = (
             (2*self.JUMPHEIGHT*self.MAXRUN**2) / (self.JUMPDISTANCE ** 2)*1.2)*0.03
-
+        self.FINAL_GRAVITY = 300
         self.air_timer = 0
 
     def update(self):

@@ -22,8 +22,9 @@ class IDLE:
         return self
 
     def process_y_movement(self, dt):
-        self.entity.velocity.y = max(
-            self.entity.FINAL_GRAVITY + self.entity.velocity.y, 2*self.entity.FINAL_GRAVITY * dt)
+        self.entity.velocity.y = min(
+            (self.entity.FINAL_GRAVITY + self.entity.velocity.y) * dt, 2*self.entity.FINAL_GRAVITY * dt)
+
         if self.entity.air_timer:
             return FALL(self.entity)
 
@@ -49,11 +50,11 @@ class RUN:
             return IDLE(self.entity)
 
         self.entity.velocity.x = calculate_x_velocity(
-            self.entity, dt) * FPS * dt
+            self.entity, dt) * dt * 80
         return self
 
     def process_y_movement(self, dt):
-        self.entity.velocity.y += self.entity.FINAL_GRAVITY * FPS * dt
+        self.entity.velocity.y += self.entity.FINAL_GRAVITY * dt
         if self.entity.air_timer:
             return FALL(self.entity)
 
@@ -77,7 +78,7 @@ class JUMP:
         return self
 
     def process_y_movement(self, dt):
-        self.entity.velocity.y += self.entity.INIT_GRAVITY * FPS * dt
+        self.entity.velocity.y += self.entity.INIT_GRAVITY * dt
         self.entity.air_timer += dt
         if not self.entity.air_timer:
             if self.entity.velocity.x == 0 and not self.entity.direction:
@@ -89,7 +90,7 @@ class JUMP:
 
     def process_x_movement(self, dt):
         self.entity.velocity.x = calculate_x_velocity(
-            self.entity, dt) * FPS * dt
+            self.entity, dt) * dt
         return self
 
 
@@ -101,7 +102,7 @@ class FALL:
         return self
 
     def process_y_movement(self, dt):
-        self.entity.velocity.y += self.entity.FINAL_GRAVITY * FPS * dt
+        self.entity.velocity.y += self.entity.FINAL_GRAVITY * dt
 
         if not self.entity.air_timer:
             if self.entity.velocity.x == 0 and not self.entity.direction:
@@ -114,13 +115,12 @@ class FALL:
 
     def process_x_movement(self, dt):
         self.entity.velocity.x = calculate_x_velocity(
-            self.entity, dt) * FPS * dt
+            self.entity, dt) * dt
 
         return self
 
 
 def calculate_x_velocity(entity, dt):
-    dt *= 1000
     u = entity.velocity.x
     target_speed = entity.MAXRUN * entity.direction
     if abs(target_speed) > 0.01:
