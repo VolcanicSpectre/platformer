@@ -30,9 +30,9 @@ class Entity:
         self.INIT_JUMP_VELOCITY = (
             (2*self.JUMPHEIGHT*self.MAXRUN) / self.JUMPDISTANCE) * -1
         self.INIT_GRAVITY = (
-            (2*self.JUMPHEIGHT*self.MAXRUN**2) / self.JUMPDISTANCE**2)*0.03
+            (2*self.JUMPHEIGHT*self.MAXRUN**2) / self.JUMPDISTANCE**2)
         self.FINAL_GRAVITY = (
-            (2*self.JUMPHEIGHT*self.MAXRUN**2) / (self.JUMPDISTANCE ** 2)*1.2)*0.03
+            (2*self.JUMPHEIGHT*self.MAXRUN**2) / (self.JUMPDISTANCE ** 2)*1.2)
         self.air_timer = 0
 
     def update(self):

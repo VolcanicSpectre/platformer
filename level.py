@@ -1,6 +1,6 @@
 import pygame
 from os import path
-
+from numba import cuda
 from constants import *
 from functools import lru_cache
 from maploader import generate_map_data
