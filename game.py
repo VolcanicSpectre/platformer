@@ -1,10 +1,9 @@
-import pygame
-import cProfile
 import pstats
-
 from sys import exit
-from constants import *
 
+import pygame
+
+from constants import *
 from engine import Engine
 from level import Level
 

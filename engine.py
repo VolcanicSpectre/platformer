@@ -1,5 +1,7 @@
-from pygame.time import Clock
 from time import perf_counter
+
+from pygame.time import Clock
+
 from constants import FPS
 
 

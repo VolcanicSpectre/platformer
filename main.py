@@ -1,7 +1,7 @@
-import sys
-from os import path
-import pygame
 import cProfile
+
+import pygame
+
 from constants import *
 from game import Game
 
@@ -23,6 +23,5 @@ if __name__ == '__main__':
     if DEBUG:
         with cProfile.Profile() as pr:
             main(pr)
-
     else:
         main()

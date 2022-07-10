@@ -2,6 +2,7 @@ from enum import Enum
 from math import copysign
 from functools import partial
 from constants import FPS
+
 sign = partial(copysign, 1)
 
 
@@ -23,7 +24,7 @@ class IDLE:
 
     def process_y_movement(self, dt):
         self.entity.velocity.y = min(
-            (self.entity.FINAL_GRAVITY + self.entity.velocity.y), 2*self.entity.FINAL_GRAVITY)
+            (self.entity.FINAL_GRAVITY + self.entity.velocity.y), 2 * self.entity.FINAL_GRAVITY)
         if self.entity.air_timer:
             return FALL(self.entity)
 
@@ -53,7 +54,7 @@ class RUN:
 
     def process_y_movement(self, dt):
         self.entity.velocity.y = min(
-            (self.entity.FINAL_GRAVITY + self.entity.velocity.y), 2*self.entity.FINAL_GRAVITY)
+            (self.entity.FINAL_GRAVITY + self.entity.velocity.y), 2 * self.entity.FINAL_GRAVITY)
         if self.entity.air_timer:
             return FALL(self.entity)
 
@@ -127,8 +128,8 @@ def calculate_x_velocity(entity, dt):
     else:
         vel_power = entity.ACCELPOWER
 
-    accel_rate = pow((entity.ACCELRUN * 1/60), vel_power) * (dt*60)
-    return (move_towards(entity.velocity.x, target_velocity, accel_rate))
+    accel_rate = pow((entity.ACCELRUN * 1 / 60), vel_power) * (dt * 60)
+    return move_towards(entity.velocity.x, target_velocity, accel_rate)
 
 
 def move_towards(current, target, max_delta):

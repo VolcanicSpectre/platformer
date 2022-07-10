@@ -1,11 +1,8 @@
 import pygame
-from os import path
-from numba import cuda
-from constants import *
-from functools import lru_cache
-from maploader import generate_map_data
+
 from camera import Camera
-from entity import Entity
+from constants import *
+from maploader import generate_map_data
 from player import Player
 
 
@@ -26,7 +23,7 @@ class Level:
 
         for entity in entities:
             if entity["name"] == "player":
-                self.player = Player(entity["x"]+8, entity["y"]-80, (8, 12))
+                self.player = Player(entity["x"] + 8, entity["y"] - 80, (8, 12))
 
     def event_handler(self, event):
         self.player.event_handler(event)
@@ -49,10 +46,10 @@ class Level:
         collisions = self.get_collisions(entity)
         if collisions:
             for collision in collisions:
-                if entity.rect.right >= collision.left and entity.old_rect.right <= collision.left:
+                if entity.rect.right >= collision.left >= entity.old_rect.right:
                     entity.rect.right = collision.left
                     entity.x = entity.rect.x
-                if entity.rect.left <= collision.right and entity.old_rect.left >= collision.right:
+                if entity.rect.left <= collision.right <= entity.old_rect.left:
                     entity.rect.left = collision.right
                     entity.x = entity.rect.x
 
@@ -66,7 +63,7 @@ class Level:
                     entity.velocity.y = 0
                     entity.air_timer = 0
 
-                if entity.rect.top <= collision.bottom and entity.old_rect.top >= collision.bottom:
+                if entity.rect.top <= collision.bottom <= entity.old_rect.top:
                     entity.rect.top = collision.bottom
                     entity.y = entity.rect.y
 
@@ -96,5 +93,5 @@ class Level:
     def draw(self):
         self.draw_visible()
         pygame.transform.scale(self.display_surface,
-                               (1152, 640), dest_surface=self.screen)
+                               (WIDTH, HEIGHT), dest_surface=self.screen)
         pygame.display.flip()

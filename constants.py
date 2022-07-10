@@ -1,8 +1,9 @@
 from os import path
 from time import strftime
+
 DEBUG = False
-DEBUG_FILENAME = (strftime("%m-%d-%Y")) + ("_FRAMERATE_INDEPENDENCE.prof")
-WIDTH, HEIGHT = 1152, 640
+DEBUG_FILENAME = (strftime("%m-%d-%Y")) + "_FRAMERATE_INDEPENDENCE.prof"
+WIDTH, HEIGHT = 1920, 1080
 DS_WIDTH, DS_HEIGHT = 576, 320
 FPS = 60
 CHUNK_SIZE = 4
