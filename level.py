@@ -26,6 +26,9 @@ class Level:
                 self.player = Player(entity["x"] + 8, entity["y"] - 80, (8, 12))
 
     def event_handler(self, event):
+        if event == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                self.pause()
         self.player.event_handler(event)
 
     def global_update(self):
@@ -95,3 +98,6 @@ class Level:
         pygame.transform.scale(self.display_surface,
                                (WIDTH, HEIGHT), dest_surface=self.screen)
         pygame.display.flip()
+
+    def pause(self):
+        pass

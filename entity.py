@@ -4,13 +4,13 @@ from states import IDLE
 
 
 class Entity:
-    def __init__(self, x: int, y: int, SIZE: list[int]):
+    def __init__(self, x: int, y: int, size: tuple[int, int]):
         self.state = IDLE(self)
 
-        self.SIZE = SIZE
-        self.image = pygame.Surface(SIZE)
+        self.SIZE = size
+        self.image = pygame.Surface(size)
         self.image.fill("red")
-        self.rect = pygame.Rect(x, y, SIZE[0], SIZE[1])
+        self.rect = pygame.Rect(x, y, size[0], size[1])
         self.old_rect = self.rect.copy()
         self.events = {"right": False, "left": False, "up": False}
 

@@ -23,15 +23,15 @@ class Game:
             "{:.2f}".format(self.engine.clock.get_fps()))
         self.engine.update()
         self.events()
-        if self.current_level != None:
+        if self.current_level is not None:
             self.current_level.global_update()
 
     def events(self):
         for event in pygame.event.get():
-            if self.current_level != None:
+            if self.current_level is not None:
                 self.current_level.event_handler(event)
 
-            if event.type == pygame.QUIT:
+            if event.type == pygame.QUIT or event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                 if DEBUG:
                     stats = pstats.Stats(self.pr)
                     stats.sort_stats(pstats.SortKey.TIME)
