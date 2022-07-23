@@ -18,8 +18,8 @@ class Entity:
 
         self.velocity = pygame.Vector2(0, 0)
         self.direction = 0
-        self.MAXRUN = 50
-        self.ACCELRUN = 180
+        self.MAXRUN = 200
+        self.ACCELRUN = 350
         self.DECELRUN = 400
 
         self.TURNPOWER = 2
@@ -34,6 +34,7 @@ class Entity:
                 (2 * self.JUMPHEIGHT * self.MAXRUN ** 2) / self.JUMPDISTANCE ** 2)
         self.FINAL_GRAVITY = (
                 (2 * self.JUMPHEIGHT * self.MAXRUN ** 2) / (self.JUMPDISTANCE ** 2) * 1.2)
+        self.FINAL_GRAVITY = 0
         self.air_timer = 0
 
     def update(self):
@@ -53,7 +54,7 @@ class Entity:
         if new_state:
             self.state = new_state
         self.y += self.velocity.y * dt
-        self.rect.y = self.y
+        self.rect.y = round(self.y)
 
     def update_direction(self):
         if self.events["right"]:

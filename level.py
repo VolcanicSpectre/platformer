@@ -19,11 +19,11 @@ class Level:
         self.width, self.height, entities, self.chunks = generate_map_data(
             path.join(MAP_FOLDER, f"n{num}.json"), CHUNK_SIZE)
 
-        self.camera = Camera(DS_WIDTH, DS_HEIGHT)
+        self.camera = Camera(self.width, self.height)
 
         for entity in entities:
             if entity["name"] == "player":
-                self.player = Player(entity["x"] + 8, entity["y"] - 80, (8, 12))
+                self.player = Player(entity["x"], entity["y"] - 80, (8, 12))
 
     def event_handler(self, event):
         if event == pygame.KEYDOWN:
@@ -42,7 +42,7 @@ class Level:
 
         self.player.update()
         self.handle_collisions(self.player)
-        self.camera.focus(self.player)
+        self.camera.update(self.player.rect)
 
     def handle_collisions(self, entity):
         entity.update_x(self.engine.dt)
@@ -72,8 +72,8 @@ class Level:
 
     def get_collisions(self, entity):
         collisions = []
-        for y in range(5):  # 5= DS_HEIGHT/(CHUNKSIZE*TILESIZE)
-            for x in range(9):  # 9= DS_WIDTH/(CHUNKSIZE*TILESIZE)
+        for y in range(DS_HEIGHT // (CHUNK_SIZE * TILE_SIZE)):
+            for x in range(DS_WIDTH // (CHUNK_SIZE * TILE_SIZE)):
                 for tile in self.chunks[(x, y)]:
                     if tile.collision_type and entity.rect.colliderect(tile.rect):
                         collisions.append(tile.rect)
@@ -81,17 +81,18 @@ class Level:
 
     def draw_visible(self):
         self.display_surface.fill((0, 0, 0))
-        for y in range(5):  # 6= DS_HEIGHT/(CHUNKSIZE*TILESIZE) + 1
-            for x in range(9):  # 10= DS_WIDTH/(CHUNKSIZE*TILESIZE) + 1
+        for y in range(DS_HEIGHT // (CHUNK_SIZE * TILE_SIZE)):
+            for x in range(DS_WIDTH // (CHUNK_SIZE * TILE_SIZE)):
                 for tile in self.chunks[(x, y)]:
-                    self.display_surface.blit(tile.image, tile.pos)
+                    self.display_surface.blit(tile.image, (tile.x - self.camera.get_scroll_x(),
+                                                           tile.y - self.camera.get_scroll_y()))
 
         for entity in self.entities:
-            if entity.rect.contains(self.camera.rect) or entity.rect.colliderect(self.camera.rect):
-                self.display_surface.blit(entity.image, (entity.x, entity.y))
+            self.display_surface.blit(entity.image,
+                                      (entity.x - self.camera.get_scroll_x(), entity.y - self.camera.get_scroll_y()))
 
         self.display_surface.blit(
-            self.player.image, (self.player.x, self.player.y))
+            self.player.image, (self.player.x - self.camera.get_scroll_x(), self.player.y - self.camera.get_scroll_y()))
 
     def draw(self):
         self.draw_visible()

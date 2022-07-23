@@ -39,7 +39,7 @@ class Chunk:
 
 class Tile:
     def __init__(self, pos, custom_properties, image):
-        self.pos = pos
+        self.x, self.y = pos
         self.image = image
         self.rect = pygame.Rect(pos, (16, 16))
         self.collision_type = custom_properties["collision_type"]
