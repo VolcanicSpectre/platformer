@@ -23,12 +23,9 @@ class Level:
 
         for entity in entities:
             if entity["name"] == "player":
-                self.player = Player(entity["x"], entity["y"] - 80, (8, 12))
+                self.player = Player(entity["x"] + 8, entity["y"] - 10, (8, 12))
 
     def event_handler(self, event):
-        if event == pygame.KEYDOWN:
-            if event.key == pygame.K_ESCAPE:
-                self.pause()
         self.player.event_handler(event)
 
     def global_update(self):
@@ -72,8 +69,8 @@ class Level:
 
     def get_collisions(self, entity):
         collisions = []
-        for y in range(DS_HEIGHT // (CHUNK_SIZE * TILE_SIZE)):
-            for x in range(DS_WIDTH // (CHUNK_SIZE * TILE_SIZE)):
+        for y in range(5):  # 5= DS_HEIGHT/(CHUNKSIZE*TILESIZE)
+            for x in range(9):  # 9= DS_WIDTH/(CHUNKSIZE*TILESIZE)
                 for tile in self.chunks[(x, y)]:
                     if tile.collision_type and entity.rect.colliderect(tile.rect):
                         collisions.append(tile.rect)
@@ -99,6 +96,3 @@ class Level:
         pygame.transform.scale(self.display_surface,
                                (WIDTH, HEIGHT), dest_surface=self.screen)
         pygame.display.flip()
-
-    def pause(self):
-        pass

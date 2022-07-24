@@ -1,8 +1,7 @@
 import json
+import pygame
 import math
 from os import path
-
-import pygame
 
 
 class TileSet:
@@ -21,8 +20,9 @@ class TileSet:
             self.tile_properties = {}
             for tile in data["tiles"]:
                 self.tile_properties[tile["id"]] = {}
-                for tile_property in tile["properties"]:
-                    self.tile_properties[tile["id"]][tile_property["name"]] = tile_property["value"]
+                for property in tile["properties"]:
+                    self.tile_properties[tile["id"]
+                    ][property["name"]] = property["value"]
 
 
 class Chunk:
