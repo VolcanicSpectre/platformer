@@ -3,13 +3,13 @@ from states import IDLE
 
 
 class Entity:
-    def __init__(self, x: int, y: int, SIZE: list[int]):
+    def __init__(self, x: int, y: int, size: tuple[int, int]):
         self.state = IDLE(self)
 
-        self.SIZE = SIZE
-        self.image = pygame.Surface(SIZE)
+        self.SIZE = size
+        self.image = pygame.Surface(size)
         self.image.fill("red")
-        self.rect = pygame.Rect(x, y, SIZE[0], SIZE[1])
+        self.rect = pygame.Rect(x, y, size[0], size[1])
         self.old_rect = self.rect.copy()
         self.events = {"right": False, "left": False, "up": False}
 
@@ -17,9 +17,9 @@ class Entity:
 
         self.velocity = pygame.Vector2(0, 0)
         self.direction = 0
-        self.MAXRUN = 50
-        self.ACCELRUN = 180
-        self.DECELRUN = 400
+        self.MAXRUN = 150
+        self.ACCELRUN = 300
+        self.DECELRUN = 500
 
         self.TURNPOWER = 2
         self.STOPPOWER = 2.5
@@ -28,11 +28,11 @@ class Entity:
         self.JUMPHEIGHT = 50
         self.JUMPDISTANCE = 50
         self.INIT_JUMP_VELOCITY = (
-            (2*self.JUMPHEIGHT*self.MAXRUN) / self.JUMPDISTANCE) * -1
+                                          (2 * self.JUMPHEIGHT * self.MAXRUN) / self.JUMPDISTANCE) * -1
         self.INIT_GRAVITY = (
-            (2*self.JUMPHEIGHT*self.MAXRUN**2) / self.JUMPDISTANCE**2)*0.03
+                                    (2 * self.JUMPHEIGHT * self.MAXRUN ** 2) / self.JUMPDISTANCE ** 2) * 0.03
         self.FINAL_GRAVITY = (
-            (2*self.JUMPHEIGHT*self.MAXRUN**2) / (self.JUMPDISTANCE ** 2)*1.2)*0.03
+                                     (2 * self.JUMPHEIGHT * self.MAXRUN ** 2) / (self.JUMPDISTANCE ** 2) * 1.2) * 0.03
         self.air_timer = 0
 
     def update(self):
@@ -44,14 +44,14 @@ class Entity:
         new_state = self.state.process_x_movement(dt)
         if new_state:
             self.state = new_state
-        self.x += self.velocity.x*dt
+        self.x += self.velocity.x * dt
         self.rect.x = round(self.x)
 
     def update_y(self, dt):
         new_state = self.state.process_y_movement(dt)
         if new_state:
             self.state = new_state
-        self.y += self.velocity.y*dt
+        self.y += self.velocity.y * dt
         self.rect.y = self.y
 
     def update_direction(self):

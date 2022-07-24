@@ -22,7 +22,8 @@ class TileSet:
                 self.tile_properties[tile["id"]] = {}
                 for property in tile["properties"]:
                     self.tile_properties[tile["id"]
-                                         ][property["name"]] = property["value"]
+                    ][property["name"]] = property["value"]
+
 
 class Chunk:
     def __init__(self, tiles):
@@ -30,7 +31,7 @@ class Chunk:
 
     def __iter__(self):
         return iter(self.tiles)
-        
+
     def update_chunk(self):
         # TODO add functionality for updating chunk
         pass
@@ -38,7 +39,7 @@ class Chunk:
 
 class Tile:
     def __init__(self, pos, custom_properties, image):
-        self.pos = pos
+        self.x, self.y = pos
         self.image = image
         self.rect = pygame.Rect(pos, (16, 16))
         self.collision_type = custom_properties["collision_type"]
@@ -77,16 +78,17 @@ def generate_map_data(level_path, chunk_size):
                     x = (chunk_x * chunk_size) + (tile_x)
                     y = (chunk_y * chunk_size) + (tile_y)
 
-                    tile_index = x + (y*map_data["width"])
+                    tile_index = x + (y * map_data["width"])
                     gid = map_data["layers"][tile_layer_index]["data"][tile_index]
 
                     if gid:
                         gid -= 1
                         # get the tile image from a tileset
                         image = tile_set.image.subsurface(pygame.Rect((gid % tile_set.tileset_width) * (
-                            tile_set.tile_width), (math.floor(gid / tile_set.tileset_width)) * (tile_set.tile_height), 16, 16))
+                            tile_set.tile_width), (math.floor(gid / tile_set.tileset_width)) * (tile_set.tile_height),
+                                                                      16, 16))
                         tiles.append(
-                            Tile((x*16, y*16), tile_set.tile_properties[gid], image))
+                            Tile((x * 16, y * 16), tile_set.tile_properties[gid], image))
 
             chunk_data[(chunk_x, chunk_y)] = Chunk(tiles)
 
