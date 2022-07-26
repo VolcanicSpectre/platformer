@@ -23,7 +23,7 @@ class Level:
 
         for entity in entities:
             if entity["name"] == "player":
-                self.player = Player(entity["x"] + 8, entity["y"] - 10, (8, 12))
+                self.player = Player(entity["x"] + 8, entity["y"] - 100, (8, 12))
 
     def event_handler(self, event):
         self.player.event_handler(event)
@@ -62,15 +62,17 @@ class Level:
                     entity.y = entity.rect.y
                     entity.velocity.y = 0
                     entity.air_timer = 0
+                    entity.grounded = True
 
                 if entity.rect.top <= collision.bottom <= entity.old_rect.top:
                     entity.rect.top = collision.bottom
                     entity.y = entity.rect.y
+                    entity.grounded = False
 
     def get_collisions(self, entity):
         collisions = []
-        for y in range(5):  # 5= DS_HEIGHT/(CHUNKSIZE*TILESIZE)
-            for x in range(9):  # 9= DS_WIDTH/(CHUNKSIZE*TILESIZE)
+        for y in range(DS_HEIGHT // (CHUNK_SIZE * TILE_SIZE)):
+            for x in range(DS_WIDTH // (CHUNK_SIZE * TILE_SIZE)):
                 for tile in self.chunks[(x, y)]:
                     if tile.collision_type and entity.rect.colliderect(tile.rect):
                         collisions.append(tile.rect)
