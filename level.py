@@ -4,6 +4,8 @@ from camera import Camera
 from constants import *
 from maploader import generate_map_data
 from player import Player
+from calc import colliderect
+from states import FALL
 
 
 class Level:
@@ -49,6 +51,7 @@ class Level:
                 if entity.rect.right >= collision.left >= entity.old_rect.right:
                     entity.rect.right = collision.left
                     entity.x = entity.rect.x
+
                 if entity.rect.left <= collision.right <= entity.old_rect.left:
                     entity.rect.left = collision.right
                     entity.x = entity.rect.x
@@ -67,14 +70,13 @@ class Level:
                 if entity.rect.top <= collision.bottom <= entity.old_rect.top:
                     entity.rect.top = collision.bottom
                     entity.y = entity.rect.y
-                    entity.grounded = False
 
     def get_collisions(self, entity):
         collisions = []
         for y in range(DS_HEIGHT // (CHUNK_SIZE * TILE_SIZE)):
             for x in range(DS_WIDTH // (CHUNK_SIZE * TILE_SIZE)):
                 for tile in self.chunks[(x, y)]:
-                    if tile.collision_type and entity.rect.colliderect(tile.rect):
+                    if tile.collision_type and colliderect(entity.rect, tile.rect):
                         collisions.append(tile.rect)
         return collisions
 

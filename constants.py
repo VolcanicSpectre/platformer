@@ -3,9 +3,10 @@ from time import strftime
 
 DEBUG = False
 DEBUG_FILENAME = (strftime("%m-%d-%Y")) + "_FRAMERATE_INDEPENDENCE.prof"
-WIDTH, HEIGHT = 1152, 640
+WIDTH, HEIGHT = 1920, 1080
 DS_WIDTH, DS_HEIGHT = 576, 320
-FPS = 60
+FPS = 120
+TARGET_FPS = 60
 CHUNK_SIZE = 4
 TILE_SIZE = 16
 GAME_FOLDER = path.dirname(__file__)

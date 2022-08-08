@@ -22,20 +22,19 @@ class Entity:
         self.MAXRUN = 2.5
         self.ACCELRUN = 300
         self.DECELRUN = 500
-
+        self.ACCELAIR = 30
         self.TURNPOWER = 2
         self.STOPPOWER = 2.5
         self.ACCELPOWER = 2
 
         self.JUMPHEIGHT = 2.8 * TILE_SIZE
         self.JUMPDISTANCE = 4 * TILE_SIZE
-        self.INIT_JUMP_VELOCITY = (
-                                          (2 * self.JUMPHEIGHT * self.MAXRUN) / self.JUMPDISTANCE) * -1
-        self.INIT_GRAVITY = (
-                (2 * self.JUMPHEIGHT * self.MAXRUN ** 2) / (self.JUMPDISTANCE ** 2))
-        self.FINAL_GRAVITY = (
-                (2 * self.JUMPHEIGHT * self.MAXRUN ** 2) / (self.JUMPDISTANCE ** 2))
-        print(self.INIT_GRAVITY, self.FINAL_GRAVITY, self.INIT_JUMP_VELOCITY)
+        self.INIT_JUMP_VELOCITY = 2 * (
+                (2 * self.JUMPHEIGHT * self.MAXRUN) / self.JUMPDISTANCE) * -1
+        self.INIT_GRAVITY = 100 * (
+                (self.JUMPHEIGHT * self.MAXRUN ** 2) / (2 * self.JUMPDISTANCE ** 2))
+        self.FINAL_GRAVITY = 100 * (
+                (self.JUMPHEIGHT * self.MAXRUN ** 2) / (self.JUMPDISTANCE ** 2))
         self.air_timer = 0
         self.grounded = False
 
@@ -48,14 +47,14 @@ class Entity:
         new_state = self.state.process_x_movement(dt)
         if new_state:
             self.state = new_state
-        self.x += self.velocity.x * dt * 60
+        self.x += self.velocity.x * dt * TARGET_FPS
         self.rect.x = round(self.x)
 
     def update_y(self, dt):
         new_state = self.state.process_y_movement(dt)
         if new_state:
             self.state = new_state
-        self.y += self.velocity.y * dt * 60
+        self.y += self.velocity.y * dt * TARGET_FPS
         self.rect.y = round(self.y)
         self.y_heights.append(self.rect.y)
 

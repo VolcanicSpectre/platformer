@@ -2,6 +2,7 @@ import json
 import pygame
 import math
 from os import path
+from constants import *
 
 
 class TileSet:
@@ -41,7 +42,7 @@ class Tile:
     def __init__(self, pos, custom_properties, image):
         self.x, self.y = pos
         self.image = image
-        self.rect = pygame.Rect(pos, (16, 16))
+        self.rect = pygame.Rect(pos, (TILE_SIZE, TILE_SIZE))
         self.collision_type = custom_properties["collision_type"]
 
 
