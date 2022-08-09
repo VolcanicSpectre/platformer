@@ -3,6 +3,7 @@ import pygame
 from camera import Camera
 from constants import *
 from maploader import generate_map_data
+from calc import colliderect
 from player import Player
 from states import FALL
 
