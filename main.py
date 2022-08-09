@@ -15,11 +15,8 @@ def main(pr=None):
     game = Game(pr)
     running = True
     game.start(screen, display_surface)
-    frame = 0
     while running:
         game.update()
-        print()
-        frame += 1
 
 
 if __name__ == "__main__":

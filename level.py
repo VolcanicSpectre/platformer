@@ -4,7 +4,6 @@ from camera import Camera
 from constants import *
 from maploader import generate_map_data
 from player import Player
-from calc import colliderect
 from states import FALL
 
 
@@ -25,7 +24,7 @@ class Level:
 
         for entity in entities:
             if entity["name"] == "player":
-                self.player = Player(entity["x"] + 8, entity["y"] - 100, (8, 12))
+                self.player = Player(entity["x"] + 30, entity["y"] - 100, (8, 12))
 
     def event_handler(self, event):
         self.player.event_handler(event)
@@ -49,11 +48,11 @@ class Level:
         if collisions:
             for collision in collisions:
                 if entity.rect.right >= collision.left >= entity.old_rect.right:
-                    entity.rect.right = collision.left
+                    entity.rect.right = collision.left - 1
                     entity.x = entity.rect.x
 
                 if entity.rect.left <= collision.right <= entity.old_rect.left:
-                    entity.rect.left = collision.right
+                    entity.rect.left = collision.right + 1
                     entity.x = entity.rect.x
 
         entity.update_y(self.engine.dt)
@@ -61,7 +60,7 @@ class Level:
         if collisions:
             for collision in collisions:
                 if entity.rect.bottom >= collision.top and entity.old_rect.bottom >= collision.top:
-                    entity.rect.bottom = collision.top
+                    entity.rect.bottom = collision.top - 1
                     entity.y = entity.rect.y
                     entity.velocity.y = 0
                     entity.air_timer = 0
