@@ -15,7 +15,7 @@ class IDLE:
         if self.entity.direction:
             return RUN(self.entity)
 
-        if self.entity.events["up"] and self.entity.air_timer == 0:
+        if self.entity.events["up"] and self.entity.air_timer < 0.05:
             return JUMP(self.entity)
 
         return self

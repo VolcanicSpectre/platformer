@@ -49,19 +49,21 @@ class Level:
         if collisions:
             for collision in collisions:
                 if entity.rect.right >= collision.left >= entity.old_rect.right:
-                    entity.rect.right = collision.left - 1
+                    entity.rect.right = collision.left
                     entity.x = entity.rect.x
 
                 if entity.rect.left <= collision.right <= entity.old_rect.left:
-                    entity.rect.left = collision.right + 1
+                    entity.rect.left = collision.right
                     entity.x = entity.rect.x
 
         entity.update_y(self.engine.dt)
+        entity.grounded = False
+        entity.rect.bottom += 1
         collisions = self.get_collisions(entity)
         if collisions:
             for collision in collisions:
                 if entity.rect.bottom >= collision.top and entity.old_rect.bottom >= collision.top:
-                    entity.rect.bottom = collision.top - 1
+                    entity.rect.bottom = collision.top
                     entity.y = entity.rect.y
                     entity.velocity.y = 0
                     entity.air_timer = 0
@@ -76,7 +78,7 @@ class Level:
         for y in range(DS_HEIGHT // (CHUNK_SIZE * TILE_SIZE)):
             for x in range(DS_WIDTH // (CHUNK_SIZE * TILE_SIZE)):
                 for tile in self.chunks[(x, y)]:
-                    if tile.collision_type and colliderect(entity.rect, tile.rect):
+                    if tile.collision_type and entity.rect.colliderect(tile.rect):
                         collisions.append(tile.rect)
         return collisions
 
