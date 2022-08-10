@@ -2,7 +2,7 @@ from functools import partial
 from math import copysign
 
 from calc import move_towards
-from constants import TARGET_FPS
+from constants import TARGET_FPS, FPS
 
 sign = partial(copysign, 1)
 
@@ -123,15 +123,13 @@ def calculate_x_velocity(entity):
     else:
         vel_power = entity.ACCELPOWER
 
-    accel_rate = pow((entity.ACCELRUN * 1 / TARGET_FPS), vel_power)
+    accel_rate = pow((entity.ACCELRUN / TARGET_FPS), vel_power)
     return move_towards(entity.velocity.x, target_velocity, accel_rate)
 
 
 def calculate_y_velocity(entity):
     if entity.velocity.y < 0:
-        accel_rate = pow((entity.ACCELAIR * 1 / TARGET_FPS), 2)
+        mult = 1
     else:
-        accel_rate = pow((entity.ACCELAIR * 1 / TARGET_FPS), 2)
-
-    target_velocity = 2 * entity.FINAL_GRAVITY
-    return move_towards(entity.velocity.y, target_velocity, accel_rate)
+        mult = 0.5
+    return move_towards(entity.velocity.y, entity.MAXFALL, (entity.GRAVITY * mult) / FPS)

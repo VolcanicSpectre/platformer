@@ -7,7 +7,6 @@ from constants import *
 from engine import Engine
 from level import Level
 
-
 class Game:
     def __init__(self, pr):
         self.pr = pr
