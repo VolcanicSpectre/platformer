@@ -14,28 +14,37 @@ class Entity:
         self.rect = pygame.Rect(x, y, size[0], size[1])
         self.old_rect = self.rect.copy()
         self.events = {"right": False, "left": False, "up": False}
-
+        self.direction = pygame.math.Vector2(0, 0)
         self.x, self.y = x, y
 
         self.velocity = pygame.Vector2(0, 0)
-        self.direction = 0
-        self.MAXRUN = 2.5
-        self.ACCELRUN = 300
-        self.DECELRUN = 500
-        self.ACCELAIR = 25
-        self.TURNPOWER = 2
-        self.STOPPOWER = 2.5
-        self.ACCELPOWER = 2
 
-        self.JUMPHEIGHT = 2.5 * TILE_SIZE
+        self.MAX_RUN = 1.25
+        self.ACCEL_RUN = 150
+        self.DECEL_RUN = 250
+        self.ACCEL_AIR = 25
+        self.TURN_POWER = 2
+        self.STOP_POWER = 2.5
+        self.ACCEL_POWER = 2
+        self.RUN_REDUCE = 1
+
+        self.JUMP_HEIGHT = 2.8 * TILE_SIZE
         self.TIME_TO_JUMP_PEAK = 0.2
+        self.JUMP_GRACE_TIME = 100
 
-        self.GRAVITY = (2 * self.JUMPHEIGHT) / (pow(self.TIME_TO_JUMP_PEAK, 2))
+        self.GRAVITY = (2 * self.JUMP_HEIGHT) / (pow(self.TIME_TO_JUMP_PEAK, 2))
         self.INIT_JUMP_VELOCITY = self.GRAVITY * self.TIME_TO_JUMP_PEAK * -1
-        print(self.GRAVITY)
         self.MAXFALL = self.GRAVITY / 5
         self.air_timer = 0
         self.grounded = False
+        self.can_jump = False
+
+        self.can_dash = False
+        self.is_dashing = False
+
+        self.DASH_POWER = None
+        self.DASH_TIME = None
+        self.DASH_MIN_TIME = None
 
     def update(self):
         self.old_rect = self.rect.copy()
@@ -59,11 +68,11 @@ class Entity:
 
     def update_direction(self):
         if self.events["right"]:
-            self.direction = 1
+            self.direction.x = 1
         elif self.events["left"]:
-            self.direction = -1
+            self.direction.x = -1
         else:
-            self.direction = 0
+            self.direction.x = 0
 
 
 def load_assets():

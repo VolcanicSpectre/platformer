@@ -3,7 +3,6 @@ import pygame
 from camera import Camera
 from constants import *
 from maploader import generate_map_data
-from calc import colliderect
 from player import Player
 from states import FALL
 
@@ -68,6 +67,7 @@ class Level:
                     entity.velocity.y = 0
                     entity.air_timer = 0
                     entity.grounded = True
+                    entity.can_jump = True
 
                 if entity.rect.top <= collision.bottom <= entity.old_rect.top:
                     entity.rect.top = collision.bottom

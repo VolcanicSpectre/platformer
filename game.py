@@ -2,10 +2,10 @@ import pstats
 from sys import exit
 
 import pygame
-
 from constants import *
 from engine import Engine
 from level import Level
+
 
 class Game:
     def __init__(self, pr):
