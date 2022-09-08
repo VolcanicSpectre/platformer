@@ -30,6 +30,7 @@ class Level:
         self.player.event_handler(event)
 
     def global_update(self):
+        print(self.player.state)
         self.update()
         self.draw()
 
@@ -68,6 +69,7 @@ class Level:
                     entity.air_timer = 0
                     entity.grounded = True
                     entity.can_jump = True
+                    entity.can_dash = True
 
                 if entity.rect.top <= collision.bottom <= entity.old_rect.top:
                     entity.rect.top = collision.bottom
@@ -84,8 +86,8 @@ class Level:
 
     def draw_visible(self):
         self.display_surface.fill((0, 0, 0))
-        for y in range(DS_HEIGHT // (CHUNK_SIZE * TILE_SIZE)-1):
-            for x in range(DS_WIDTH // (CHUNK_SIZE * TILE_SIZE)-1):
+        for y in range(DS_HEIGHT // (CHUNK_SIZE * TILE_SIZE)):
+            for x in range(DS_WIDTH // (CHUNK_SIZE * TILE_SIZE)):
                 for tile in self.chunks[(x, y)]:
                     self.display_surface.blit(tile.image, (tile.x - self.camera.get_scroll_x(),
                                                            tile.y - self.camera.get_scroll_y()))

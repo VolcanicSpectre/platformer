@@ -15,6 +15,8 @@ class IDLE:
         if self.entity.direction.x:
             return RUN(self.entity)
 
+        if self.entity.events["dash"] and self.entity.can_dash:
+            return DASH(self.entity, self.entity.direction)
         if self.entity.events["up"] and self.entity.air_timer <= self.entity.JUMP_GRACE_TIME:
             return JUMP(self.entity)
 
@@ -39,6 +41,9 @@ class RUN:
         self.entity = entity
 
     def input_handler(self):
+        if self.entity.events["dash"] and self.entity.can_dash:
+            return DASH(self.entity, self.entity.direction)
+
         if self.entity.events["up"] and self.entity.air_timer <= self.entity.JUMP_GRACE_TIME:
             return JUMP(self.entity)
 
@@ -67,25 +72,43 @@ class RUN:
 
 
 class DASH:
-    def __init__(self, entity):
+    def __init__(self, entity, dash_direction):
         self.entity = entity
-        self.dash_timer = entity.DASH_TIME
+        self.entity.can_dash = False
+        self.entity.is_dashing = True
+        self.dash_direction = dash_direction
+        self.dash_timer = 0
 
     def input_handler(self):
         return self
 
     def process_x_movement(self, dt):
-        self.dash_timer -= dt
-        self.entity.velocity.x = calculate_x_velocity(self.entity)
+        self.dash_timer += dt
+        if self.dash_timer > self.entity.DASH_DURATION:
+            self.is_dashing = False
+            return FALL(self.entity)
 
-    def process_y_move(self):
-        pass
+        if self.dash_timer > self.entity.MIN_DASH_DURATION:
+            self.entity.velocity.x = calculate_x_velocity(self.entity)
+        else:
+            self.entity.velocity.x = self.entity.MAX_RUN / self.entity.DASH_POWER
+            self.entity.velocity.x = self.entity.velocity.dot(self.entity.DASH_POWER * self.dash_direction)
+
+    def process_y_movement(self, dt):
+        if self.dash_timer > self.entity.MIN_DASH_DURATION:
+            self.entity.velocity.y = calculate_y_velocity(self.entity)
+        else:
+            self.entity.velocity.y = self.entity.velocity.dot(self.entity.DASH_POWER * self.dash_direction)
 
 
 class JUMP:
     def __init__(self, entity):
         self.entity = entity
         self.entity.y_heights = []
+
+    def input_handler(self):
+        if self.entity.events["dash"] and self.entity.can_dash:
+            return DASH(self.entity, self.entity.direction)
 
     def process_y_movement(self, dt):
         self.entity.velocity.y = self.entity.INIT_JUMP_VELOCITY
@@ -96,7 +119,6 @@ class JUMP:
 
     def process_x_movement(self, dt):
         self.entity.velocity.x = calculate_x_velocity(self.entity)
-
         return self
 
 
@@ -105,6 +127,9 @@ class FALL:
         self.entity = entity
 
     def input_handler(self):
+        if self.entity.events["dash"] and self.entity.can_dash:
+            return DASH(self.entity, self.entity.direction)
+
         if self.entity.events["up"] and self.entity.air_timer <= self.entity.JUMP_GRACE_TIME and self.entity.can_jump:
             return JUMP(self.entity)
 

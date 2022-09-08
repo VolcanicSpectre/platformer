@@ -3,8 +3,8 @@ from constants import *
 
 class Camera:
     def __init__(self, width, height):
-        self.width = width
-        self.height = height
+        self.width = width * TILE_SIZE
+        self.height = height * TILE_SIZE
         self.true_scroll_x = 0
         self.true_scroll_y = 0
         self.scroll_x = 0

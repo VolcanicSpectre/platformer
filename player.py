@@ -14,6 +14,8 @@ class Player(Entity):
                     self.events["left"] = True
                 case pygame.K_UP:
                     self.events["up"] = True
+                case pygame.K_SPACE:
+                    self.events["dash"] = True
 
         elif event.type == pygame.KEYUP:
             match event.key:
@@ -23,3 +25,5 @@ class Player(Entity):
                     self.events["left"] = False
                 case pygame.K_UP:
                     self.events["up"] = False
+                case pygame.K_SPACE:
+                    self.events["dash"] = False

@@ -13,7 +13,7 @@ class Entity:
         self.image.fill("red")
         self.rect = pygame.Rect(x, y, size[0], size[1])
         self.old_rect = self.rect.copy()
-        self.events = {"right": False, "left": False, "up": False}
+        self.events = {"right": False, "left": False, "up": False, "dash": False}
         self.direction = pygame.math.Vector2(0, 0)
         self.x, self.y = x, y
 
@@ -42,9 +42,9 @@ class Entity:
         self.can_dash = False
         self.is_dashing = False
 
-        self.DASH_POWER = None
-        self.DASH_TIME = None
-        self.DASH_MIN_TIME = None
+        self.DASH_POWER = 1.1
+        self.DASH_DURATION = 0.4
+        self.MIN_DASH_DURATION = 0.2
 
     def update(self):
         self.old_rect = self.rect.copy()
@@ -64,7 +64,6 @@ class Entity:
             self.state = new_state
         self.y += self.velocity.y * dt
         self.rect.y = round(self.y)
-        self.y_heights.append(self.rect.y)
 
     def update_direction(self):
         if self.events["right"]:
