@@ -78,7 +78,8 @@ class DASH:
         self.dash_timer -= dt
         self.entity.velocity.x = calculate_x_velocity(self.entity)
 
-    def process_y_move
+    def process_y_move(self):
+        pass
 
 
 class JUMP:
