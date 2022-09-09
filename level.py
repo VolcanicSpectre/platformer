@@ -30,7 +30,6 @@ class Level:
         self.player.event_handler(event)
 
     def global_update(self):
-        print(self.player.state)
         self.update()
         self.draw()
 

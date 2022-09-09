@@ -92,19 +92,22 @@ class DASH:
             self.entity.velocity.x = calculate_x_velocity(self.entity)
         else:
             self.entity.velocity.x = self.entity.MAX_RUN / self.entity.DASH_POWER
-            self.entity.velocity.x = self.entity.velocity.dot(self.entity.DASH_POWER * self.dash_direction)
+            self.entity.velocity.x *= self.entity.DASH_POWER * self.dash_direction.x
 
     def process_y_movement(self, dt):
         if self.dash_timer > self.entity.MIN_DASH_DURATION:
             self.entity.velocity.y = calculate_y_velocity(self.entity)
         else:
-            self.entity.velocity.y = self.entity.velocity.dot(self.entity.DASH_POWER * self.dash_direction)
+            self.entity.velocity.y = self.entity.INIT_JUMP_VELOCITY
+            self.entity.grounded = False
+            self.entity.can_jump = False
+            self.entity.air_timer += dt
+            self.entity.velocity.y *= self.entity.DASH_POWER * self.dash_direction.y
 
 
 class JUMP:
     def __init__(self, entity):
         self.entity = entity
-        self.entity.y_heights = []
 
     def input_handler(self):
         if self.entity.events["dash"] and self.entity.can_dash:
