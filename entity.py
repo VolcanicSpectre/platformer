@@ -43,6 +43,7 @@ class Entity:
         self.is_dashing = False
 
         self.DASH_POWER = 1.1
+        self.DASH_ACCEL = 400
         self.DASH_DURATION = 0.4
         self.MIN_DASH_DURATION = 0.2
 
@@ -72,6 +73,11 @@ class Entity:
             self.direction.x = -1
         else:
             self.direction.x = 0
+
+        if self.events["up"]:
+            self.direction.y = -1
+        else:
+            self.direction.y = 0
 
 
 def load_assets():

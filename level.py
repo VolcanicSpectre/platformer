@@ -68,7 +68,7 @@ class Level:
                     entity.air_timer = 0
                     entity.grounded = True
                     entity.can_jump = True
-                    entity.can_dash = True
+                    entity.can_dash = not entity.is_dashing
 
                 if entity.rect.top <= collision.bottom <= entity.old_rect.top:
                     entity.rect.top = collision.bottom

@@ -1,5 +1,6 @@
 from functools import partial
 from math import copysign
+from pygame.math import Vector2
 
 from calc import move_towards
 from constants import TARGET_FPS, FPS
@@ -15,7 +16,7 @@ class IDLE:
         if self.entity.direction.x:
             return RUN(self.entity)
 
-        if self.entity.events["dash"] and self.entity.can_dash:
+        if self.entity.events["dash"] and self.entity.can_dash and self.entity.direction != Vector2(0, 0):
             return DASH(self.entity, self.entity.direction)
         if self.entity.events["up"] and self.entity.air_timer <= self.entity.JUMP_GRACE_TIME:
             return JUMP(self.entity)
@@ -41,7 +42,7 @@ class RUN:
         self.entity = entity
 
     def input_handler(self):
-        if self.entity.events["dash"] and self.entity.can_dash:
+        if self.entity.events["dash"] and self.entity.can_dash and self.entity.direction != Vector2(0, 0):
             return DASH(self.entity, self.entity.direction)
 
         if self.entity.events["up"] and self.entity.air_timer <= self.entity.JUMP_GRACE_TIME:
@@ -85,24 +86,26 @@ class DASH:
     def process_x_movement(self, dt):
         self.dash_timer += dt
         if self.dash_timer > self.entity.DASH_DURATION:
-            self.is_dashing = False
+            self.entity.is_dashing = False
             return FALL(self.entity)
 
         if self.dash_timer > self.entity.MIN_DASH_DURATION:
             self.entity.velocity.x = calculate_x_velocity(self.entity)
         else:
-            self.entity.velocity.x = self.entity.MAX_RUN / self.entity.DASH_POWER
-            self.entity.velocity.x *= self.entity.DASH_POWER * self.dash_direction.x
+            self.entity.velocity.x = move_towards(self.entity.velocity.x, pow(abs(self.entity.velocity.x),
+                                                                              self.entity.DASH_POWER) * self.dash_direction.x,
+                                                  self.entity.DASH_ACCEL / TARGET_FPS)
 
     def process_y_movement(self, dt):
         if self.dash_timer > self.entity.MIN_DASH_DURATION:
             self.entity.velocity.y = calculate_y_velocity(self.entity)
         else:
-            self.entity.velocity.y = self.entity.INIT_JUMP_VELOCITY
             self.entity.grounded = False
             self.entity.can_jump = False
             self.entity.air_timer += dt
-            self.entity.velocity.y *= self.entity.DASH_POWER * self.dash_direction.y
+            self.entity.velocity.y = move_towards(0, pow(abs(self.entity.velocity.y),
+                                                         self.entity.DASH_POWER) * self.dash_direction.y,
+                                                  self.entity.DASH_ACCEL / TARGET_FPS)
 
 
 class JUMP:
