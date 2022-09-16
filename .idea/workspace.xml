@@ -3,7 +3,10 @@
   <component name="ChangeListManager">
     <list default="true" id="5f9d6df4-80da-4126-884e-58c448feba29" name="Changes" comment="commit master">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/states.py" beforeDir="false" afterPath="$PROJECT_DIR$/states.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/maps/test.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/maps/test.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/maps/test2.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/tilesets/textures.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/tilesets/textures.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/level.py" beforeDir="false" afterPath="$PROJECT_DIR$/level.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
