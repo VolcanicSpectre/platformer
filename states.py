@@ -92,8 +92,9 @@ class DASH:
         if self.dash_timer > self.entity.MIN_DASH_DURATION:
             self.entity.velocity.x = calculate_x_velocity(self.entity)
         else:
-            self.entity.velocity.x = move_towards(self.entity.MAX_RUN, pow(abs(self.entity.velocity.x),
-                                                                              self.entity.DASH_POWER) * self.dash_direction.x,
+            self.entity.velocity.x = move_towards(self.entity.MAX_RUN * self.dash_direction.x,
+                                                  pow(abs(self.entity.velocity.x),
+                                                      self.entity.DASH_POWER) * self.dash_direction.x,
                                                   self.entity.DASH_ACCEL / TARGET_FPS)
 
     def process_y_movement(self, dt):
@@ -103,9 +104,11 @@ class DASH:
             self.entity.grounded = False
             self.entity.can_jump = False
             self.entity.air_timer += dt
-            self.entity.velocity.y = move_towards(self.entity.INIT_JUMP_VELOCITY * self.entity.DASH_DURATION * self.entity.DASH_POWER, pow(abs(self.entity.velocity.y),
-                                                         self.entity.DASH_POWER) * self.dash_direction.y,
-                                                  self.entity.DASH_ACCEL / TARGET_FPS)
+            self.entity.velocity.y = move_towards(
+                self.entity.INIT_JUMP_VELOCITY * self.entity.DASH_DURATION * self.entity.DASH_POWER,
+                pow(abs(self.entity.velocity.y),
+                    self.entity.DASH_POWER) * self.dash_direction.y,
+                self.entity.DASH_ACCEL / TARGET_FPS)
 
 
 class JUMP:
