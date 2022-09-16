@@ -18,13 +18,13 @@ class Level:
         self.particles = []
 
         self.width, self.height, entities, self.chunks = generate_map_data(
-            path.join(MAP_FOLDER, f"{num}.json"), CHUNK_SIZE)
+            path.join(MAP_FOLDER, f"test.json"), CHUNK_SIZE)
 
         self.camera = Camera(self.width, self.height)
 
         for entity in entities:
             if entity["name"] == "player":
-                self.player = Player(entity["x"] + 30, entity["y"] - 100, (8, 12))
+                self.player = Player(entity["x"], entity["y"], (8, 12))
 
     def event_handler(self, event):
         self.player.event_handler(event)
@@ -84,6 +84,10 @@ class Level:
         return collisions
 
     def draw_visible(self):
+        render_queue =
+        for chunk_pos in self.chunks:
+            if pygame.Rect(chunk_pos[0] * CHUNK_SIZE * TILE_SIZE, chunk_pos[1] * CHUNK_SIZE * TILE_SIZE, CHUNK_SIZE * TILE_SIZE, CHUNK_SIZE * TILE_SIZE).colliderect(self.camera.true_scroll_x, self.camera.true_scroll_y, DS_WIDTH, DS_HEIGHT):
+
         self.display_surface.fill((0, 0, 0))
         for y in range(DS_HEIGHT // (CHUNK_SIZE * TILE_SIZE)):
             for x in range(DS_WIDTH // (CHUNK_SIZE * TILE_SIZE)):
