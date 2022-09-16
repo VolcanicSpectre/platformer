@@ -84,10 +84,10 @@ class Level:
         return collisions
 
     def draw_visible(self):
-        render_queue =
+        render_queue = None
         for chunk_pos in self.chunks:
             if pygame.Rect(chunk_pos[0] * CHUNK_SIZE * TILE_SIZE, chunk_pos[1] * CHUNK_SIZE * TILE_SIZE, CHUNK_SIZE * TILE_SIZE, CHUNK_SIZE * TILE_SIZE).colliderect(self.camera.true_scroll_x, self.camera.true_scroll_y, DS_WIDTH, DS_HEIGHT):
-
+                pass
         self.display_surface.fill((0, 0, 0))
         for y in range(DS_HEIGHT // (CHUNK_SIZE * TILE_SIZE)):
             for x in range(DS_WIDTH // (CHUNK_SIZE * TILE_SIZE)):
