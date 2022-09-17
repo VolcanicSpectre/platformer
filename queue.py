@@ -1,6 +1,6 @@
 class Queue:
-    def __init__(self, MAX_SIZE):
-        self.MAX_SIZE = MAX_SIZE
+    def __init__(self, max_size):
+        self.MAX_SIZE = max_size
         self.queue = []
         self.front, self.rear = -1, -1
 
@@ -12,7 +12,7 @@ class Queue:
 
     def enqueue(self, item):
         if self.is_full():
-            return
+            return FullQueue
         if self.is_empty():
             self.front = 0
             self.rear = 0
@@ -22,7 +22,7 @@ class Queue:
 
     def dequeue(self):
         if self.is_empty():
-            return IndexError
+            return EmptyQueue
         else:
             item = self.queue.pop(self.front)
             if self.front == 0 and self.rear == 0:
@@ -32,6 +32,12 @@ class Queue:
 
             return item
 
+
 class EmptyQueue(Exception):
-    def __init__(self, message):
-        pass
+    """ Raised when a queue is empty"""
+    pass
+
+
+class FullQueue(Exception):
+    """Raised when a queue is full"""
+    pass
