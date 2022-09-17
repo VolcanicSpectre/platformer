@@ -2,9 +2,10 @@ import pygame
 
 from camera import Camera
 from constants import *
-from maploader import generate_map_data
+from map_loader import generate_map_data
 from player import Player
-from states import FALL
+from render_object import RenderObject
+from queue import CircularQueue
 
 
 class Level:
@@ -13,6 +14,7 @@ class Level:
         self.num = num
         self.screen = screen
         self.display_surface = display_surface
+        self.render_queue = CircularQueue(100, RenderObject)
 
         self.entities = []
         self.particles = []
@@ -31,7 +33,7 @@ class Level:
 
     def global_update(self):
         self.update()
-        self.draw()
+        self.render_visible()
 
     def update(self):
         for entity in self.entities:
@@ -83,27 +85,26 @@ class Level:
                         collisions.append(tile.rect)
         return collisions
 
-    def draw_visible(self):
-        render_queue = None
-        for chunk_pos in self.chunks:
-            if pygame.Rect(chunk_pos[0] * CHUNK_SIZE * TILE_SIZE, chunk_pos[1] * CHUNK_SIZE * TILE_SIZE, CHUNK_SIZE * TILE_SIZE, CHUNK_SIZE * TILE_SIZE).colliderect(self.camera.true_scroll_x, self.camera.true_scroll_y, DS_WIDTH, DS_HEIGHT):
-                pass
-        self.display_surface.fill((0, 0, 0))
-        for y in range(DS_HEIGHT // (CHUNK_SIZE * TILE_SIZE)):
-            for x in range(DS_WIDTH // (CHUNK_SIZE * TILE_SIZE)):
-                for tile in self.chunks[(x, y)]:
-                    self.display_surface.blit(tile.image, (tile.x - self.camera.get_scroll_x(),
-                                                           tile.y - self.camera.get_scroll_y()))
+    def update_render_queue(self):
+        for chunk_x, chunk_y in self.chunks:
+            if pygame.Rect(chunk_x * CHUNK_SIZE * TILE_SIZE, chunk_y * CHUNK_SIZE * TILE_SIZE,
+                           CHUNK_SIZE * TILE_SIZE, CHUNK_SIZE * TILE_SIZE).colliderect(self.camera.true_scroll_x,
+                                                                                       self.camera.true_scroll_y,
+                                                                                       DS_WIDTH, DS_HEIGHT):
+                for tile in self.chunks[chunk_x, chunk_y]:
+                    self.render_queue.enqueue(RenderObject(tile.x, tile.y, pygame.surfarray.array2d(tile.image)))
 
         for entity in self.entities:
-            self.display_surface.blit(entity.image,
-                                      (entity.x - self.camera.get_scroll_x(), entity.y - self.camera.get_scroll_y()))
+            self.render_queue.enqueue(RenderObject(entity.x, entity.y, pygame.surfarray.array2d(entity.image)))
 
-        self.display_surface.blit(
-            self.player.image, (self.player.x - self.camera.get_scroll_x(), self.player.y - self.camera.get_scroll_y()))
-
-    def draw(self):
-        self.draw_visible()
-        pygame.transform.scale(self.display_surface,
-                               (WIDTH, HEIGHT), dest_surface=self.screen)
+        self.render_queue.enqueue(
+            RenderObject(self.player.x, self.player.y, pygame.surfarray.array2d(self.player.image)))
         pygame.display.flip()
+
+    def render_visible(self):
+        self.update_render_queue()
+        while not self.render_queue.is_empty():
+            render_object = self.render_queue.dequeue()
+            self.display_surface.blit(pygame.surfarray.make_surface(render_object.image),
+                                      render_object.x - self.camera.get_scroll_x(),
+                                      render_object.y - self.camera.get_scroll_y())
