@@ -1,5 +1,6 @@
 from functools import partial
 from math import copysign
+
 from pygame.math import Vector2
 
 from calc import move_towards
@@ -77,6 +78,7 @@ class DASH:
         self.entity = entity
         self.entity.can_dash = False
         self.entity.is_dashing = True
+        self.entity.dash_cooldown_timer = self.entity.DASH_COOLDOWN
         self.dash_direction = dash_direction
         self.dash_timer = 0
 
@@ -106,11 +108,10 @@ class DASH:
             self.entity.grounded = False
             self.entity.can_jump = False
             self.entity.air_timer += dt
-            self.entity.velocity.y = move_towards(
-                self.entity.INIT_JUMP_VELOCITY * self.entity.DASH_DURATION * self.entity.DASH_POWER,
-                pow(abs(self.entity.velocity.y),
-                    self.entity.DASH_POWER) * self.dash_direction.y,
-                self.entity.DASH_ACCEL / TARGET_FPS)
+            self.entity.velocity.y = move_towards(self.entity.INIT_JUMP_VELOCITY * self.entity.Y_AXIS_MULT,
+                                                  pow(abs(self.entity.velocity.y),
+                                                      self.entity.DASH_POWER) * self.dash_direction.y,
+                                                  self.entity.DASH_ACCEL / TARGET_FPS)
 
 
 class JUMP:

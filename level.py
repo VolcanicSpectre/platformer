@@ -40,7 +40,7 @@ class Level:
             entity.update()
             self.handle_collisions(entity)
 
-        self.player.update()
+        self.player.update(self.engine.dt)
         self.handle_collisions(self.player)
         self.camera.update(self.player.rect)
 
@@ -70,7 +70,7 @@ class Level:
                     entity.air_timer = 0
                     entity.grounded = True
                     entity.can_jump = True
-                    entity.can_dash = not entity.is_dashing
+                    entity.can_dash = not entity.is_dashing and entity.dash_cooldown_timer <= 0
 
                 if entity.rect.top <= collision.bottom <= entity.old_rect.top:
                     entity.rect.top = collision.bottom

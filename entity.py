@@ -41,14 +41,17 @@ class Entity:
 
         self.can_dash = False
         self.is_dashing = False
-
+        self.dash_cooldown_timer = 0
         self.DASH_POWER = 3
         self.DASH_ACCEL = 400
+        self.Y_AXIS_MULT = 0.5
         self.DASH_DURATION = 0.1
         self.MIN_DASH_DURATION = 0.2
+        self.DASH_COOLDOWN = 0.3
 
-    def update(self):
+    def update(self, dt):
         self.old_rect = self.rect.copy()
+        self.update_dash_cooldown(dt)
         self.update_direction()
         self.state = self.state.input_handler()
 
@@ -78,6 +81,10 @@ class Entity:
             self.direction.y = -1
         else:
             self.direction.y = 0
+
+    def update_dash_cooldown(self, dt):
+        self.dash_cooldown_timer -= dt
+        self.dash_cooldown_timer = max(0, self.dash_cooldown_timer)
 
 
 def load_assets():
