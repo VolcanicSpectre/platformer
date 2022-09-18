@@ -42,9 +42,9 @@ class Entity:
         self.can_dash = False
         self.is_dashing = False
 
-        self.DASH_POWER = 1.1
+        self.DASH_POWER = 3
         self.DASH_ACCEL = 400
-        self.DASH_DURATION = 0.4
+        self.DASH_DURATION = 0.1
         self.MIN_DASH_DURATION = 0.2
 
     def update(self):
