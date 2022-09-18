@@ -118,7 +118,7 @@ class JUMP:
         self.entity = entity
 
     def input_handler(self):
-        if self.entity.events["dash"] and self.entity.can_dash:
+        if self.entity.events["dash"] and self.entity.can_dash and self.entity.direction != Vector2(0, 0):
             return DASH(self.entity, self.entity.direction)
 
     def process_y_movement(self, dt):
@@ -138,7 +138,7 @@ class FALL:
         self.entity = entity
 
     def input_handler(self):
-        if self.entity.events["dash"] and self.entity.can_dash:
+        if self.entity.events["dash"] and self.entity.can_dash and self.entity.direction != Vector2(0, 0):
             return DASH(self.entity, self.entity.direction)
 
         if self.entity.events["up"] and self.entity.air_timer <= self.entity.JUMP_GRACE_TIME and self.entity.can_jump:
