@@ -104,7 +104,6 @@ class Level:
 
         self.render_queue.enqueue(
             RenderObject(self.player.x, self.player.y, self.player.image))
-        pygame.display.flip()
 
     def render_visible(self):
         self.display_surface.fill((0, 0, 0))
