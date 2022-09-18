@@ -4,8 +4,8 @@ from camera import Camera
 from constants import *
 from map_loader import generate_map_data
 from player import Player
+from circular_queue import CircularQueue
 from render_object import RenderObject
-from queue import CircularQueue
 
 
 class Level:
@@ -14,7 +14,7 @@ class Level:
         self.num = num
         self.screen = screen
         self.display_surface = display_surface
-        self.render_queue = CircularQueue(100, RenderObject)
+        self.render_queue = CircularQueue(1000, RenderObject)
 
         self.entities = []
         self.particles = []
@@ -106,5 +106,9 @@ class Level:
         while not self.render_queue.is_empty():
             render_object = self.render_queue.dequeue()
             self.display_surface.blit(pygame.surfarray.make_surface(render_object.image),
-                                      render_object.x - self.camera.get_scroll_x(),
-                                      render_object.y - self.camera.get_scroll_y())
+                                      (render_object.x - self.camera.get_scroll_x(),
+                                       render_object.y - self.camera.get_scroll_y()),
+                                      )
+        pygame.transform.scale(self.display_surface,
+                               (WIDTH, HEIGHT), dest_surface=self.screen)
+        pygame.display.flip()

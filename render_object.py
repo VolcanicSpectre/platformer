@@ -1,13 +1,13 @@
+from numba import int32
 from numba.experimental import jitclass
-from numba import int32, float32
-from numpy import array, dtype
 
 
 @jitclass
 class RenderObject:
     x: int
     y: int
-    image:array(int32, 2d, C)
+    image: int32[:, :]
+
     def __init__(self, x, y, image):
         self.x = x
         self.y = y
