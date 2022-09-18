@@ -1,4 +1,5 @@
 import pygame
+
 from camera import Camera
 from circular_queue import CircularQueue
 from constants import *

@@ -1,5 +1,3 @@
-from numba import int32
-from numba.experimental import jitclass
 from pygame import Surface
 
 

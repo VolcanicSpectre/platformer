@@ -98,7 +98,7 @@ class DASH:
                                                   self.entity.DASH_ACCEL / TARGET_FPS)
 
     def process_y_movement(self, dt):
-        if self.dash_timer > self.entity.MIN_DASH_DURATION:
+        if self.dash_timer > self.entity.MIN_DASH_DURATION or not self.dash_direction.y:
             self.entity.velocity.y = calculate_y_velocity(self.entity)
         else:
             self.entity.grounded = False
