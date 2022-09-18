@@ -1,10 +1,9 @@
 import pygame
-
 from camera import Camera
+from circular_queue import CircularQueue
 from constants import *
 from map_loader import generate_map_data
 from player import Player
-from circular_queue import CircularQueue
 from render_object import RenderObject
 
 
@@ -14,7 +13,7 @@ class Level:
         self.num = num
         self.screen = screen
         self.display_surface = display_surface
-        self.render_queue = CircularQueue(1000, RenderObject)
+        self.render_queue = CircularQueue(300, RenderObject)
 
         self.entities = []
         self.particles = []
@@ -76,36 +75,43 @@ class Level:
                     entity.rect.top = collision.bottom
                     entity.y = entity.rect.y
 
+    def get_visible_chunks(self):
+        visible_chunks = []
+        for chunk_x, chunk_y in self.chunks:
+            if pygame.Rect(chunk_x * CHUNK_SIZE * TILE_SIZE, chunk_y * CHUNK_SIZE * TILE_SIZE,
+                           CHUNK_SIZE * TILE_SIZE, CHUNK_SIZE * TILE_SIZE).colliderect(self.camera.get_scroll_x(),
+                                                                                       self.camera.get_scroll_y(),
+                                                                                       DS_WIDTH,
+                                                                                       DS_HEIGHT):
+                visible_chunks.append(self.chunks[(chunk_x, chunk_y)])
+        return visible_chunks
+
     def get_collisions(self, entity):
         collisions = []
-        for y in range(DS_HEIGHT // (CHUNK_SIZE * TILE_SIZE)):
-            for x in range(DS_WIDTH // (CHUNK_SIZE * TILE_SIZE)):
-                for tile in self.chunks[(x, y)]:
-                    if tile.collision_type and entity.rect.colliderect(tile.rect):
-                        collisions.append(tile.rect)
+        for chunk in self.get_visible_chunks():
+            for tile in chunk:
+                if tile.collision_type and entity.rect.colliderect(tile.rect):
+                    collisions.append(tile.rect)
         return collisions
 
     def update_render_queue(self):
-        for chunk_x, chunk_y in self.chunks:
-            if pygame.Rect(chunk_x * CHUNK_SIZE * TILE_SIZE, chunk_y * CHUNK_SIZE * TILE_SIZE,
-                           CHUNK_SIZE * TILE_SIZE, CHUNK_SIZE * TILE_SIZE).colliderect(self.camera.true_scroll_x,
-                                                                                       self.camera.true_scroll_y,
-                                                                                       DS_WIDTH, DS_HEIGHT):
-                for tile in self.chunks[chunk_x, chunk_y]:
-                    self.render_queue.enqueue(RenderObject(tile.x, tile.y, pygame.surfarray.array2d(tile.image)))
+        for chunk in self.get_visible_chunks():
+            for tile in chunk:
+                self.render_queue.enqueue(RenderObject(tile.x, tile.y, tile.image))
 
         for entity in self.entities:
-            self.render_queue.enqueue(RenderObject(entity.x, entity.y, pygame.surfarray.array2d(entity.image)))
+            self.render_queue.enqueue(RenderObject(entity.x, entity.y, entity.image))
 
         self.render_queue.enqueue(
-            RenderObject(self.player.x, self.player.y, pygame.surfarray.array2d(self.player.image)))
+            RenderObject(self.player.x, self.player.y, self.player.image))
         pygame.display.flip()
 
     def render_visible(self):
+        self.display_surface.fill((0, 0, 0))
         self.update_render_queue()
         while not self.render_queue.is_empty():
             render_object = self.render_queue.dequeue()
-            self.display_surface.blit(pygame.surfarray.make_surface(render_object.image),
+            self.display_surface.blit(render_object.image,
                                       (render_object.x - self.camera.get_scroll_x(),
                                        render_object.y - self.camera.get_scroll_y()),
                                       )

@@ -1,12 +1,12 @@
 from numba import int32
 from numba.experimental import jitclass
+from pygame import Surface
 
 
-@jitclass
 class RenderObject:
     x: int
     y: int
-    image: int32[:, :]
+    image: Surface
 
     def __init__(self, x, y, image):
         self.x = x
