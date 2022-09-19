@@ -108,10 +108,10 @@ class DASH:
             self.entity.grounded = False
             self.entity.can_jump = False
             self.entity.air_timer += dt
-            self.entity.velocity.y = move_towards(self.entity.INIT_JUMP_VELOCITY * self.entity.Y_AXIS_MULT,
+            self.entity.velocity.y = move_towards(self.entity.INIT_JUMP_VELOCITY / self.entity.Y_AXIS_MULT,
                                                   pow(abs(self.entity.velocity.y),
                                                       self.entity.DASH_POWER) * self.dash_direction.y,
-                                                  self.entity.DASH_ACCEL / TARGET_FPS)
+                                                  self.entity.DASH_ACCEL * self.entity.Y_AXIS_MULT / TARGET_FPS)
 
 
 class JUMP:

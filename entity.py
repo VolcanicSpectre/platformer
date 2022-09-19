@@ -28,8 +28,8 @@ class Entity:
         self.ACCEL_POWER = 2
         self.RUN_REDUCE = 1
 
-        self.JUMP_HEIGHT = 2.8 * TILE_SIZE
-        self.TIME_TO_JUMP_PEAK = 0.2
+        self.JUMP_HEIGHT = 3 * TILE_SIZE
+        self.TIME_TO_JUMP_PEAK = 0.25
         self.JUMP_GRACE_TIME = 100
 
         self.GRAVITY = (2 * self.JUMP_HEIGHT) / (pow(self.TIME_TO_JUMP_PEAK, 2))
@@ -42,11 +42,12 @@ class Entity:
         self.can_dash = False
         self.is_dashing = False
         self.dash_cooldown_timer = 0
+
         self.DASH_POWER = 3
         self.DASH_ACCEL = 400
-        self.Y_AXIS_MULT = 0.5
-        self.DASH_DURATION = 0.1
-        self.MIN_DASH_DURATION = 0.2
+        self.Y_AXIS_MULT = 1.5
+        self.DASH_DURATION = 0.2
+        self.MIN_DASH_DURATION = 0.1
         self.DASH_COOLDOWN = 0.3
 
     def update(self, dt):

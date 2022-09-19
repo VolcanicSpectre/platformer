@@ -63,7 +63,7 @@ class Level:
         collisions = self.get_collisions(entity)
         if collisions:
             for collision in collisions:
-                if entity.rect.bottom >= collision.top and entity.old_rect.bottom >= collision.top:
+                if entity.rect.bottom >= collision.top >= entity.old_rect.bottom:
                     entity.rect.bottom = collision.top
                     entity.y = entity.rect.y
                     entity.velocity.y = 0
@@ -74,6 +74,7 @@ class Level:
 
                 if entity.rect.top <= collision.bottom <= entity.old_rect.top:
                     entity.rect.top = collision.bottom
+                    entity.velocity.y = 0
                     entity.y = entity.rect.y
 
     def get_visible_chunks(self):
@@ -113,7 +114,7 @@ class Level:
             render_object = self.render_queue.dequeue()
             self.display_surface.blit(render_object.image,
                                       (render_object.x - self.camera.get_scroll_x(),
-                                       render_object.y - self.camera.get_scroll_y()),
+                                       render_object.y - self.camera.get_scroll_y() + TILE_SIZE),
                                       )
         pygame.transform.scale(self.display_surface,
                                (WIDTH, HEIGHT), dest_surface=self.screen)
