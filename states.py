@@ -115,8 +115,9 @@ class DASH:
 
 
 class JUMP:
-    def __init__(self, entity):
+    def __init__(self, entity, wall=False):
         self.entity = entity
+        self.wall = wall
 
     def input_handler(self):
         if self.entity.events["dash"] and self.entity.can_dash and self.entity.direction != Vector2(0, 0):
@@ -124,6 +125,9 @@ class JUMP:
 
     def process_y_movement(self, dt):
         self.entity.velocity.y = self.entity.INIT_JUMP_VELOCITY
+        if self.wall:
+            self.entity.velocity.y *= self.entity.wall_jump_mult
+
         self.entity.grounded = False
         self.entity.can_jump = False
         self.entity.air_timer += dt
@@ -162,6 +166,22 @@ class FALL:
         self.entity.velocity.x = calculate_x_velocity(self.entity)
 
         return self
+
+
+class Slide:
+    def __init__(self, entity):
+        self.entity = entity
+        self.slide_time = self.entity.slide_time
+
+    def input_handler(self):
+        if self.entity.events["up"]:
+            return JUMP(self.entity)
+
+    def process_x_movement(self):
+        pass
+
+    def process_y_movement(self):
+        pass
 
 
 def calculate_x_velocity(entity):

@@ -50,6 +50,9 @@ class Entity:
         self.MIN_DASH_DURATION = 0.1
         self.DASH_COOLDOWN = 0.3
 
+        self.slide_time = 1.5
+        self.wall_jump_mult = 0.9
+
     def update(self, dt):
         self.old_rect = self.rect.copy()
         self.update_dash_cooldown(dt)
