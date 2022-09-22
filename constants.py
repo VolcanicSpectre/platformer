@@ -2,7 +2,7 @@ from os import path
 from time import strftime
 
 DEBUG = False
-DEBUG_FILENAME = (strftime("%m-%d-%Y")) + "_FRAMERATE_INDEPENDENCE.prof"
+DEBUG_FILENAME = (strftime("%m-%d-%Y")) + "_RENDER_QUEUE_CAP_120.prof"
 WIDTH, HEIGHT = 1920, 1080
 DS_WIDTH, DS_HEIGHT = 576, 320
 FPS = 120

@@ -1,10 +1,11 @@
 import pygame
 
 from camera import Camera
+from circular_queue import CircularQueue
 from constants import *
-from maploader import generate_map_data
+from map_loader import generate_map_data
 from player import Player
-from states import FALL
+from render_object import RenderObject
 
 
 class Level:
@@ -13,32 +14,33 @@ class Level:
         self.num = num
         self.screen = screen
         self.display_surface = display_surface
+        self.render_queue = CircularQueue(300, RenderObject)
 
         self.entities = []
         self.particles = []
 
         self.width, self.height, entities, self.chunks = generate_map_data(
-            path.join(MAP_FOLDER, f"{num}.json"), CHUNK_SIZE)
+            path.join(MAP_FOLDER, f"test.json"), CHUNK_SIZE)
 
         self.camera = Camera(self.width, self.height)
 
         for entity in entities:
             if entity["name"] == "player":
-                self.player = Player(entity["x"] + 30, entity["y"] - 100, (8, 12))
+                self.player = Player(entity["x"], entity["y"], (8, 12))
 
     def event_handler(self, event):
         self.player.event_handler(event)
 
     def global_update(self):
         self.update()
-        self.draw()
+        self.render_visible()
 
     def update(self):
         for entity in self.entities:
             entity.update()
             self.handle_collisions(entity)
 
-        self.player.update()
+        self.player.update(self.engine.dt)
         self.handle_collisions(self.player)
         self.camera.update(self.player.rect)
 
@@ -61,45 +63,59 @@ class Level:
         collisions = self.get_collisions(entity)
         if collisions:
             for collision in collisions:
-                if entity.rect.bottom >= collision.top and entity.old_rect.bottom >= collision.top:
+                if entity.rect.bottom >= collision.top >= entity.old_rect.bottom:
                     entity.rect.bottom = collision.top
                     entity.y = entity.rect.y
                     entity.velocity.y = 0
                     entity.air_timer = 0
                     entity.grounded = True
                     entity.can_jump = True
-                    entity.can_dash = not entity.is_dashing
+                    entity.can_dash = not entity.is_dashing and entity.dash_cooldown_timer <= 0
 
                 if entity.rect.top <= collision.bottom <= entity.old_rect.top:
                     entity.rect.top = collision.bottom
+                    entity.velocity.y = 0
                     entity.y = entity.rect.y
+
+    def get_visible_chunks(self):
+        visible_chunks = []
+        for chunk_x, chunk_y in self.chunks:
+            if pygame.Rect(chunk_x * CHUNK_SIZE * TILE_SIZE, chunk_y * CHUNK_SIZE * TILE_SIZE,
+                           CHUNK_SIZE * TILE_SIZE, CHUNK_SIZE * TILE_SIZE).colliderect(self.camera.get_scroll_x(),
+                                                                                       self.camera.get_scroll_y(),
+                                                                                       DS_WIDTH,
+                                                                                       DS_HEIGHT):
+                visible_chunks.append(self.chunks[(chunk_x, chunk_y)])
+        return visible_chunks
 
     def get_collisions(self, entity):
         collisions = []
-        for y in range(DS_HEIGHT // (CHUNK_SIZE * TILE_SIZE)):
-            for x in range(DS_WIDTH // (CHUNK_SIZE * TILE_SIZE)):
-                for tile in self.chunks[(x, y)]:
-                    if tile.collision_type and entity.rect.colliderect(tile.rect):
-                        collisions.append(tile.rect)
+        for chunk in self.get_visible_chunks():
+            for tile in chunk:
+                if tile.collision_type and entity.rect.colliderect(tile.rect):
+                    collisions.append(tile.rect)
         return collisions
 
-    def draw_visible(self):
-        self.display_surface.fill((0, 0, 0))
-        for y in range(DS_HEIGHT // (CHUNK_SIZE * TILE_SIZE)):
-            for x in range(DS_WIDTH // (CHUNK_SIZE * TILE_SIZE)):
-                for tile in self.chunks[(x, y)]:
-                    self.display_surface.blit(tile.image, (tile.x - self.camera.get_scroll_x(),
-                                                           tile.y - self.camera.get_scroll_y()))
+    def update_render_queue(self):
+        for chunk in self.get_visible_chunks():
+            for tile in chunk:
+                self.render_queue.enqueue(RenderObject(tile.x, tile.y, tile.image))
 
         for entity in self.entities:
-            self.display_surface.blit(entity.image,
-                                      (entity.x - self.camera.get_scroll_x(), entity.y - self.camera.get_scroll_y()))
+            self.render_queue.enqueue(RenderObject(entity.x, entity.y, entity.image))
 
-        self.display_surface.blit(
-            self.player.image, (self.player.x - self.camera.get_scroll_x(), self.player.y - self.camera.get_scroll_y()))
+        self.render_queue.enqueue(
+            RenderObject(self.player.x, self.player.y, self.player.image))
 
-    def draw(self):
-        self.draw_visible()
+    def render_visible(self):
+        self.display_surface.fill((0, 0, 0))
+        self.update_render_queue()
+        while not self.render_queue.is_empty():
+            render_object = self.render_queue.dequeue()
+            self.display_surface.blit(render_object.image,
+                                      (render_object.x - self.camera.get_scroll_x(),
+                                       render_object.y - self.camera.get_scroll_y() + TILE_SIZE),
+                                      )
         pygame.transform.scale(self.display_surface,
                                (WIDTH, HEIGHT), dest_surface=self.screen)
         pygame.display.flip()

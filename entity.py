@@ -28,8 +28,8 @@ class Entity:
         self.ACCEL_POWER = 2
         self.RUN_REDUCE = 1
 
-        self.JUMP_HEIGHT = 2.8 * TILE_SIZE
-        self.TIME_TO_JUMP_PEAK = 0.2
+        self.JUMP_HEIGHT = 3 * TILE_SIZE
+        self.TIME_TO_JUMP_PEAK = 0.25
         self.JUMP_GRACE_TIME = 100
 
         self.GRAVITY = (2 * self.JUMP_HEIGHT) / (pow(self.TIME_TO_JUMP_PEAK, 2))
@@ -41,14 +41,21 @@ class Entity:
 
         self.can_dash = False
         self.is_dashing = False
+        self.dash_cooldown_timer = 0
 
-        self.DASH_POWER = 1.1
+        self.DASH_POWER = 3
         self.DASH_ACCEL = 400
-        self.DASH_DURATION = 0.4
-        self.MIN_DASH_DURATION = 0.2
+        self.Y_AXIS_MULT = 1.5
+        self.DASH_DURATION = 0.2
+        self.MIN_DASH_DURATION = 0.1
+        self.DASH_COOLDOWN = 0.3
 
-    def update(self):
+        self.slide_time = 1.5
+        self.wall_jump_mult = 0.9
+
+    def update(self, dt):
         self.old_rect = self.rect.copy()
+        self.update_dash_cooldown(dt)
         self.update_direction()
         self.state = self.state.input_handler()
 
@@ -78,6 +85,10 @@ class Entity:
             self.direction.y = -1
         else:
             self.direction.y = 0
+
+    def update_dash_cooldown(self, dt):
+        self.dash_cooldown_timer -= dt
+        self.dash_cooldown_timer = max(0, self.dash_cooldown_timer)
 
 
 def load_assets():
