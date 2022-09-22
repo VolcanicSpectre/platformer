@@ -30,7 +30,7 @@ class Entity:
 
         self.JUMP_HEIGHT = 3 * TILE_SIZE
         self.TIME_TO_JUMP_PEAK = 0.25
-        self.JUMP_GRACE_TIME = 100
+        self.JUMP_GRACE_TIME = 0.05
 
         self.GRAVITY = (2 * self.JUMP_HEIGHT) / (pow(self.TIME_TO_JUMP_PEAK, 2))
         self.INIT_JUMP_VELOCITY = self.GRAVITY * self.TIME_TO_JUMP_PEAK * -1

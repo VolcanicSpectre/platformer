@@ -1,4 +1,4 @@
-from numpy import empty, delete
+from numpy import empty
 
 
 class CircularQueue:
@@ -39,6 +39,7 @@ class CircularQueue:
         else:
             self.front = (self.front + 1) % self.MAX_SIZE
         return temp
+
 
 
 class EmptyQueue(Exception):
