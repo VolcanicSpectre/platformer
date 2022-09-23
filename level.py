@@ -1,6 +1,6 @@
 import pygame
 
-import collision_types
+from collision_types import CollisionTypes
 from camera import Camera
 from circular_queue import CircularQueue
 from constants import *
@@ -53,12 +53,12 @@ class Level:
                 if entity.rect.right >= collision.left >= entity.old_rect.right:
                     entity.rect.right = collision.left
                     entity.x = entity.rect.x
-                    entity.collisions[collision_types.X_WALL] = True
+                    entity.collisions[CollisionTypes.X_WALL] = True
 
                 if entity.rect.left <= collision.right <= entity.old_rect.left:
                     entity.rect.left = collision.right
                     entity.x = entity.rect.x
-                    entity.collisions[collision_types.X_WALL] = True
+                    entity.collisions[CollisionTypes.X_WALL] = True
 
         entity.update_y(self.engine.dt)
         entity.grounded = False

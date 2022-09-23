@@ -1,4 +1,5 @@
 from enum import Enum, auto
 
-class Collisions(Enum):
-    X_WALL: auto()
+
+class CollisionTypes(Enum):
+    X_WALL = auto()

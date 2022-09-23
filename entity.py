@@ -2,7 +2,8 @@ import pygame
 
 from constants import *
 from states import IDLE
-import collision_types
+from collision_types import CollisionTypes
+
 
 class Entity:
     def __init__(self, x: int, y: int, size: tuple[int, int]):
@@ -13,8 +14,9 @@ class Entity:
         self.image.fill("red")
         self.rect = pygame.Rect(x, y, size[0], size[1])
         self.old_rect = self.rect.copy()
-        self.events = {"right": False, "left": False, "up": False, "dash": False}
-        self.collisions = {collision_types.X_WALL: False}
+        self.events = {"right": False, "left": False, "up": False, "down": False, "dash": False}
+        self.collisions = {CollisionTypes.X_WALL: False}
+        self.false_collisions = self.collisions
         self.direction = pygame.math.Vector2(0, 0)
         self.x, self.y = x, y
 
@@ -33,14 +35,12 @@ class Entity:
         self.TIME_TO_JUMP_PEAK = 0.25
         self.JUMP_GRACE_TIME = 0.05
 
-
         self.GRAVITY = (2 * self.JUMP_HEIGHT) / (pow(self.TIME_TO_JUMP_PEAK, 2))
         self.INIT_JUMP_VELOCITY = self.GRAVITY * self.TIME_TO_JUMP_PEAK * -1
         self.MAXFALL = self.GRAVITY / 5
         self.air_timer = 0
         self.grounded = False
         self.can_jump = False
-
 
         self.can_dash = False
         self.is_dashing = False
@@ -53,8 +53,11 @@ class Entity:
         self.MIN_DASH_DURATION = 0.1
         self.DASH_COOLDOWN = 0.3
 
-        self.slide_time = 1.5
-        self.wall_jump_mult = 0.9
+        self.SLIDE_UP_MULT = 0.2
+        self.SLIDE_DOWN_MULT = 0.8
+        self.MIN_WALL_JUMP_TIME = 0.015
+        self.WALL_JUMP_TIME = 0.05
+        self.WALL_JUMP_MULT = 0.3
 
     def update(self, dt):
         self.old_rect = self.rect.copy()
