@@ -2,7 +2,7 @@ import pygame
 
 from constants import *
 from states import IDLE
-
+import collision_types
 
 class Entity:
     def __init__(self, x: int, y: int, size: tuple[int, int]):
@@ -14,6 +14,7 @@ class Entity:
         self.rect = pygame.Rect(x, y, size[0], size[1])
         self.old_rect = self.rect.copy()
         self.events = {"right": False, "left": False, "up": False, "dash": False}
+        self.collisions = {collision_types.X_WALL: False}
         self.direction = pygame.math.Vector2(0, 0)
         self.x, self.y = x, y
 
@@ -32,12 +33,14 @@ class Entity:
         self.TIME_TO_JUMP_PEAK = 0.25
         self.JUMP_GRACE_TIME = 0.05
 
+
         self.GRAVITY = (2 * self.JUMP_HEIGHT) / (pow(self.TIME_TO_JUMP_PEAK, 2))
         self.INIT_JUMP_VELOCITY = self.GRAVITY * self.TIME_TO_JUMP_PEAK * -1
         self.MAXFALL = self.GRAVITY / 5
         self.air_timer = 0
         self.grounded = False
         self.can_jump = False
+
 
         self.can_dash = False
         self.is_dashing = False

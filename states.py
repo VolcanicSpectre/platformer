@@ -5,6 +5,7 @@ from pygame.math import Vector2
 
 from calc import move_towards
 from constants import TARGET_FPS, FPS
+from collision_types import X_WALL
 
 sign = partial(copysign, 1)
 
@@ -146,6 +147,8 @@ class FALL:
         if self.entity.events["dash"] and self.entity.can_dash and self.entity.direction != Vector2(0, 0):
             return DASH(self.entity, self.entity.direction)
 
+        if self.entity.direction.x and self.entity.collisions[X_WALL]:
+            return Slide(self.entity)
         if self.entity.events["up"] and self.entity.air_timer <= self.entity.JUMP_GRACE_TIME and self.entity.can_jump:
             return JUMP(self.entity)
 
@@ -174,8 +177,8 @@ class Slide:
         self.slide_time = self.entity.slide_time
 
     def input_handler(self):
-        if self.entity.events["up"]:
-            return JUMP(self.entity)
+        if self.entity.events["up"] and self.entity.direction.x:
+            return DASH(self.entity)
 
     def process_x_movement(self):
         pass
