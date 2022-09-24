@@ -178,11 +178,14 @@ class SLIDE:
         self.initial_x_slide_direction = initial_x_slide_direction
 
     def input_handler(self):
-        if self.entity.events["up"] and self.entity.direction.x != self.initial_x_slide_direction:
+        if self.entity.events["up"] and self.entity.direction.x == -1 * self.initial_x_slide_direction and \
+                self.entity.collisions[CollisionTypes.X_WALL]:
             return WALLJUMP(self.entity, self.entity.direction)
 
-        if self.entity.direction.x != self.initial_x_slide_direction or self.entity.grounded:
+        if self.entity.direction.x != self.initial_x_slide_direction or self.entity.grounded or not \
+                self.entity.collisions[CollisionTypes.X_WALL]:
             return FALL(self.entity)
+
         return self
 
     def process_x_movement(self, dt):
@@ -255,8 +258,8 @@ def calculate_y_velocity(entity):
             mult = entity.SLIDE_UP_MULT
         elif entity.events["down"]:
             mult = entity.SLIDE_DOWN_MULT
+        return mult * move_towards(entity.velocity.y, entity.MAXFALL, entity.GRAVITY / FPS)
     else:
         if entity.velocity.y > 0:
             mult = 0.5
-
-    return move_towards(entity.velocity.y, entity.MAXFALL, (entity.GRAVITY * mult) / FPS)
+        return move_towards(entity.velocity.y, entity.MAXFALL, (entity.GRAVITY * mult) / FPS)

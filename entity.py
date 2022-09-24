@@ -53,11 +53,11 @@ class Entity:
         self.MIN_DASH_DURATION = 0.1
         self.DASH_COOLDOWN = 0.3
 
-        self.SLIDE_UP_MULT = 0.2
+        self.SLIDE_UP_MULT = 0.7
         self.SLIDE_DOWN_MULT = 0.8
         self.MIN_WALL_JUMP_TIME = 0.015
         self.WALL_JUMP_TIME = 0.05
-        self.WALL_JUMP_MULT = 0.3
+        self.WALL_JUMP_MULT = 1
 
     def update(self, dt):
         self.old_rect = self.rect.copy()

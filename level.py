@@ -48,6 +48,7 @@ class Level:
     def handle_collisions(self, entity):
         entity.update_x(self.engine.dt)
         collisions = self.get_collisions(entity)
+        entity.collisions = {CollisionTypes.X_WALL: False}
         if collisions:
             for collision in collisions:
                 if entity.rect.right >= collision.left >= entity.old_rect.right:
