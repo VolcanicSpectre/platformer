@@ -30,6 +30,7 @@ class Entity:
         self.STOP_POWER = 2.5
         self.ACCEL_POWER = 2
         self.RUN_REDUCE = 1
+        self.AIR_REDUCE = 0.8
 
         self.JUMP_HEIGHT = 3 * TILE_SIZE
         self.TIME_TO_JUMP_PEAK = 0.25
@@ -40,7 +41,7 @@ class Entity:
         self.MAXFALL = self.GRAVITY / 5
         self.air_timer = 0
         self.grounded = False
-        self.can_jump = False
+        self.can_jump = True
 
         self.can_dash = False
         self.is_dashing = False
@@ -53,11 +54,11 @@ class Entity:
         self.MIN_DASH_DURATION = 0.1
         self.DASH_COOLDOWN = 0.3
 
-        self.SLIDE_UP_MULT = 0.85
-        self.SLIDE_DOWN_MULT = 0.8
+        self.SLIDE_MULT = 0.8
         self.MIN_WALL_JUMP_TIME = 0.015
         self.WALL_JUMP_TIME = 0.05
-        self.WALL_JUMP_MULT = 1
+        self.WALL_JUMP_MULT = 0.39
+        self.can_wall_jump = False
 
     def update(self, dt):
         self.old_rect = self.rect.copy()
