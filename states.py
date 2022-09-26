@@ -20,7 +20,7 @@ class IDLE:
 
         if self.entity.events["dash"] and self.entity.can_dash and self.entity.direction != Vector2(0, 0):
             return DASH(self.entity, self.entity.direction)
-        if self.entity.events["up"] and self.entity.air_timer <= self.entity.JUMP_GRACE_TIME and self.entity.can_jump:
+        if self.entity.events["up"] and self.entity.air_timer <= self.entity.JUMP_GRACE_TIME:
             return JUMP(self.entity)
 
         return self
@@ -47,7 +47,7 @@ class RUN:
         if self.entity.events["dash"] and self.entity.can_dash and self.entity.direction != Vector2(0, 0):
             return DASH(self.entity, self.entity.direction)
 
-        if self.entity.events["up"] and self.entity.air_timer <= self.entity.JUMP_GRACE_TIME and self.entity.can_jump:
+        if self.entity.events["up"] and self.entity.air_timer <= self.entity.JUMP_GRACE_TIME:
             return JUMP(self.entity)
 
         if self.entity.velocity.x == 0 and not self.entity.direction.x:
@@ -121,8 +121,7 @@ class JUMP:
         self.wall = wall
 
     def input_handler(self):
-        if self.entity.events["dash"] and self.entity.can_dash and self.entity.direction != Vector2(0,
-                                                                                                    0):
+        if self.entity.events["dash"] and self.entity.can_dash and self.entity.direction != Vector2(0, 0):
             return DASH(self.entity, self.entity.direction)
 
     def process_y_movement(self, dt):
@@ -148,7 +147,7 @@ class FALL:
         if self.entity.events["dash"] and self.entity.can_dash and self.entity.direction != Vector2(0, 0):
             return DASH(self.entity, self.entity.direction)
 
-        if self.entity.direction.x and self.entity.collisions[CollisionTypes.X_WALL_LEFT] or self.entity.collisions[CollisionTypes.X_WALL_RIGHT]:
+        if self.entity.direction.x and self.entity.collisions[CollisionTypes.X_WALL]:
             return SLIDE(self.entity, self.entity.direction.x)
 
         if self.entity.events["up"] and self.entity.air_timer <= self.entity.JUMP_GRACE_TIME and self.entity.can_jump:
@@ -179,10 +178,11 @@ class SLIDE:
         self.initial_x_slide_direction = initial_x_slide_direction
 
     def input_handler(self):
-        if self.entity.events["up"] and self.entity.collisions[CollisionTypes.X_WALL] and self.entity.can_wall_jump:
-            return WALLJUMP(self.entity, Vector2(self.initial_x_slide_direction * -1, 1))
+        if self.entity.events["up"] and self.entity.direction.x == -1 * self.initial_x_slide_direction and \
+                self.entity.collisions[CollisionTypes.X_WALL]:
+            return WALLJUMP(self.entity, self.entity.direction)
 
-        if self.entity.direction.x == -1 * self.initial_x_slide_direction or self.entity.grounded or not \
+        if self.entity.direction.x != self.initial_x_slide_direction or self.entity.grounded or not \
                 self.entity.collisions[CollisionTypes.X_WALL]:
             return FALL(self.entity)
 
@@ -200,7 +200,6 @@ class SLIDE:
 class WALLJUMP:
     def __init__(self, entity, wall_jump_direction):
         self.entity = entity
-        self.entity.can_wall_jump = False
         self.wall_jump_direction = wall_jump_direction
         self.wall_jump_timer = 0
 
@@ -213,10 +212,13 @@ class WALLJUMP:
             self.entity.is_dashing = False
             return FALL(self.entity)
 
-        self.entity.velocity.x = move_towards(self.entity.MAX_RUN * self.wall_jump_direction.x,
-                                              pow(abs(self.entity.velocity.x),
-                                                  self.entity.DASH_POWER * self.entity.WALL_JUMP_MULT) * self.wall_jump_direction.x,
-                                              self.entity.DASH_ACCEL / TARGET_FPS)
+        if self.wall_jump_timer > self.entity.MIN_WALL_JUMP_TIME:
+            self.entity.velocity.x = calculate_x_velocity(self.entity)
+        else:
+            self.entity.velocity.x = move_towards(self.entity.MAX_RUN * self.wall_jump_direction.x,
+                                                  pow(abs(self.entity.velocity.x),
+                                                      self.entity.DASH_POWER * self.entity.WALL_JUMP_MULT) * self.wall_jump_direction.x,
+                                                  self.entity.DASH_ACCEL / TARGET_FPS)
 
     def process_y_movement(self, dt):
         if self.wall_jump_timer > self.entity.MIN_WALL_JUMP_TIME:
@@ -243,20 +245,19 @@ def calculate_x_velocity(entity):
     else:
         vel_power = entity.ACCEL_POWER
 
-    if not entity.grounded:
-        accel_rate = pow((entity.ACCEL_AIR / TARGET_FPS), vel_power)
-    else:
-        accel_rate = pow((entity.ACCEL_RUN / TARGET_FPS), vel_power)
-
-    if not entity.grounded:
-        mult = entity.AIR_REDUCE
+    accel_rate = pow((entity.ACCEL_RUN / TARGET_FPS), vel_power)
+    if entity.is_dashing:
+        mult = entity.RUN_REDUCE
     return move_towards(entity.velocity.x, target_velocity, accel_rate * mult)
 
 
 def calculate_y_velocity(entity):
     mult = 1
     if isinstance(entity.state, SLIDE):
-        mult = entity.SLIDE_MULT
+        if entity.events["up"]:
+            mult = entity.SLIDE_UP_MULT
+        elif entity.events["down"]:
+            mult = entity.SLIDE_DOWN_MULT
         return mult * move_towards(entity.velocity.y, entity.MAXFALL, entity.GRAVITY / FPS)
     else:
         if entity.velocity.y > 0:
