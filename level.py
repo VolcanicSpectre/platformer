@@ -48,18 +48,18 @@ class Level:
     def handle_collisions(self, entity):
         entity.update_x(self.engine.dt)
         collisions = self.get_collisions(entity)
-        entity.collisions = {CollisionTypes.X_WALL: False}
+        entity.collisions = {CollisionTypes.X_WALL_LEFT: False, CollisionTypes.X_WALL_RIGHT: False}
         if collisions:
             for collision in collisions:
                 if entity.rect.right >= collision.left >= entity.old_rect.right:
                     entity.rect.right = collision.left
                     entity.x = entity.rect.x
-                    entity.collisions[CollisionTypes.X_WALL] = True
+                    entity.collisions[CollisionTypes.X_WALL_RIGHT] = True
 
                 if entity.rect.left <= collision.right <= entity.old_rect.left:
                     entity.rect.left = collision.right
                     entity.x = entity.rect.x
-                    entity.collisions[CollisionTypes.X_WALL] = True
+                    entity.collisions[CollisionTypes.X_WALL_LEFT] = True
 
         entity.update_y(self.engine.dt)
         entity.grounded = False
@@ -73,7 +73,6 @@ class Level:
                     entity.velocity.y = 0
                     entity.air_timer = 0
                     entity.grounded = True
-                    entity.can_jump = True
                     entity.can_dash = not entity.is_dashing and entity.dash_cooldown_timer <= 0
 
                 if entity.rect.top <= collision.bottom <= entity.old_rect.top:
