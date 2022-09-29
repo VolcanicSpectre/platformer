@@ -8,11 +8,11 @@ class Player(Entity):
     def event_handler(self, event):
         if event.type == pygame.KEYDOWN:
             match event.key:
-                case pygame.K_RIGHT:
+                case pygame.K_d:
                     self.events["right"] = True
-                case pygame.K_LEFT:
+                case pygame.K_a:
                     self.events["left"] = True
-                case pygame.K_UP:
+                case pygame.K_w:
                     self.events["up"] = True
                 case pygame.K_SPACE:
                     self.events["dash"] = True

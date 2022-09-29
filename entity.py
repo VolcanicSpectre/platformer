@@ -15,7 +15,7 @@ class Entity:
         self.rect = pygame.Rect(x, y, size[0], size[1])
         self.old_rect = self.rect.copy()
         self.events = {"right": False, "left": False, "up": False, "down": False, "dash": False}
-        self.collisions = {CollisionTypes.X_WALL: False}
+        self.collisions = {CollisionTypes.X_WALL_LEFT: False, CollisionTypes.X_WALL_RIGHT: False}
         self.false_collisions = self.collisions
         self.direction = pygame.math.Vector2(0, 0)
         self.x, self.y = x, y
