@@ -93,6 +93,7 @@ class DASH:
             return FALL(self.entity)
 
         if self.dash_timer > self.entity.MIN_DASH_DURATION:
+            self.entity.velocity.x = self.entity.MAX_RUN * self.entity.direction.x
             self.entity.velocity.x = calculate_x_velocity(self.entity)
         else:
             self.entity.velocity.x = move_towards(self.entity.MAX_RUN * self.dash_direction.x,
@@ -112,7 +113,7 @@ class DASH:
             self.entity.velocity.y = move_towards(self.entity.INIT_JUMP_VELOCITY / self.entity.Y_AXIS_MULT,
                                                   pow(abs(self.entity.velocity.y),
                                                       self.entity.DASH_POWER) * self.dash_direction.y,
-                                                  self.entity.DASH_ACCEL * self.entity.Y_AXIS_MULT / TARGET_FPS)
+                                                  self.entity.DASH_ACCEL / TARGET_FPS)
 
 
 class JUMP:
@@ -145,12 +146,13 @@ class FALL:
         self.entity = entity
 
     def input_handler(self):
-        active_collisions = [collision_type for collision_type in [collision for collision in self.entity.collisions if self.entity.collisions[collision]]]
-        
+        active_collisions = [collision_type for collision_type in
+                             [collision for collision in self.entity.collisions if self.entity.collisions[collision]]]
+
         if active_collisions:
-            if active_collisions[0].value == self.entity.direction.x :
+            if active_collisions[0].value == self.entity.direction.x:
                 return SLIDE(self.entity, self.entity.direction.x)
-        
+
         if self.entity.events["dash"] and self.entity.can_dash and self.entity.direction != Vector2(0, 0):
             return DASH(self.entity, self.entity.direction)
 
@@ -186,7 +188,8 @@ class SLIDE:
             return WALLJUMP(self.entity, Vector2(self.initial_x_slide_direction * -1, 1))
 
         if self.entity.direction.x != self.initial_x_slide_direction or self.entity.grounded or not \
-                (self.entity.collisions[CollisionTypes.X_WALL_RIGHT] or self.entity.collisions[CollisionTypes.X_WALL_LEFT]):
+                (self.entity.collisions[CollisionTypes.X_WALL_RIGHT] or self.entity.collisions[
+                    CollisionTypes.X_WALL_LEFT]):
             return FALL(self.entity)
 
         return self
@@ -263,5 +266,5 @@ def calculate_y_velocity(entity):
         return mult * move_towards(entity.velocity.y, entity.MAXFALL, entity.GRAVITY / FPS)
     else:
         if entity.velocity.y > 0:
-            mult = 0.8
+            mult = 0.6
         return move_towards(entity.velocity.y, entity.MAXFALL, (entity.GRAVITY * mult) / FPS)

@@ -27,5 +27,6 @@ class Player(Entity):
                     self.events["up"] = False
                     self.can_jump = True
                     self.can_wall_jump = True
+
                 case pygame.K_SPACE:
                     self.events["dash"] = False
