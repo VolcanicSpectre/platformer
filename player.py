@@ -19,11 +19,11 @@ class Player(Entity):
 
         elif event.type == pygame.KEYUP:
             match event.key:
-                case pygame.K_RIGHT:
+                case pygame.K_d:
                     self.events["right"] = False
-                case pygame.K_LEFT:
+                case pygame.K_a:
                     self.events["left"] = False
-                case pygame.K_UP:
+                case pygame.K_w:
                     self.events["up"] = False
                     self.can_jump = True
                     self.can_wall_jump = True

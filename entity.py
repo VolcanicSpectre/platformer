@@ -47,7 +47,7 @@ class Entity:
         self.is_dashing = False
         self.dash_cooldown_timer = 0
 
-        self.DASH_POWER = 3
+        self.DASH_POWER = 2
         self.DASH_ACCEL = 400
         self.Y_AXIS_MULT = 1.5
         self.DASH_DURATION = 0.2
