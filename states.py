@@ -264,6 +264,9 @@ def calculate_y_velocity(entity):
     if isinstance(entity.state, SLIDE):
         mult = entity.SLIDE_MULT
         return mult * move_towards(entity.velocity.y, entity.MAXFALL, entity.GRAVITY / FPS)
+    elif isinstance(entity.state, WALLJUMP):
+        mult = entity.WALL_JUMP_ACCEL_MULT
+        return mult * move_towards(entity.velocity.y, entity.MAXFALL, entity.GRAVITY / FPS)
     else:
         if entity.velocity.y > 0:
             mult = 0.6

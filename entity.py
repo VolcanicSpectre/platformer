@@ -25,7 +25,7 @@ class Entity:
         self.MAX_RUN = 1.25
         self.ACCEL_RUN = 150
         self.DECEL_RUN = 250
-        self.ACCEL_AIR = 25
+        self.ACCEL_AIR = 36
         self.TURN_POWER = 2
         self.STOP_POWER = 2.5
         self.ACCEL_POWER = 2
@@ -58,6 +58,7 @@ class Entity:
         self.MIN_WALL_JUMP_TIME = 0.1
         self.WALL_JUMP_TIME = 0.2
         self.WALL_JUMP_MULT = 0.18
+        self.WALL_JUMP_ACCEL_MULT = 0.96
         self.can_wall_jump = False
 
     def update(self, dt):
