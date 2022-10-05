@@ -19,6 +19,12 @@ class NeuralNetwork:
             a = reluv(np.dot(w, a) + b)
         return a
 
+    def add_node(self):
+        pass
+
+    def add_connection(self):
+        pass
+
 
 @numba.vectorize([numba.float64(numba.float64)])
 def reluv(a):
