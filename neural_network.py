@@ -13,15 +13,11 @@ class NeuralNetwork:
         self.biases = [np.random.randn(y, 1) for y in self.sizes[1:]]
         self.weights = [np.random.randn(y, x) / np.sqrt(x)
                         for x, y in zip(self.sizes[:-1], self.sizes[1:])]
-    
+
     def feed_forward(self, a):
         for b, w in zip(self.biases, self.weights):
             a = reluv(np.dot(w, a) + b)
         return a
-
-
-
-
 
 
 @numba.vectorize([numba.float64(numba.float64)])
