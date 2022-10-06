@@ -7,7 +7,7 @@ WIDTH, HEIGHT = 1920, 1080
 DS_WIDTH, DS_HEIGHT = 576, 320
 FPS = 120
 
-#Map
+# Map
 TARGET_FPS = 120
 CHUNK_SIZE = 4
 TILE_SIZE = 16
@@ -18,7 +18,8 @@ ASSETS_FOLDER = path.join(GAME_FOLDER, "assets")
 MAP_FOLDER = path.join(ASSETS_FOLDER, "maps")
 PLAYER_FOLDER = path.join(ASSETS_FOLDER, "player")
 
-
-#Neural Network
-INITIAL_SIZES = (720)
+# Neural Network
+CONNECTION_DTYPE = [("in", "u4"), ("out", "u4"), ("weight", "f8"), ("enabled", "?"), ("innovation", "u4")]
+NEURON_DTYPE = [("id", "u4"), ("node_type", "u4"), ("node_location", "u4")]
+INITIAL_SIZES = (720, )
 NUMBER_OF_GENERATIONS = 1

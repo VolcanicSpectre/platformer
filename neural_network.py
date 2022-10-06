@@ -1,24 +1,17 @@
 import numpy as np
 import numba
+from time import perf_counter
 
 
 class NeuralNetwork:
-    """Pending Documentation
-    """
+    """Pending Documentation"""
+
     def __init__(self, sizes):
         self.n_layers = len(sizes)
         self.sizes = sizes
-        self.initialise_default_weights_and_biases()
+        self.node_genes =
 
-    def initialise_default_weights_and_biases(self):
-        self.biases = [np.random.randn(y, 1) for y in self.sizes[1:]]
-        self.weights = [np.random.randn(y, x) / np.sqrt(x)
-                        for x, y in zip(self.sizes[:-1], self.sizes[1:])]
-
-    def feed_forward(self, a):
-        for b, w in zip(self.biases, self.weights):
-            a = relu(np.dot(w, a) + b)
-        return a
+        self.connection_genes = np.array()
 
     def add_node(self):
         pass

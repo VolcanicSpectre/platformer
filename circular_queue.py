@@ -5,6 +5,7 @@ class CircularQueue:
     """
     Provides a circular queue that has a maximum size and provids the methods associated with a circular queue 
     """
+
     def __init__(self, max_size, dtype):
         self.MAX_SIZE = max_size
         self.queue = empty(self.MAX_SIZE, dtype=dtype)
@@ -42,7 +43,6 @@ class CircularQueue:
         else:
             self.front = (self.front + 1) % self.MAX_SIZE
         return temp
-
 
 
 class EmptyQueue(Exception):
