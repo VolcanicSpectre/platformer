@@ -62,12 +62,22 @@ class Entity:
         self.can_wall_jump = False
 
     def update(self, dt):
+        """Calls the relevant update functions to update the entity 
+
+        Args:
+            dt (float): the time between the previous and current frame
+        """
         self.old_rect = self.rect.copy()
         self.update_dash_cooldown(dt)
         self.update_direction()
         self.state = self.state.input_handler()
 
     def update_x(self, dt):
+        """Updates the x axis the entities velocity and position on the x axis
+
+        Args:
+            dt (float): the time between the previous and current frame
+        """
         new_state = self.state.process_x_movement(dt)
         if new_state:
             self.state = new_state
@@ -75,6 +85,11 @@ class Entity:
         self.rect.x = round(self.x)
 
     def update_y(self, dt):
+        """Updates the y axis the entities velocity and position on the y axis
+
+        Args:
+            dt (float): the time between the previous and current frame
+        """
         new_state = self.state.process_y_movement(dt)
         if new_state:
             self.state = new_state
@@ -82,6 +97,9 @@ class Entity:
         self.rect.y = round(self.y)
 
     def update_direction(self):
+        """
+        Updates the entities direction vector according to the relevant inputs on that frame
+        """
         if self.events["right"]:
             self.direction.x = 1
         elif self.events["left"]:
@@ -95,6 +113,11 @@ class Entity:
             self.direction.y = 0
 
     def update_dash_cooldown(self, dt):
+        """_summary_
+
+        Args:
+            dt (float_): the time between the previous and current frame
+        """
         self.dash_cooldown_timer -= dt
         self.dash_cooldown_timer = max(0, self.dash_cooldown_timer)
 

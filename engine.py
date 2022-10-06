@@ -6,6 +6,9 @@ from constants import FPS
 
 
 class Engine:
+    """
+    Provides an interface to access the time between the last frame
+    """
     def __init__(self):
         self.clock = Clock()
         self.t1 = perf_counter()

@@ -4,12 +4,16 @@ import numpy as np
 
 
 class NeuralNetworkManager:
+    """Pending Documentation
+    """
     def __init__(self, generation_size):
         self.generation_size = generation_size
         generations = [Generation(generation_size) for generation_size in range(NUMBER_OF_GENERATIONS)]
 
 
 class Generation:
+    """Pending Documentation
+    """
     def __init__(self, size):
         self.size = size
         self.generation = [NeuralNetwork(INITIAL_SIZES) for i in range(self.size)]
@@ -42,6 +46,8 @@ class Generation:
 
         return mating_pool
 
+    def reproduction(mating_pool):
+        pass
 
 
 def fitness_function():

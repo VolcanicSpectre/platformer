@@ -6,6 +6,7 @@ from constants import *
 
 
 class TileSet:
+    """Converts a .json file into a TileSet object"""
     def __init__(self, tileset_path):
         with open(tileset_path) as f:
             data = json.load(f)
@@ -27,6 +28,7 @@ class TileSet:
 
 
 class Chunk:
+    """Provides a list of all tiles in a given chunk"""
     def __init__(self, tiles):
         self.tiles = tiles
 
@@ -39,6 +41,8 @@ class Chunk:
 
 
 class Tile:
+    """Provides attrbutes to uniquely identify a tile
+    """
     def __init__(self, pos, custom_properties, image):
         self.x, self.y = pos
         self.image = image
@@ -56,6 +60,15 @@ class AnimatedTile(Tile):
 
 
 def generate_map_data(level_path, chunk_size):
+    """Returns a dictionary of the format {(chunk_x, chunk_y): Chunk} and all entities locations and names and the level width and level height
+
+    Args:
+        level_path (str): the path to the level folder
+        chunk_size (int): the size of the chunk in tiles
+
+    Returns:
+        a dictionary of the format {(chunk_x, chunk_y): Chunk} and all entities locations and names and the level width and level
+    """
     chunk_data = {}
     map_data = json.load(open(level_path))
     entities = []

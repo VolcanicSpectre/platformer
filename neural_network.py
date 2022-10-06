@@ -3,6 +3,8 @@ import numba
 
 
 class NeuralNetwork:
+    """Pending Documentation
+    """
     def __init__(self, sizes):
         self.n_layers = len(sizes)
         self.sizes = sizes

@@ -5,6 +5,11 @@ from entity import Entity, load_assets
 
 
 class Player(Entity):
+    """Creates an entity with the added functionality of getting inputs
+
+    Args:
+        Entity (Entity): Inherits from entity class
+    """
     def event_handler(self, event):
         if event.type == pygame.KEYDOWN:
             match event.key:

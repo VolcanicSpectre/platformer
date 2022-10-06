@@ -96,7 +96,7 @@ class DASH:
             self.entity.velocity.x = self.entity.MAX_RUN * self.entity.direction.x
             self.entity.velocity.x = calculate_x_velocity(self.entity)
         else:
-            self.entity.velocity.x = move_towards(self.entity.MAX_RUN * self.dash_direction.x,
+            self.entity.velocity.x = calc.move_towards(self.entity.MAX_RUN * self.dash_direction.x,
                                                   pow(abs(self.entity.velocity.x),
                                                       self.entity.DASH_POWER) * self.dash_direction.x,
                                                   self.entity.DASH_ACCEL / TARGET_FPS)

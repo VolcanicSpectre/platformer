@@ -10,6 +10,8 @@ from render_object import RenderObject
 
 
 class Level:
+    """Provides an interface to handle all logic for a level
+    """
     def __init__(self, engine, num, screen, display_surface):
         self.engine = engine
         self.num = num
@@ -30,13 +32,22 @@ class Level:
                 self.player = Player(entity["x"], entity["y"], (8, 12))
 
     def event_handler(self, event):
+        """Passes down the event to the event_handler of self.player
+
+        Args:
+            event (pygame.Event):
+        """
         self.player.event_handler(event)
 
     def global_update(self):
+        """Provides an entry point to update all aspects of the level
+        """
         self.update()
         self.render_visible()
 
     def update(self):
+        """Updates all entities and the camera and handles collisions 
+        """
         for entity in self.entities:
             entity.update()
             self.handle_collisions(entity)
@@ -46,6 +57,11 @@ class Level:
         self.camera.update(self.player.rect)
 
     def handle_collisions(self, entity):
+        """Updates one axis of the entity and then checks for collisions on that axis. The other axis is then updated and collsions are checked.
+
+        Args:
+            entity (Entity): An entity object
+        """
         entity.update_x(self.engine.dt)
         collisions = self.get_collisions(entity)
         entity.collisions = {CollisionTypes.X_WALL_LEFT: False, CollisionTypes.X_WALL_RIGHT: False}
@@ -81,6 +97,11 @@ class Level:
                     entity.y = entity.rect.y
 
     def get_visible_chunks(self):
+        """Returns a list of all the chunks that are visible on the screen
+
+        Returns:
+            List[Chunk]: A list of all chunk objects that are currently visible on the display
+        """
         visible_chunks = []
         for chunk_x, chunk_y in self.chunks:
             if pygame.Rect(chunk_x * CHUNK_SIZE * TILE_SIZE, chunk_y * CHUNK_SIZE * TILE_SIZE,
@@ -92,6 +113,14 @@ class Level:
         return visible_chunks
 
     def get_collisions(self, entity):
+        """Returns a list of all collisions with a given entity
+
+        Args:
+            entity (Entity): 
+
+        Returns:
+            List[pygame.Rect]: A list of pygame.Rect objects representing all of the collsions with a given entity
+        """
         collisions = []
         for chunk in self.get_visible_chunks():
             for tile in chunk:
@@ -100,6 +129,8 @@ class Level:
         return collisions
 
     def update_render_queue(self):
+        """Adds all objects to be drawn this frame to the render_queue if it is visible on the screen
+        """
         for chunk in self.get_visible_chunks():
             for tile in chunk:
                 self.render_queue.enqueue(RenderObject(tile.x, tile.y, tile.image))
@@ -111,6 +142,8 @@ class Level:
             RenderObject(self.player.x, self.player.y, self.player.image))
 
     def render_visible(self):
+        """Dequeues self.render_queue until render_queue.is_empty() is True and draws the render_objects onto the self.display_surface and scales them onto self.screen, self.screen is then updated
+        """
         self.display_surface.fill((0, 0, 0))
         self.update_render_queue()
         while not self.render_queue.is_empty():
