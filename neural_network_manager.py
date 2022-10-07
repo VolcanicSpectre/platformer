@@ -17,6 +17,7 @@ class Generation:
     def __init__(self, size):
         self.size = size
         self.generation = [NeuralNetwork(INITIAL_SIZES) for i in range(self.size)]
+        self.connetion_lookup_table = []
         self.rng = np.random.default_rng()
 
     def __iter__(self):

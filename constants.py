@@ -21,5 +21,5 @@ PLAYER_FOLDER = path.join(ASSETS_FOLDER, "player")
 # Neural Network
 CONNECTION_DTYPE = [("in", "u4"), ("out", "u4"), ("weight", "f8"), ("enabled", "?"), ("innovation", "u4")]
 NEURON_DTYPE = [("id", "u4"), ("node_type", "u4"), ("node_layer", "u4"), ("sum_inp")]
-INITIAL_SIZES = (720, )
+INITIAL_SIZES = (720, 1, 4)
 NUMBER_OF_GENERATIONS = 1

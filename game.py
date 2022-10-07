@@ -9,7 +9,7 @@ from level import Level
 
 class Game:
     """
-    Provides an interface for creating a game with levels and managing the game locgic
+    Provides an interface for creating a game with levels and managing the game logic
     """
     def __init__(self, pr):
         self.pr = pr
