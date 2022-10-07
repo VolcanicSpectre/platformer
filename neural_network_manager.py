@@ -1,23 +1,26 @@
+import numpy as np
+
 from constants import *
 from neural_network import NeuralNetwork
-import numpy as np
 
 
 class NeuralNetworkManager:
     """Pending Documentation
     """
+
     def __init__(self, generation_size):
         self.generation_size = generation_size
         generations = [Generation(generation_size) for generation_size in range(NUMBER_OF_GENERATIONS)]
 
 
 class Generation:
-    """Pending Documentation
-    """
+    """Pending Documentation"""
+
     def __init__(self, size):
         self.size = size
         self.generation = [NeuralNetwork(INITIAL_SIZES) for i in range(self.size)]
-        self.connetion_lookup_table = []
+        self.innovation_id_matrix = []
+        self.current_innovation = 0
         self.rng = np.random.default_rng()
 
     def __iter__(self):
@@ -47,8 +50,18 @@ class Generation:
 
         return mating_pool
 
-    def reproduction(mating_pool):
+    def reproduction(self, mating_pool):
         pass
+
+    def crossover(self, parent1, parent2):
+        child = NeuralNetwork(self)
+        for connection1 in parent1.connections:
+            for connection2 in parent2.connections:
+                if connection1.innovation_id == connection2.innovation_id:
+                    if self.rng.integers(0, 1, 1)[0]:
+                        child.connections.append(connection1)
+                    else:
+                        child.connections.append(connection2)
 
 
 def fitness_function():
