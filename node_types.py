@@ -2,6 +2,6 @@ from enum import Enum
 
 
 class NodeTypes(Enum):
-    INPUT = 1
+    INPUT = 3
     HIDDEN = 2
-    OUTPUT = 3
+    OUTPUT = 1

@@ -19,7 +19,7 @@ class Generation:
     def __init__(self, size):
         self.size = size
         self.generation = [NeuralNetwork(INITIAL_SIZES) for i in range(self.size)]
-        self.innovation_id_matrix = []
+        self.connections = {}
         self.current_innovation = 0
         self.rng = np.random.default_rng()
 
@@ -54,14 +54,7 @@ class Generation:
         pass
 
     def crossover(self, parent1, parent2):
-        child = NeuralNetwork(self)
-        for connection1 in parent1.connections:
-            for connection2 in parent2.connections:
-                if connection1.innovation_id == connection2.innovation_id:
-                    if self.rng.integers(0, 1, 1)[0]:
-                        child.connections.append(connection1)
-                    else:
-                        child.connections.append(connection2)
+        pass
 
 
 def fitness_function():

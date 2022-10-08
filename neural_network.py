@@ -1,72 +1,76 @@
-import numba
 import numpy as np
-from numpy.random import uniform
+from numpy.random import uniform, choice
 
+from constants import *
 from node_types import NodeTypes
 
 
-class NeuralNetwork:
-    """Pending Documentation"""
-
-    def __init__(self, generation, sizes):
+class Genome:
+    def __init__(self, generation):
         self.generation = generation
-        self.n_input_nodes, self.n_inital_hidden_nodes, self.n_output_nodes = sizes
-        self.node_id_counter = 0
-        self.sizes = sizes
-        self.nodes = []
-        self.connections = []
-        self.fitness = 0
+        self.rng = np.default_rng()
+        self.node_genes = []
+        self.connection_genes = []
 
-    def initialise(self):
-        for i in range(self.n_input_nodes):
-            pass
+    def feed_forward(self, inputs):
+        for input_node, input_value in zip(
+                [node_gene for node_gene in self.node_genes if node_gene.type_ == NodeTypes.INPUT], inputs):
+            input_node.output_value = input_value
 
-        for i in range(self.n_inital_hidden_nodes):
-            pass
+        for node_gene in [node_gene for node_gene in self.node_genes if node_gene.type_ != NodeTypes.INPUT]:
+            for connection in [connection for connection in self.connection_genes if
+                               (connection.enabled and connection.output_id == node_gene.identifier)]:
+                node_gene.input_value += self.node_genes[connection.input_node_id].output_value * connection.weight
+            node_gene.output_value = node_gene.activation_function(node_gene.output_value)
 
-        for i in range(self.n_output_nodes):
-            pass
+        outputs = [node_gene.output_value for node_gene in self.node_genes if node_gene.type == NodeTypes.OUTPUT]
 
-        for hidden_node in self.nodes[NodeTypes.HIDDEN]:
-            pass
+        for node_gene in self.node_genes:
+            node_gene.input_value, node_gene.output_value = 0, 0
 
-    def add_node(self):
-        pass
-
-    def add_connection(self):
-        pass
+        return outputs
 
     def mutate_weights(self):
-        pass
+        for connection_gene in self.connection_genes:
+            seed = self.rng.random_sample()
+            if seed < COMPLETY_MUTATE_WEIGHT:
+                connection_gene.weight = (self.rng.random_sample - 0.5) * 2
+            else:
+                connection_gene.weight += self.rng.random_sample() * VARIANCE_FOR_WEIGHT_MUTATION_MULTIPLIER
 
-    def load_inputs(self, inputs):
-        pass
-
-    def propogate(self):
-        pass
-
-
-class Node:
-    def __init__(self, identifier, _type, layer):
-        self.id = identifier
-        self._type = _type
-        self.layer = layer
-        self.sum_i = 0
-        self.sum_o = 0
-        self.connections = []
+    def mutate_add_connection(self):
+        for node_gene_1 in self.rng.shuffle(self.connection_genes):
+            for node_gene_2 in self.rng.shuffle(self.connection_genes):
+                if (node_gene_1.id - node_gene_2.id) > 0 or (
+                        node_gene_1.type_ == node_gene_2.type_ == NodeTypes.HIDDEN):
+                    if not [connection_gene for connection_gene in self.connection_genes if (
+                            connection_gene.input_node_id == node_gene_1.id and connection_gene.output_node_id == node_gene_2.id)]:
+                        try:
+                            innovation_id = self.generation.connections[(node_gene_1.id, node_gene_2.id)]
+                        except KeyError:
+                            innovation_id = self.generation.current_innovation
+                            new_connection_gene = ConnectionGene(innovation_id, nod)
 
 
-class Connection:
-    def __init__(self, innovation_id, input_node, output_node, weight=uniform(-20, 20, 1)[0],
-                 enabled=True, is_recurrent=False):
+class NodeGene:
+    def __init__(self, identifier, type_=NodeTypes.HIDDEN, bias=uniform(-20, 20, 1)[0],
+                 activation_function=choice(ACTIVATION_FUNCTIONS)):
+        self.identifier = identifier
+        self.type_ = type_
+        self.bias = bias
+        self.input_value = 0
+        self.output_value = 0
+        self.activation_function = activation_function
+
+
+class ConnectionGene:
+    def __init__(self, innovation_id, input_node_id, output_node_id, weight=uniform(-20, 20, 1)[0], enabled=True):
         self.innovation_id = innovation_id
-        self.input_node = input_node
-        self.output_node = output_node
+        self.input_node_id = input_node_id
+        self.output_node_id = output_node_id
         self.weight = weight
         self.enabled = enabled
-        self.is_recurrent = is_recurrent
 
 
-@numba.njit()
-def relu(a):
-    return np.maximum(0, a)
+def filter_node_genes(node_gene, node_types):
+    return node_gene.type_ in node_types
