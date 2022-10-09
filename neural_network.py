@@ -1,3 +1,5 @@
+from platform import node
+
 import numpy as np
 from numpy.random import uniform, choice
 from functools import lru_cache
@@ -9,7 +11,7 @@ from node_types import NodeTypes
 class Genome:
     def __init__(self, generation):
         self.generation = generation
-        self.rng = np.default_rng()
+        self.rng = np.random.default_rng()
         self.node_genes = []
         self.connection_genes = []
 
@@ -71,19 +73,25 @@ class Genome:
 
     def set_node_layers(self):
         for hidden_node_gene in [node_gene for node_gene in self.node_genes if node_gene.type_ == NodeTypes.HIDDEN]:
+            pass
 
-
-    @lru_cache(10)
+    @lru_cache(15)
     def get_longest_path_to_input_layer(self, node_gene):
         path_lengths = []
-        for connection_termianting_at_node in [connection_gene for connection_gene in self.connection_genes if connection_gene.output_node_id == node_gene.output_node_id]
+        for connection_termianting_at_node in [connection_gene for connection_gene in self.connection_genes if
+                                               connection_gene.output_node_id == node_gene.identifier]:
             if self.node_genes[connection_termianting_at_node.input_node_id].type_ == NodeTypes.INPUT:
-                return 1
+                path_lengths.append(1)
             else:
-                return self.get_longest_path_to_input_layer()
+                path_lengths.append(
+                    1 + self.get_longest_path_to_input_layer(
+                        self.node_genes[connection_termianting_at_node.input_node_id]))
+
+        return max(path_lengths)
+
 
 class NodeGene:
-    def __init__(self, identifier, layer, type_=NodeTypes.HIDDEN, bias=uniform(-20, 20, 1)[0],
+    def __init__(self, identifier, layer=0, type_=NodeTypes.HIDDEN, bias=uniform(-20, 20, 1)[0],
                  activation_function=choice(ACTIVATION_FUNCTIONS, 1)[0]):
         self.identifier = identifier
         self.layer = layer
@@ -107,3 +115,50 @@ class ConnectionGene:
 
 def filter_node_genes(node_gene, node_types):
     return node_gene.type_ in node_types
+
+
+if __name__ == '__main__':
+    # layer test (WORKS!)
+
+    genome = Genome(1)
+    node1 = NodeGene(0, 0, NodeTypes.INPUT)
+    node2 = NodeGene(1, 4, NodeTypes.OUTPUT)
+
+    node3 = NodeGene(2, 1)  # Blue
+    node4 = NodeGene(3, 1)  # Green
+    node5 = NodeGene(4, 2)  # Orange
+    node6 = NodeGene(5, 3)  # Red
+    node7 = NodeGene(6)  # Grey
+    node8 = NodeGene(7)  # LY
+    node9 = NodeGene(8)  # LB
+    node10 = NodeGene(9)  # Brown
+    node11 = NodeGene(10)  # Lime
+    node12 = NodeGene(11)  # Pink
+
+    genome.node_genes = [node1, node2, node3, node4, node5, node6, node7, node8, node9, node10, node11, node12]
+
+    conn1 = ConnectionGene(0, node1.identifier, node3.identifier)
+    conn2 = ConnectionGene(0, node1.identifier, node4.identifier)
+    conn3 = ConnectionGene(0, node3.identifier, node5.identifier)
+    conn4 = ConnectionGene(0, node5.identifier, node6.identifier)
+    conn5 = ConnectionGene(0, node4.identifier, node6.identifier)
+    conn6 = ConnectionGene(0, node5.identifier, node8.identifier)
+    conn7 = ConnectionGene(0, node8.identifier, node11.identifier)
+    conn8 = ConnectionGene(0, node11.identifier, node12.identifier)
+    conn9 = ConnectionGene(0, node12.identifier, node2.identifier)
+    conn10 = ConnectionGene(0, node6.identifier, node9.identifier)
+    conn11 = ConnectionGene(0, node9.identifier, node11.identifier)
+    conn12 = ConnectionGene(0, node6.identifier, node7.identifier)
+    conn13 = ConnectionGene(0, node7.identifier, node10.identifier)
+    conn14 = ConnectionGene(0, node10.identifier, node12.identifier)
+
+    genome.connection_genes = [conn1, conn2, conn3, conn4, conn5, conn6, conn7, conn8, conn9, conn10, conn11, conn12,
+                               conn13, conn14]
+
+    print(f"RED {genome.get_longest_path_to_input_layer(node6)}")
+    print(f"PINK {genome.get_longest_path_to_input_layer(node12)}")
+    print(f"BROWN {genome.get_longest_path_to_input_layer(node10)}")
+    print(f"LIME {genome.get_longest_path_to_input_layer(node11)}")
+    print(f"BLACK {genome.get_longest_path_to_input_layer(node2)}")
+    print(f"LB {genome.get_longest_path_to_input_layer(node9)}")
+    print(f"LY {genome.get_longest_path_to_input_layer(node8)}")
