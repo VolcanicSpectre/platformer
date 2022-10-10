@@ -21,12 +21,13 @@ PLAYER_FOLDER = path.join(ASSETS_FOLDER, "player")
 
 # Neural Network
 ACTIVATION_FUNCTIONS = [relu, sigmoid, tanh]
-CONNECTION_DTYPE = [("in", "u4"), ("out", "u4"), ("weight", "f8"), ("enabled", "?"), ("innovation", "u4")]
-NEURON_DTYPE = [("id", "u4"), ("node_type", "u4"), ("node_layer", "u4"), ("sum_inp")]
+
 
 INITIAL_SIZES = (720, 1, 4)
 NUMBER_OF_GENERATIONS = 1
 ALLOW_RECURRENT_CONNECTIONS = True
 
+MUTATE_WEIGHTS_CHANCE = 0.8
+PLUS_OR_MINUS_20_PERCENT_CHANCE = 0.9
 COMPLETY_MUTATE_WEIGHT = 0.1
-VARIANCE_FOR_WEIGHT_MUTATION_MULTIPLIER = 0.1
+ENABLE_CONNECTION_CHANCE = 0.25

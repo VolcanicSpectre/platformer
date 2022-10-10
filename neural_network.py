@@ -5,6 +5,7 @@ from numpy.random import uniform, choice
 from functools import lru_cache
 
 from constants import *
+from connection_types import ConnectionTypes
 from node_types import NodeTypes
 
 
@@ -32,33 +33,54 @@ class Genome:
             node_gene.input_value, node_gene.output_value = 0, 0
 
         return outputs
+    def mutate(self):
+        seed = self.rng.random_sample()
+        if seed < MUTATE_WEIGHTS_CHANCE:
+            self.mutate_weights()
+        
 
     def mutate_weights(self):
         for connection_gene in self.connection_genes:
             seed = self.rng.random_sample()
-            if seed < COMPLETY_MUTATE_WEIGHT:
-                connection_gene.weight = (self.rng.random_sample - 0.5) * 2
+            if seed < PLUS_OR_MINUS_20_PERCENT_CHANCE:
+                connection_gene.weight *=  1 + uniform(-2.2, 0.2, 1)[0]
             else:
-                connection_gene.weight += self.rng.random_sample() * VARIANCE_FOR_WEIGHT_MUTATION_MULTIPLIER
+                connection_gene.weight = uniform(-20, 20, 1)[0]
 
     def mutate_add_connection(self):
+        connection_found = False
         for i in range(20):
             node_gene_1, node_gene_2 = [choice(self.node_genes, 1)[0] for i in range(2)]
+            
             if self.valid_node_pair(node_gene_1, node_gene_2):
-                self.connection_genes.append(ConnectionGene(None, node_gene_1, node_gene_2))
+                if self.valid_node_pair(node_gene_1, node_gene_2) == ConnectionTypes.CONNECTION_EXISTS:
+                    connection = [connection_gene for connection_gene in self.connection_genes if (connection_gene.input_node_id == node_gene_1.id and connection_gene.output_node_id == node_gene_2.id)]
+                    if not connection.enabled:
+                        if self.rng.random_sample() < ENABLE_CONNECTION_CHANCE:
+                            connection.enabled = True
+                else:
+                    try:
+                        innovation_id = self.generation[(node_gene_1.identifier, node_gene_2.identifier)]
+                    except KeyError:
+                        innovation_id = self.generation.current_innovation
+                        self.current_innovation += 1
+                    self.connection_genes.append(ConnectionGene(innovation_id, node_gene_1, node_gene_2))
 
     def valid_node_pair(self, node_gene_1, node_gene_2):
         if [connection_gene for connection_gene in self.connection_genes if
             (connection_gene.input_node_id == node_gene_1.id and connection_gene.output_node_id == node_gene_2.id)]:
-            return False
+            return ConnectionTypes.CONNECTION_EXISTS
         if node_gene_1.id == node_gene_2.id:
             return False
         if node_gene_1.layer == node_gene_2.layer:
             return False
-        if node_gene_1.layer > node_gene_2.layer and not ALLOW_RECURRENT_CONNECTIONS:
-            return False
+        if node_gene_1.layer > node_gene_2.layer:
+            if ALLOW_RECURRENT_CONNECTIONS:
+                return ConnectionTypes.RECURRENT
+            else:
+                return False
 
-        return True
+        return ConnectionTypes.VALID_FORWARD_CONNECTION
 
     def mutate_add_node(self):
         connection_for_new_node = \
@@ -72,8 +94,8 @@ class Genome:
         self.connection_genes.append(new_connection_gene_2)
 
     def set_node_layers(self):
-        for hidden_node_gene in [node_gene for node_gene in self.node_genes if node_gene.type_ == NodeTypes.HIDDEN]:
-            pass
+        for node_gene in [node_gene for node_gene in self.node_genes if node_gene.type_ != NodeTypes.HIDDEN]:
+            node_gene.layer = self.get_longest_path_to_input_layer(node_gene)
 
     @lru_cache(15)
     def get_longest_path_to_input_layer(self, node_gene):
