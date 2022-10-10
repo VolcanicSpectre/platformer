@@ -1,7 +1,5 @@
-from platform import node
-
 import numpy as np
-from numpy.random import uniform, choice
+from numpy.random import uniform, choice, random_sample
 from functools import lru_cache
 
 from constants import *
@@ -33,17 +31,21 @@ class Genome:
             node_gene.input_value, node_gene.output_value = 0, 0
 
         return outputs
+
     def mutate(self):
-        seed = self.rng.random_sample()
-        if seed < MUTATE_WEIGHTS_CHANCE:
+        seed = random_sample()
+        if seed < ADD_NODE_CHANCE:
+            self.mutate_add_node()
+        elif seed < ADD_CONNECTION_CHANCE:
+            self.mutate_add_connection()
+        elif seed < MUTATE_WEIGHTS_CHANCE:
             self.mutate_weights()
-        
 
     def mutate_weights(self):
         for connection_gene in self.connection_genes:
-            seed = self.rng.random_sample()
+            seed = random_sample()
             if seed < PLUS_OR_MINUS_20_PERCENT_CHANCE:
-                connection_gene.weight *=  1 + uniform(-2.2, 0.2, 1)[0]
+                connection_gene.weight *= 1 + uniform(-2.2, 0.2, 1)[0]
             else:
                 connection_gene.weight = uniform(-20, 20, 1)[0]
 
@@ -51,10 +53,11 @@ class Genome:
         connection_found = False
         for i in range(20):
             node_gene_1, node_gene_2 = [choice(self.node_genes, 1)[0] for i in range(2)]
-            
+
             if self.valid_node_pair(node_gene_1, node_gene_2):
                 if self.valid_node_pair(node_gene_1, node_gene_2) == ConnectionTypes.CONNECTION_EXISTS:
-                    connection = [connection_gene for connection_gene in self.connection_genes if (connection_gene.input_node_id == node_gene_1.id and connection_gene.output_node_id == node_gene_2.id)]
+                    connection = [connection_gene for connection_gene in self.connection_genes if (
+                            connection_gene.input_node_id == node_gene_1.id and connection_gene.output_node_id == node_gene_2.id)]
                     if not connection.enabled:
                         if self.rng.random_sample() < ENABLE_CONNECTION_CHANCE:
                             connection.enabled = True
@@ -63,7 +66,7 @@ class Genome:
                         innovation_id = self.generation[(node_gene_1.identifier, node_gene_2.identifier)]
                     except KeyError:
                         innovation_id = self.generation.current_innovation
-                        self.current_innovation += 1
+                        self.generation.current_innovation += 1
                     self.connection_genes.append(ConnectionGene(innovation_id, node_gene_1, node_gene_2))
 
     def valid_node_pair(self, node_gene_1, node_gene_2):
@@ -133,10 +136,6 @@ class ConnectionGene:
         self.weight = weight
         self.enabled = enabled
         self.recurrent = recurrent
-
-
-def filter_node_genes(node_gene, node_types):
-    return node_gene.type_ in node_types
 
 
 if __name__ == '__main__':

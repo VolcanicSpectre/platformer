@@ -1,16 +1,6 @@
 import numpy as np
-
 from constants import *
 from neural_network import NeuralNetwork
-
-
-class NeuralNetworkManager:
-    """Pending Documentation
-    """
-
-    def __init__(self, generation_size):
-        self.generation_size = generation_size
-        generations = [Generation(generation_size) for generation_size in range(NUMBER_OF_GENERATIONS)]
 
 
 class Generation:
@@ -21,6 +11,8 @@ class Generation:
         self.generation = [NeuralNetwork(INITIAL_SIZES) for i in range(self.size)]
         self.connections = {}
         self.current_innovation = 0
+        self.distance_threshold = 4
+        self.desired_number_of_species = 5
         self.rng = np.random.default_rng()
 
     def __iter__(self):
@@ -55,6 +47,16 @@ class Generation:
 
     def crossover(self, parent1, parent2):
         pass
+
+    def get_excess_and_disjoint_genes(self, genome1, genome2):
+        excess_and_disjoint_conection_gene_innovation_ids = [connection_gene_1.innovation_id for connection_gene_1 in genome1.connection_genes for connection_gene_2 in genome2.connection_genes if connection_gene_1.innovation_id == connection_gene_2.innovation_id]
+
+    def get_average_enabled_weight_difference(self, genome1, genome2):
+        pass
+
+    def get_distance_between_2_genomes(self, genome1, genome2):
+        return self.get_excess_and_disjoint_genes(genome1, genome2) + self.get_average_enabled_weight_difference(
+            genome1, genome2)
 
 
 def fitness_function():
