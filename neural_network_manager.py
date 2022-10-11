@@ -49,7 +49,18 @@ class Generation:
         pass
 
     def get_excess_and_disjoint_connection_genes(self, genome1, genome2):
-        excess_and_disjoint_connection_genes = []
+        #Will need to be able to get the exxcess and disjoint connections later
+        number_of_excess_and_disjoint_connection_genes = 0
+        for connection_gene_1 in genome1.connection_genes:
+            if connection_gene_1.innovation_id not in [connection_gene_2.innovation_id for connection_gene_2 in genome2.connection_genes if connection_gene_2.enabled] and connection_gene_1.enabled:
+                number_of_excess_and_disjoint_connection_genes += 1
+
+        for connection_gene_2 in genome2.connection_genes:
+            if connection_gene_2.innovation_id not in [connection_gene_1.innovation_id for connection_gene_1 in genome1.connection_genes if connection_gene_1.enabled] and connection_gene_2.enabled:
+                number_of_excess_and_disjoint_connection_genes += 1
+
+        return number_of_excess_and_disjoint_connection_genes
+
 
     def get_average_enabled_weight_difference(self, genome1, genome2):
         innovation_ids_of_shared_connections = [connection_gene_1.innovation_id for connection_gene_1 in
@@ -58,7 +69,8 @@ class Generation:
                                                 connection_gene_1.innovation_id == connection_gene_2.innovation_id]
 
     def get_distance_between_2_genomes(self, genome1, genome2):
-        return self.get_excess_and_disjoint_genes(genome1, genome2) + self.get_average_enabled_weight_difference(
+        #Could Normalise the Number of Excess and Disjoint Connections by N
+        return self.get_excess_and_disjoint_genes(genome1, genome2) +  self.get_average_enabled_weight_difference(
             genome1, genome2)
 
 
