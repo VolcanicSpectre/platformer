@@ -54,9 +54,19 @@ class Generation:
         genome2.connection_genes.sort(key=lambda connection_gene: connection_gene.innovation_id)
 
         excess_and_disjoint_connection_genes = []
-        for connection_gene_1 in genome1.connection_genes:
-            if connection_gene_1.innovation_id not in [connection_gene_2.innovation_id for connection_gene_2 in genome2.connection_genes if connection_gene_2.enabled] and connection_gene_1.enabled:
+        disjoint_connection_genes = []
+        excess_connectiuon_genes = []
 
+        for connection_gene_1 in genome1.connection_genes:
+            if connection_gene_1.innovation_id not in [connection_gene_2.innovation_id for connection_gene_2 in genome2.connection_genes]:
+                excess_and_disjoint_connection_genes.append(connection_gene_1)
+
+        for connection_gene_2 in genome2.connection_genes:
+            if connection_gene_2.innovation_id not in [connection_gene_1.innovation_id for connection_gene_1 in genome1.connection_genes]:
+                excess_and_disjoint_connection_genes.append(connection_gene_2)
+
+        for connection_gene in excess_and_disjoint_connection_genes:
+            pass
 
     def get_number_of_excess_and_disjoint_connection_genes(self, genome1, genome2):
         #Will need to be able to get the exxcess and disjoint connections later
