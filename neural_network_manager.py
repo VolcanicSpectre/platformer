@@ -48,7 +48,17 @@ class Generation:
     def crossover(self, parent1, parent2):
         pass
 
-    def get_excess_and_disjoint_connection_genes(self, genome1, genome2):
+
+    def get_excess_and_disjoint_connection_genes(genome1, genome2):
+        genome1.connection_genes.sort(key=lambda connection_gene: connection_gene.innovation_id)
+        genome2.connection_genes.sort(key=lambda connection_gene: connection_gene.innovation_id)
+
+        excess_and_disjoint_connection_genes = []
+        for connection_gene_1 in genome1.connection_genes:
+            if connection_gene_1.innovation_id not in [connection_gene_2.innovation_id for connection_gene_2 in genome2.connection_genes if connection_gene_2.enabled] and connection_gene_1.enabled:
+
+
+    def get_number_of_excess_and_disjoint_connection_genes(self, genome1, genome2):
         #Will need to be able to get the exxcess and disjoint connections later
         number_of_excess_and_disjoint_connection_genes = 0
         for connection_gene_1 in genome1.connection_genes:
@@ -70,7 +80,7 @@ class Generation:
 
     def get_distance_between_2_genomes(self, genome1, genome2):
         #Could Normalise the Number of Excess and Disjoint Connections by N
-        return self.get_excess_and_disjoint_genes(genome1, genome2) +  self.get_average_enabled_weight_difference(
+        return self.get_number_of_excess_and_disjoint_genes(genome1, genome2) +  self.get_average_enabled_weight_difference(
             genome1, genome2)
 
 

@@ -15,7 +15,7 @@ def main(pr=None):
     game = Game(pr)
     running = True
     game.start(screen, display_surface)
-    while running:
+    while running:z
         game.update()
 
 
