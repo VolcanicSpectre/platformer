@@ -53,20 +53,31 @@ class Generation:
         genome1.connection_genes.sort(key=lambda connection_gene: connection_gene.innovation_id)
         genome2.connection_genes.sort(key=lambda connection_gene: connection_gene.innovation_id)
 
-        excess_and_disjoint_connection_genes = []
+        genome_1_excess_and_disjoint_connection_genes = []
+        genome_2_excess_and_disjoint_connection_genes = []
         disjoint_connection_genes = []
-        excess_connectiuon_genes = []
+        excess_connection_genes = []
 
+        genome_1_maximum_innovation_id = max([connection_gene.innovation_id for connection_gene in genome1.connection_genes]), 
+        genome_2_maximum_innovation_id = max([connection_gene.innovation_id for connection_gene in genome2.connection_genes])
+        
         for connection_gene_1 in genome1.connection_genes:
             if connection_gene_1.innovation_id not in [connection_gene_2.innovation_id for connection_gene_2 in genome2.connection_genes]:
-                excess_and_disjoint_connection_genes.append(connection_gene_1)
+                genome_1_excess_and_disjoint_connection_genes.append(connection_gene_1)
 
         for connection_gene_2 in genome2.connection_genes:
             if connection_gene_2.innovation_id not in [connection_gene_1.innovation_id for connection_gene_1 in genome1.connection_genes]:
-                excess_and_disjoint_connection_genes.append(connection_gene_2)
+                genome_2_excess_and_disjoint_connection_genes.append(connection_gene_2)
 
-        for connection_gene in excess_and_disjoint_connection_genes:
-            pass
+        for connection_gene_1 in genome_1_excess_and_disjoint_connection_genes:
+            if connection_gene_1.innovation_id > genome_2_maximum_innovation_id:
+                excess_connection_genes.append(connection_gene_1)
+        for connection_gene_2 in genome_2_excess_and_disjoint_connection_genes:
+            if connection_gene_2.innovation_id > genome_1_maximum_innovation_id:
+                excess_connection_genes.append(connection_gene_2)
+
+
+
 
     def get_number_of_excess_and_disjoint_connection_genes(self, genome1, genome2):
         #Will need to be able to get the exxcess and disjoint connections later
@@ -80,7 +91,6 @@ class Generation:
                 number_of_excess_and_disjoint_connection_genes += 1
 
         return number_of_excess_and_disjoint_connection_genes
-
 
     def get_average_enabled_weight_difference(self, genome1, genome2):
         innovation_ids_of_shared_connections = [connection_gene_1.innovation_id for connection_gene_1 in
@@ -96,3 +106,13 @@ class Generation:
 
 def fitness_function():
     pass
+
+
+
+#
+
+
+
+#
+
+
