@@ -107,12 +107,3 @@ class Generation:
 def fitness_function():
     pass
 
-
-
-#
-
-
-
-#
-
-

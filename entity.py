@@ -8,7 +8,6 @@ from collision_types import CollisionTypes
 class Entity:
     def __init__(self, x: int, y: int, size: tuple[int, int]):
         self.state = IDLE(self)
-        self.y_heights = []
         self.SIZE = size
         self.image = pygame.Surface(size)
         self.image.fill("red")
@@ -16,7 +15,6 @@ class Entity:
         self.old_rect = self.rect.copy()
         self.events = {"right": False, "left": False, "up": False, "down": False, "dash": False}
         self.collisions = {CollisionTypes.X_WALL_LEFT: False, CollisionTypes.X_WALL_RIGHT: False}
-        self.false_collisions = self.collisions
         self.direction = pygame.math.Vector2(0, 0)
         self.x, self.y = x, y
 
