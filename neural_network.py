@@ -44,23 +44,26 @@ class Genome:
     def mutate_weights(self):
         for connection_gene in self.connection_genes:
             seed = random_sample()
-            if seed < PLUS_OR_MINUS_20_PERCENT_CHANCE:
-                connection_gene.weight *= 1 + uniform(-2.2, 0.2, 1)[0]
+            if seed < COMPLETELY_MUTATE_WEIGHT_CHANCE:
+                connection_gene.weight += uniform(-MUTATION_POWER, MUTATION_POWER, 1)[0]
             else:
                 connection_gene.weight = uniform(-20, 20, 1)[0]
 
     def mutate_add_connection(self):
         connection_found = False
         for i in range(20):
+            if connection_found:
+                break
             node_gene_1, node_gene_2 = [choice(self.node_genes, 1)[0] for i in range(2)]
 
             if self.valid_node_pair(node_gene_1, node_gene_2):
+                connection_found = True
                 if self.valid_node_pair(node_gene_1, node_gene_2) == ConnectionTypes.CONNECTION_EXISTS:
                     connection = [connection_gene for connection_gene in self.connection_genes if (
                             connection_gene.input_node_id == node_gene_1.id and connection_gene.output_node_id == node_gene_2.id)]
                     if not connection.enabled:
                         if self.rng.random_sample() < ENABLE_CONNECTION_CHANCE:
-                            connection.enabled = True
+                            conznection.enabled = True
                 else:
                     try:
                         innovation_id = self.generation[(node_gene_1.identifier, node_gene_2.identifier)]

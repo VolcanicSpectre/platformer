@@ -119,7 +119,6 @@ class DASH:
 class JUMP:
     def __init__(self, entity, wall=False):
         self.entity = entity
-        self.wall = wall
 
     def input_handler(self):
         if self.entity.events["dash"] and self.entity.can_dash and self.entity.direction != Vector2(0,
@@ -128,9 +127,6 @@ class JUMP:
 
     def process_y_movement(self, dt):
         self.entity.velocity.y = self.entity.INIT_JUMP_VELOCITY
-        if self.wall:
-            self.entity.velocity.y *= self.entity.wall_jump_mult
-
         self.entity.grounded = False
         self.entity.can_jump = False
         self.entity.air_timer += dt
