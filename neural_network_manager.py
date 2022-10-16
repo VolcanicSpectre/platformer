@@ -8,7 +8,7 @@ class Generation:
 
     def __init__(self, size):
         self.size = size
-        self.generation = [NeuralNetwork(INITIAL_SIZES) for i in range(self.size)]
+        self.generation = [Genome(INITIAL_SIZES) for i in range(self.size)]
         self.connections = {}
         self.current_innovation = 0
         self.distance_threshold = 4
