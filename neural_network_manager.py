@@ -12,7 +12,7 @@ class Generation:
         self.generation = [Genome(INITIAL_SIZES) for i in repeat(self.size)]
         self.connections = {}
         self.current_innovation = 0
-        self.distance_threshold = 4
+        self.distance_threshold = 100
         self.desired_number_of_species = 5
         self.rng = np.random.default_rng()
 
@@ -24,9 +24,15 @@ class Generation:
     
     def get_next_generation():
         species = self.speciation()
+        number_of_offspring = GENERATION_SIZE
+        population_average_adjusted_fitness = sum([calulate_total_adjusted_fitness(species[species_number]) for species_number in species]) / self.size
+
         for species_number in species:
             mating_pool = roulette_wheel_selection(species[species_number])
-    
+            allowed_number_of_offspring = round((calulate_total_adjusted_fitness(species[species_number]) * len(species[species_number]) / population_average_adjusted_fitness))
+
+
+        
     def speciation(self):
         current_species_number = 0
         genomes = self.copy()
@@ -48,20 +54,12 @@ class Generation:
     def roulette_wheel_selection(self, genomes, mating_pool_size=2):
         mating_pool = []
         chromosome_fitness_values = [fitness_function(genome) for genome in genomes]
-        total_population_fitness = sum(chromosome_fitness_values)
+        total_species_fitness = sum(chromosome_fitness_values)
 
         chromosome_selection_probability =[(chromosome_fitness_value / total_population_fitness) for chromosome_fitness_value in chromosome_fitness_values]
 
-        return self.rng.choice(genomes, p=chromosome_selection_probability,size=mating_pool_size)
-
-
-
+        return self.rng.choice(genomes, p=chromosome_selection_probability,size=mating_pool_size), total_species_fitness / len(chromosome_fitness_values)
         
-
-
-
-
-
 
     def reproduction(self, mating_pool):
         pass
@@ -124,6 +122,9 @@ class Generation:
         return self.get_number_of_excess_and_disjoint_genes(genome1, genome2) +  self.get_average_enabled_weight_difference(
             genome1, genome2)
 
+
+def calulate_total_adjusted_fitness(genomes):
+    return sum([fitness_function(genome) / len(species) for genome in genomes])
 
 def fitness_function():
     pass
