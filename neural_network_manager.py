@@ -1,4 +1,5 @@
-import numpy as np
+from numpy.random import default_rng
+from itertools import repeat
 from constants import *
 from genome import Genome
 
@@ -8,7 +9,7 @@ class Generation:
 
     def __init__(self, size):
         self.size = size
-        self.generation = [Genome(INITIAL_SIZES) for i in range(self.size)]
+        self.generation = [Genome(INITIAL_SIZES) for i in repeat(self.size)]
         self.connections = {}
         self.current_innovation = 0
         self.distance_threshold = 4
@@ -20,31 +21,47 @@ class Generation:
 
     def __getitem__(self, index):
         return self.generation[index]
-
+    
+    def get_next_generation():
+        species = self.speciation()
+        for species_number in species:
+            mating_pool = roulette_wheel_selection(species[species_number])
+    
     def speciation(self):
+        current_species_number = 0
         genomes = self.copy()
-        random_genome = choice(self.generation, 1)[0]
+        species = {}
+        while genomes:
+            current_species_number += 1
+            random_genome = choice(genomes, 1)[0]
+            genomes.remove(random_genome)
+            species[current_species_number] = [random_genome]
+            
+            for genome in genomes[:]:
+                if self.get_distance_between_2_genomes(random_genome, genome) < self.distance_threshold:
+                    species[current_species_number].append(genome)
+                    genomes.remove(genome)
+        return species
 
-    def selection(self):
+
+
+    def roulette_wheel_selection(self, genomes, mating_pool_size=2):
         mating_pool = []
-        chromosome_fitness_values = np.array([nn for nn in self])
-        total_population_fitness = np.sum(chromosome_fitness_values)
+        chromosome_fitness_values = [fitness_function(genome) for genome in genomes]
+        total_population_fitness = sum(chromosome_fitness_values)
 
-        chromosome_selection_probability = np.array(
-            [(chromosome_fitness_value / total_population_fitness) for chromosome_fitness_value in
-             chromosome_fitness_values], dtype=np.float64)
+        chromosome_selection_probability =[(chromosome_fitness_value / total_population_fitness) for chromosome_fitness_value in chromosome_fitness_values]
 
-        chromosome_cumulative_probabilty = [np.sum(chromosome_selection_probability[:index]) for
-                                            index, chromosome_probabilty in enumerate(chromosome_selection_probability)]
+        return self.rng.choice(genomes, p=chromosome_selection_probability,size=mating_pool_size)
 
-        for nn, index, cumulative_chromosome_probability in zip(self, enumerate(chromosome_cumulative_probabilty)):
-            rn = self.rng.random()
-            if rn <= cumulative_chromosome_probability:
-                mating_pool.append(nn)
-            elif chromosome_cumulative_probabilty[index - 1] < rn <= cumulative_chromosome_probability:
-                mating_pool.append(self[self.rng.integers(low=2, high=self.size, size=1)[0]])
 
-        return mating_pool
+
+        
+
+
+
+
+
 
     def reproduction(self, mating_pool):
         pass
@@ -110,4 +127,5 @@ class Generation:
 
 def fitness_function():
     pass
+
 
