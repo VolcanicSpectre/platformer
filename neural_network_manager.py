@@ -1,6 +1,6 @@
 import numpy as np
 from constants import *
-from neural_network import NeuralNetwork
+from genome import Genome
 
 
 class Generation:
@@ -20,6 +20,10 @@ class Generation:
 
     def __getitem__(self, index):
         return self.generation[index]
+
+    def speciation(self):
+        genomes = self.copy()
+        random_genome = choice(self.generation, 1)[0]
 
     def selection(self):
         mating_pool = []
