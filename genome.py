@@ -8,8 +8,7 @@ from node_types import NodeTypes
 
 
 class Genome:
-    def __init__(self, generation):
-        self.generation = generation
+    def __init__(self): 
         self.rng = np.random.default_rng()
         self.node_genes = []
         self.connection_genes = []
