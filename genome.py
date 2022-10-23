@@ -1,18 +1,24 @@
 import numpy as np
 from numpy.random import uniform, choice, random_sample
 from functools import lru_cache
-
+from pickle import dump, load
 from constants import *
 from connection_types import ConnectionTypes
 from node_types import NodeTypes
-
+import json
 
 class Genome:
     def __init__(self): 
         self.rng = np.random.default_rng()
         self.node_genes = []
         self.connection_genes = []
+        self.outputs = []
 
+    def initilaise(self):
+        self.node_genes += [NodeGene(len(self.node_genes), 0, NodeTypes.INPUT) for i in range(INITIAL_SIZES[0])]
+        self.node_genes += [NodeGene(len(self.node_genes), 1, NodeTypes.HIDDEN) for i in range(INITIAL_SIZES[1])]
+        self.node_genes += [NodeGene(len(self.node_genes), 2, NodeTypes.OUTPUT) for i in range(INITIAL_SIZES[2])]
+    
     def feed_forward(self, inputs):
         for input_node, input_value in zip(
                 [node_gene for node_gene in self.node_genes if node_gene.type_ == NodeTypes.INPUT], inputs):
@@ -28,8 +34,7 @@ class Genome:
 
         for node_gene in self.node_genes:
             node_gene.input_value, node_gene.output_value = 0, 0
-
-        return outputs
+        self.outputs = outputs
 
     def mutate(self):
         seed = random_sample()
@@ -54,10 +59,10 @@ class Genome:
             if connection_found:
                 break
             node_gene_1, node_gene_2 = [choice(self.node_genes, 1)[0] for i in range(2)]
-
-            if self.valid_node_pair(node_gene_1, node_gene_2):
+            connection_type = self.valid_node_pair(node_gene_1, node_gene_2)
+            if connection_type:
                 connection_found = True
-                if self.valid_node_pair(node_gene_1, node_gene_2) == ConnectionTypes.CONNECTION_EXISTS:
+                if connection_typen == ConnectionTypes.CONNECTION_EXISTS:
                     connection = [connection_gene for connection_gene in self.connection_genes if (
                             connection_gene.input_node_id == node_gene_1.id and connection_gene.output_node_id == node_gene_2.id)]
                     if not connection.enabled:
@@ -69,7 +74,7 @@ class Genome:
                     except KeyError:
                         innovation_id = self.generation.current_innovation
                         self.generation.current_innovation += 1
-                    self.connection_genes.append(ConnectionGene(innovation_id, node_gene_1, node_gene_2))
+                    self.connection_genes.append(ConnectionGene(innovation_id, node_gene_1, node_gene_2, recurrent=connection_type == ConnectionTypes.RECURRENT))
 
     def valid_node_pair(self, node_gene_1, node_gene_2):
         if [connection_gene for connection_gene in self.connection_genes if
@@ -123,7 +128,6 @@ class NodeGene:
         self.identifier = identifier
         self.layer = layer
         self.type_ = type_
-        self.bias = bias
         self.input_value = 0
         self.output_value = 0
         self.activation_function = activation_function
@@ -139,6 +143,14 @@ class ConnectionGene:
         self.enabled = enabled
         self.recurrent = recurrent
 
+
+def save_genome(genome):
+    with open(f"{self.generation.number}_{self.generation.index(self)}", "wb") as f:
+        dump(genome, f)
+
+def load_network(file_path):
+    with open(file_path, "rb") as f:
+        return load(f)
 
 if __name__ == '__main__':
     # layer test (WORKS!)

@@ -12,6 +12,7 @@ from render_object import RenderObject
 class Level:
     """Provides an interface to handle all logic for a level
     """
+
     def __init__(self, engine, num, screen, display_surface):
         self.engine = engine
         self.num = num
@@ -64,7 +65,8 @@ class Level:
         """
         entity.update_x(self.engine.dt)
         collisions = self.get_collisions(entity)
-        entity.collisions = {CollisionTypes.X_WALL_LEFT: False, CollisionTypes.X_WALL_RIGHT: False}
+        entity.collisions = {
+            CollisionTypes.X_WALL_LEFT: False, CollisionTypes.X_WALL_RIGHT: False}
         if collisions:
             for collision in collisions:
                 if entity.rect.right >= collision.left >= entity.old_rect.right:
@@ -133,10 +135,12 @@ class Level:
         """
         for chunk in self.get_visible_chunks():
             for tile in chunk:
-                self.render_queue.enqueue(RenderObject(tile.x, tile.y, tile.image))
+                self.render_queue.enqueue(
+                    RenderObject(tile.x, tile.y, tile.image))
 
         for entity in self.entities:
-            self.render_queue.enqueue(RenderObject(entity.x, entity.y, entity.image))
+            self.render_queue.enqueue(RenderObject(
+                entity.x, entity.y, entity.image))
 
         self.render_queue.enqueue(
             RenderObject(self.player.x, self.player.y, self.player.image))

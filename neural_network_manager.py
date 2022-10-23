@@ -7,7 +7,8 @@ from genome import Genome
 class Generation:
     """Pending Documentation"""
 
-    def __init__(self, size, distance_threshold):
+    def __init__(self, number, distance_threshold):
+        self.number = number
         self.generation = []
         self.connections = {}
         self.current_innovation = 0
@@ -21,8 +22,11 @@ class Generation:
         return self.generation[index]
     
     def get_next_generation():
-        next_generation = Generation()
+        for genome in self:
+            genome.mutate()
+          
         species = self.speciation()
+        next_generation = Generation(self.number + 1, self.distance_threshold)
         number_of_offspring = GENERATION_SIZE
         population_average_adjusted_fitness = sum([calulate_total_adjusted_fitness(species[species_number]) for species_number in species]) / self.size
         
@@ -30,9 +34,12 @@ class Generation:
         for species_number in species:
             allowed_number_of_offspring = min(round((calulate_total_adjusted_fitness(species[species_number]) * len(species[species_number]) / population_average_adjusted_fitness)), number_of_offspring)
             number_of_offspring -= allowed_number_of_offspring
-
             for i in repeat(number_of_offspring):
                 mating_pool = roulette_wheel_selection(species[species_number])
+                next_generation.genomes.append(self.crossover(mating_pool))
+        
+        next_generation.connections = self.connections
+        next_generation.current_innovation = self.current_innovation
 
 
             
@@ -53,8 +60,11 @@ class Generation:
                 if self.get_distance_between_2_genomes(random_genome, genome) < self.distance_threshold:
                     species[current_species_number].append(genome)
                     genomes.remove(genome)
+        if len(species) < TARGET_NUMBER_OF_SPECIES:
+            self.distance_threshold += DISTANCE_THRESHOLD_STEP
+        elif len(species) > TARGET_NUMBER_OF_SPECIES:
+            self.distance_threshold += DISTANCE_THRESHOLD_STEP
         return species
-
 
 
     def roulette_wheel_selection(self, genomes, mating_pool_size=2):
@@ -71,7 +81,8 @@ class Generation:
         
 
 
-    def crossover(self, parent1, parent2):
+    def crossover(self, parents):
+        parent1, parent2  = parents
         fittest_parent = max(genome1, genome2, key=fitness_function)
         child = copy_genome(fittest_parent)
         shared_connections = get_shared_connections(parent1, parent2)
@@ -150,7 +161,8 @@ def get_average_enabled_weight_difference(self, genome1, genome2):
 def calulate_total_adjusted_fitness(genomes):
     return sum([fitness_function(genome) / len(species) for genome in genomes])
 
-def fitness_function():
-    pass
+def fitness_function(genome):
+    return 1 - sum((e-a)**2 for a, e in zip(genome.outputs, EXPECTED_OUTPUTS))
+    
 
 
