@@ -35,6 +35,7 @@ class Entity:
         self.JUMP_GRACE_TIME = 0.05
 
         self.GRAVITY = (2 * self.JUMP_HEIGHT) / (pow(self.TIME_TO_JUMP_PEAK, 2))
+        self.MAX_FALL = self.GRAVITY / 5
         self.INIT_JUMP_VELOCITY = self.GRAVITY * self.TIME_TO_JUMP_PEAK * -1
         self.air_timer = 0
         self.grounded = False

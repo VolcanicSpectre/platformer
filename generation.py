@@ -21,10 +21,16 @@ class Generation:
     def __getitem__(self, index):
         return self.generation[index]
     
+    def initilaise(self):
+        self = [Genome().initilaise() for i in range(POPULATION_SIZE)]
+
     def get_next_generation():
         for genome in self:
             genome.mutate()
-          
+        for genome in self:
+            for inputs in INPUTS:
+                genome.feed_forward(inputs)
+                
         species = self.speciation()
         next_generation = Generation(self.number + 1, self.distance_threshold)
         number_of_offspring = GENERATION_SIZE
@@ -40,12 +46,8 @@ class Generation:
         
         next_generation.connections = self.connections
         next_generation.current_innovation = self.current_innovation
+    
 
-
-            
-
-
-        
     def speciation(self):
         current_species_number = 0
         genomes = self.copy()
@@ -80,7 +82,6 @@ class Generation:
         return self.rng.choice(max_percent_genomes, p=genome_selection_probability,size=mating_pool_size), total_species_fitness / len(chromosome_fitness_values)
         
 
-
     def crossover(self, parents):
         parent1, parent2  = parents
         fittest_parent = max(genome1, genome2, key=fitness_function)
@@ -94,8 +95,6 @@ class Generation:
         return child
 
         
-
-
     def get_excess_and_disjoint_connection_genes(genome1, genome2):
         genome1.connection_genes.sort(key=lambda connection_gene: connection_gene.innovation_id)
         genome2.connection_genes.sort(key=lambda connection_gene: connection_gene.innovation_id)
