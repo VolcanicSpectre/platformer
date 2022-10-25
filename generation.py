@@ -3,6 +3,8 @@ from itertools import repeat
 from constants import *
 from genome import Genome, save_genome
 from math import inf
+import pygame
+
 
 class Population:
     """Pending Documentation"""
@@ -64,10 +66,12 @@ class Population:
                 if self.get_distance_between_2_genomes(random_genome, genome) < self.distance_threshold:
                     species[current_species_number].append(genome)
                     genomes.remove(genome)
+        
         if len(species) < TARGET_NUMBER_OF_SPECIES:
             self.distance_threshold += DISTANCE_THRESHOLD_STEP
         elif len(species) > TARGET_NUMBER_OF_SPECIES:
             self.distance_threshold += DISTANCE_THRESHOLD_STEP
+
         return species
 
 
@@ -86,6 +90,7 @@ class Population:
 
     def crossover(self, parents):
         parent1, parent2  = parents
+        
         fittest_parent = max(parent1, parent2, key=fitness_function)
         child = copy_genome(fittest_parent)
         shared_connections = get_shared_connections(parent1, parent2)
@@ -151,8 +156,7 @@ def copy_genome(genome):
     return copied_genome
 
 def get_weights_of_shared_connections(genome1, genome2):
-    return [(connection_gene_1.weight, connection_gene_2.weight) for connection_gene_1 in genome1.connection_genes for connection_gene_2 in genome2.connection_genes if connection_gene_1.innovation_id == connection_gene_2.innovation_id]
-
+    return [(connection_gene_1.weight, connection_gene_2.weight) for connection_gene_1, connection_gene_2 in zip(genome1.connection_genes, genome2.connection_genes) if connection_gene_1.innovation_id == connection_gene_2.innovation_id]
 
 def get_average_enabled_weight_difference(genome1, genome2):
         weights_of_shared_connections = get_weights_of_shared_connections(genome1, genome2)
@@ -164,7 +168,6 @@ def calulate_total_adjusted_fitness(genomes):
     return sum([fitness_function(genome) / len(genomes) for genome in genomes])
 
 def fitness_function(genome):
-    print(genome.outputs)
     return 1 - sum((e-a)**2 for a, e in zip(genome.outputs, EXPECTED_OUTPUTS))
     
 
@@ -172,6 +175,14 @@ def fitness_function(genome):
 if __name__ == "__main__":
     population = Population(0, 100)
     population.initilaise()
+
+    for genome in population.generation:
+        genome.set_node_layers()
+        print(genome.node_genes[0].layer)
+        for ff_input in INPUTS:
+            genome.feed_forward(ff_input)
+            print(genome.outputs)
+    sys.exit()
     for i in range(100):
         population.advance_generation()
     best_genome = max(population, key=fitness_function)
