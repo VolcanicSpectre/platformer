@@ -12,11 +12,11 @@ import sys
 
 sys.setrecursionlimit(9999999)
 
-class Generation:
-    def __init__(self, number, distance_threshold):
-        self.connections = {}
-        self.current_innovation = 0
-        self.rng = np.random.default_rng()
+# class Generation:
+#     def __init__(self, number, distance_threshold):
+#         self.connections = {}
+#         self.current_innovation = 0
+#         self.rng = np.random.default_rng()
 
 class Genome:
     def __init__(self, generation, blank_initialise=True): 
@@ -29,27 +29,36 @@ class Genome:
             self.initilaise()
     
     def initilaise(self):
-        self.node_genes += [NodeGene(i, 0, NodeTypes.INPUT) for i in range(INITIAL_SIZES[0])]
-        node_gene_counter = len(self.node_genes)
-        
-        self.node_genes += [NodeGene(i + node_gene_counter, 1, NodeTypes.HIDDEN) for i in range(INITIAL_SIZES[1])]
-        node_gene_counter = len(self.node_genes)
-        
-        self.node_genes += [NodeGene(i + node_gene_counter, 2,  NodeTypes.OUTPUT) for i in range(INITIAL_SIZES[2])]
-        for input_node in [node_gene for node_gene in self.node_genes if node_gene.type_ == NodeTypes.INPUT]:
+        valid_genome = False 
+        while not valid_genome:
+            self.node_genes = [NodeGene(i, 0, NodeTypes.INPUT) for i in range(INITIAL_SIZES[0])]
+            node_gene_counter = len(self.node_genes)
+            
+            self.node_genes += [NodeGene(i + node_gene_counter, 1, NodeTypes.HIDDEN) for i in range(INITIAL_SIZES[1])]
+            node_gene_counter = len(self.node_genes)
+            
+            self.node_genes += [NodeGene(i + node_gene_counter, 2,  NodeTypes.OUTPUT) for i in range(INITIAL_SIZES[2])]
+            for input_node in [node_gene for node_gene in self.node_genes if node_gene.type_ == NodeTypes.INPUT]:
+                for hidden_node in [node_gene for node_gene in self.node_genes if node_gene.type_ == NodeTypes.HIDDEN]:
+                    if self.rng.uniform(size=1) < PERCENTAGE_OF_INITIAL_CONNECTIONS:
+                        innovation_id = self.generation.current_innovation
+                        self.generation.current_innovation += 1
+                        self.connection_genes.append(ConnectionGene(innovation_id, input_node.id, hidden_node.id))
+            
             for hidden_node in [node_gene for node_gene in self.node_genes if node_gene.type_ == NodeTypes.HIDDEN]:
-                if self.rng.uniform(size=1) < PERCENTAGE_OF_INITIAL_CONNECTIONS:
-                    innovation_id = self.generation.current_innovation
-                    self.generation.current_innovation += 1
-                    self.connection_genes.append(ConnectionGene(innovation_id, input_node.id, hidden_node.id))
-        
-        for hidden_node in [node_gene for node_gene in self.node_genes if node_gene.type_ == NodeTypes.HIDDEN]:
-            for output_node in [node_gene for node_gene in self.node_genes if node_gene.type_ == NodeTypes.OUTPUT]:
-                if self.rng.uniform(size=1) < PERCENTAGE_OF_INITIAL_CONNECTIONS:
-                    innovation_id = self.generation.current_innovation
-                    self.generation.current_innovation += 1
-                    self.connection_genes.append(ConnectionGene(innovation_id, hidden_node.id, output_node.id))
+                for output_node in [node_gene for node_gene in self.node_genes if node_gene.type_ == NodeTypes.OUTPUT]:
+                    if self.rng.uniform(size=1) < PERCENTAGE_OF_INITIAL_CONNECTIONS:
+                        innovation_id = self.generation.current_innovation
+                        self.generation.current_innovation += 1
+                        self.connection_genes.append(ConnectionGene(innovation_id, hidden_node.id, output_node.id))
     
+            try:
+                self.set_node_layers()
+            except ValueError: # There is no valid path to the input layer
+                continue
+            else:
+                valid_genome = True
+
     def feed_forward(self, inputs):
         for input_node, input_value in zip(
                 [node_gene for node_gene in self.node_genes if node_gene.type_ == NodeTypes.INPUT], inputs):
@@ -57,11 +66,11 @@ class Genome:
 
         for node_gene in [node_gene for node_gene in self.node_genes if node_gene.type_ != NodeTypes.INPUT]:
             for connection in [connection for connection in self.connection_genes if
-                               (connection.enabled and connection.output_id == node_gene.id)]:
+                               (connection.enabled and connection.output_node_id == node_gene.id)]:
                 node_gene.input_value += self.node_genes[connection.input_node_id].output_value * connection.weight
             node_gene.output_value = node_gene.activation_function(node_gene.output_value)
 
-        outputs = [node_gene.output_value for node_gene in self.node_genes if node_gene.type == NodeTypes.OUTPUT]
+        outputs = [node_gene.output_value for node_gene in self.node_genes if node_gene.type_ == NodeTypes.OUTPUT]
 
         for node_gene in self.node_genes:
             node_gene.input_value, node_gene.output_value = 0, 0
@@ -138,8 +147,10 @@ class Genome:
         connection_for_new_node = choice([connection_gene for connection_gene in self.connection_genes if not connection_gene.recurrent])
         connection_for_new_node.enabled = False
         new_node_gene = NodeGene(len(self.node_genes))
+        
         new_connection_gene_1 = ConnectionGene(None, connection_for_new_node.input_node_id, new_node_gene.id)
         new_connection_gene_2 = ConnectionGene(None, new_node_gene.id, connection_for_new_node.output_node_id)
+        
         self.connection_genes.append(new_connection_gene_1)
         self.connection_genes.append(new_connection_gene_2)
         self.node_genes.append(new_node_gene)
@@ -249,24 +260,24 @@ def load_network(file_path):
     with open(file_path, "rb") as f:
         return load(f)
 
-if __name__ == '__main__':
-    width, height = 1920, 1080
+# if __name__ == '__main__':
+#     width, height = 1920, 1080
 
-    screen = pygame.display.set_mode((width, height))
-    gen = Generation(0, 4)
-    test_genome = Genome(gen, blank_initialise=False)
-    running = True
-    while running:
-        screen.fill((0,0,0))
-        for event in pygame.event.get():
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    running = False
-                elif event.key == pygame.K_p:
-                    test_genome.mutate_add_node()
-                elif event.key == pygame.K_o:
-                    test_genome.mutate_add_connection()
-        test_genome.set_node_layers()
-        test_genome.draw(screen)
-        pygame.display.update()
+#     screen = pygame.display.set_mode((width, height))
+#     gen = Generation(0, 4)
+#     test_genome = Genome(gen, blank_initialise=False)
+#     running = True
+#     while running:
+#         screen.fill((0,0,0))
+#         for event in pygame.event.get():
+#             if event.type == pygame.KEYDOWN:
+#                 if event.key == pygame.K_ESCAPE:
+#                     running = False
+#                 elif event.key == pygame.K_p:
+#                     test_genome.mutate_add_node()
+#                 elif event.key == pygame.K_o:
+#                     test_genome.mutate_add_connection()
+#         test_genome.set_node_layers()
+#         test_genome.draw(screen)
+#         pygame.display.update()
     
