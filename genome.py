@@ -1,5 +1,4 @@
-import numpy as np
-from numpy.random import uniform, choice
+from numpy.random import default_rng
 from functools import lru_cache
 from pickle import dump, load
 from constants import *
@@ -7,7 +6,7 @@ from connection_types import ConnectionTypes
 from node_types import NodeTypes
 import json
 from collections import defaultdict, OrderedDict
-import pygame
+#import pygame
 import sys
 
 sys.setrecursionlimit(9999999)
@@ -16,21 +15,29 @@ sys.setrecursionlimit(9999999)
 #     def __init__(self, number, distance_threshold):
 #         self.connections = {}
 #         self.current_innovation = 0
-#         self.rng = np.random.default_rng()
+#         self.rng = default_rng()
 
 class Genome:
     def __init__(self, generation, blank_initialise=True): 
-        self.rng = np.random.default_rng()
+        self.rng = default_rng()
         self.generation = generation
+        self.fitness = 0
         self.node_genes = []
         self.connection_genes = []
         self.outputs = []
         if not blank_initialise:
             self.initilaise()
     
+    def __lt__(self, other):
+        return self.fitness < other.fitness
+
+    def __eq__(self, other):
+        return self.fitness == other.fitness
+    
     def initilaise(self):
         valid_genome = False 
         while not valid_genome:
+            
             temp_connections_dict = self.generation.connections.copy()
             
             self.node_genes = [NodeGene(i, 0, NodeTypes.INPUT) for i in range(INITIAL_SIZES[0])]
@@ -50,7 +57,7 @@ class Genome:
                             self.generation.connections[(input_node.id, hidden_node.id)] = innovation_id
                             self.generation.current_innovation += 1
                     
-                        self.connection_genes.append(ConnectionGene(innovation_id, input_node.id, hidden_node.id, self.rng.uniform(low=-20, high=20, size=1)))
+                        self.connection_genes.append(ConnectionGene(innovation_id, input_node.id, hidden_node.id, self.rng.uniform(low=-20, high=20, size=1)[0]))
             
             for hidden_node in [node_gene for node_gene in self.node_genes if node_gene.type_ == NodeTypes.HIDDEN]:
                 for output_node in [node_gene for node_gene in self.node_genes if node_gene.type_ == NodeTypes.OUTPUT]:
@@ -62,40 +69,57 @@ class Genome:
                             self.generation.connections[(hidden_node.id, output_node.id)] = innovation_id 
                             self.generation.current_innovation += 1
                             
-                        self.connection_genes.append(ConnectionGene(innovation_id, hidden_node.id, output_node.id, self.rng.uniform(low=-20, high=20, size=1)))
+                        self.connection_genes.append(ConnectionGene(innovation_id, hidden_node.id, output_node.id, 5))
     
             try:
                 self.set_node_layers()
             except ValueError: # There is no valid path to the input layer
                 self.generation.connections = temp_connections_dict
+
+                self.node_genes = []
+                self.connection_genes = []
+                self.outputs = []
             else:
                 valid_genome = True
-
+ 
     def feed_forward(self, inputs):
+        self.outputs = []
         self.set_node_layers()        
         
         node_genes_by_layer = defaultdict(list)
         for node_gene in self.node_genes:
             node_genes_by_layer[node_gene.layer].append(node_gene)
         
-        node_genes_by_layer = dict(sorted(rows.items()))
+        node_genes_by_layer = dict(sorted(node_genes_by_layer.items()))
+        output_layer = max(node_genes_by_layer)
 
-        for input_node, input_value in zip(node_genes_by_layer, inputs):
+        for input_node, input_value in zip(node_genes_by_layer[0], inputs):
             input_node.input_value = 0
-            input_node.output_value = input_value
+            input_node.input_value = input_value
+            
             for connection_gene_terminating_at_node in [connection_gene for connection_gene in self.connection_genes if connection_gene.output_node_id == input_node.id]:
-                input_node.input_value += self.node_genes[connection_termianting_at_node.input_node_id].output_value * connection_gene_terminating_at_node.weight    
-            input_node.output_value += input_node.input_value
+                input_node.input_value += self.node_genes[connection_gene_terminating_at_node.input_node_id].output_value * connection_gene_terminating_at_node.weight    
+            
+            input_node.output_value = input_node.input_value
+        
 
+        del(node_genes_by_layer[0])
+        
+        for layer in node_genes_by_layer.values():
+            for node_gene in layer:
+                node_gene.input_value = 0
+                for connection_gene_terminating_at_node in [connection_gene for connection_gene in self.connection_genes if connection_gene.output_node_id == node_gene.id]:
+                    node_gene.input_value += self.node_genes[connection_gene_terminating_at_node.input_node_id].output_value * connection_gene_terminating_at_node.weight
+                
+                node_gene.output_value = node_gene.activation_function(node_gene.input_value)
 
-        outputs = [node_gene.output_value for node_gene in self.node_genes if node_gene.type_ == NodeTypes.OUTPUT]
-       
-        for node_gene in self.node_genes:
-            node_gene.input_value, node_gene.output_value = 0, 0
-        self.outputs = outputs
-
+        #temp_var = [node_gene.output_value for node_gene in node_genes_by_layer[output_layer]]
+        for node_gene in node_genes_by_layer[output_layer]:
+            self.list_of_outputs.append(node_gene.output_value)
+    
     def mutate(self):
-        seed = uniform(size=1)
+        self.set_node_layers()
+        seed = self.rng.uniform(size=1)
         if seed < ADD_NODE_CHANCE:
             self.mutate_add_node()
         elif seed < ADD_CONNECTION_CHANCE:
@@ -116,7 +140,7 @@ class Genome:
         for i in range(20):
             if connection_found:
                 break
-            node_gene_1, node_gene_2 = [choice(self.node_genes, 1)[0] for i in range(2)]
+            node_gene_1, node_gene_2 = [self.rng.choice(self.node_genes, 1)[0] for i in range(2)]
             connection_type = self.valid_node_pair(node_gene_1, node_gene_2)
 
             if connection_type:
@@ -146,7 +170,7 @@ class Genome:
                     
                     
                     
-                    self.connection_genes.append(ConnectionGene(innovation_id, node_gene_1.id, node_gene_2.id, self.rng.uniform(low=-20, high=20, size=1), recurrent=connection_type == recurrent))
+                    self.connection_genes.append(ConnectionGene(innovation_id, node_gene_1.id, node_gene_2.id, self.rng.uniform(low=-20, high=20, size=1)[0], recurrent=connection_type == recurrent))
 
     def valid_node_pair(self, node_gene_1, node_gene_2):
         if [connection_gene for connection_gene in self.connection_genes if
@@ -165,12 +189,27 @@ class Genome:
         return ConnectionTypes.VALID_FORWARD_CONNECTION
 
     def mutate_add_node(self):
-        connection_for_new_node = choice([connection_gene for connection_gene in self.connection_genes if not connection_gene.recurrent])
+        connection_for_new_node = self.rng.choice([connection_gene for connection_gene in self.connection_genes if not connection_gene.recurrent])
         connection_for_new_node.enabled = False
         new_node_gene = NodeGene(len(self.node_genes))
         
-        new_connection_gene_1 = ConnectionGene(None, connection_for_new_node.input_node_id, new_node_gene.id, self.rng.uniform(low=-20, high=20, size=1))
-        new_connection_gene_2 = ConnectionGene(None, new_node_gene.id, connection_for_new_node.output_node_id, self.rng.uniform(low=-20, high=20, size=1))
+
+        try:
+            innovation_id = self.generation.connections[(connection_for_new_node.input_node_id, new_node_gene.id)]
+        except KeyError:
+            innovation_id = self.generation.current_innovation
+            self.generation.current_innovation += 1
+        
+        new_connection_gene_1 = ConnectionGene(innovation_id, connection_for_new_node.input_node_id, new_node_gene.id, self.rng.uniform(low=-20, high=20, size=1)[0])
+        
+
+        try:
+            innovation_id = self.generation.connections[(new_node_gene.id, connection_for_new_node.output_node_id)]
+        except KeyError:
+            innovation_id = self.generation.current_innovation
+            self.generation.current_innovation += 1
+
+        new_connection_gene_2 = ConnectionGene(innovation_id, new_node_gene.id, connection_for_new_node.output_node_id, self.rng.uniform(low=-20, high=20, size=1)[0])
         
         self.connection_genes.append(new_connection_gene_1)
         self.connection_genes.append(new_connection_gene_2)
@@ -189,7 +228,7 @@ class Genome:
     def get_longest_path_to_input_layer(self, node_gene):
         path_lengths = []
         
-        for connection_termianting_at_node in [connection_gene for connection_gene in self.connection_genes if connection_gene.enabled and not connection_gene.recurrent and connection_gene.output_node_id == node_gene.id]:
+        for connection_termianting_at_node in [connection_gene for connection_gene in self.connection_genes if (not connection_gene.recurrent) and connection_gene.output_node_id == node_gene.id]:
             if self.node_genes[connection_termianting_at_node.input_node_id].type_ == NodeTypes.INPUT:
                 path_lengths.append(1)
             else:
@@ -236,13 +275,15 @@ class Genome:
                             if connection_gene.recurrent:
                                 colour = (173, 216, 230)
                             else:
-                                colour = (1*connection_gene.weight//30,205 * connection_gene.weight//250 ,50)
+                                colour = (20, 200 ,50)
                             target_center = nodes_to_draw[node_id_2][1]
             
                     pygame.draw.line(screen, colour, center, target_center, 2)
 
 
-
+    def save_genome(self):
+        with open(f"{self.generation.generation_number}_{self.generation.generation.index(self)}.pickle", "wb") as f:
+            dump(self, f)
 
 
 
@@ -252,8 +293,7 @@ class Genome:
 
 
 class NodeGene:
-    def __init__(self, id, layer=0, type_=NodeTypes.HIDDEN, bias=uniform(-20, 20, 1)[0],
-                 activation_function=sigmoid):
+    def __init__(self, id, layer=0, type_=NodeTypes.HIDDEN, activation_function=sigmoid):
         self.id = id
         self.layer = layer
         self.type_ = type_
@@ -271,12 +311,12 @@ class ConnectionGene:
         self.enabled = enabled
         self.recurrent = recurrent
 
+    def __str__(self):
+        print(f"({self.input_node_id} -> {self.output_node_id}) : {self.weight}")
 
-def save_genome(genome):
-    with open(f"{self.generation.number}_{self.generation.index(self)}", "wb") as f:
-        dump(genome, f)
 
-def load_network(file_path):
+
+def load_genome(file_path):
     with open(file_path, "rb") as f:
         return load(f)
 

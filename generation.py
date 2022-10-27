@@ -1,10 +1,9 @@
 from numpy.random import default_rng
 from itertools import repeat
 from constants import *
-from genome import Genome, save_genome
+from genome import Genome, load_genome
 from math import inf
-import pygame
-
+import sys
 
 class Population:
     """Pending Documentation"""
@@ -17,39 +16,44 @@ class Population:
         self.distance_threshold = distance_threshold
         self.rng = default_rng()
 
-    def __iter__(self):
-        return iter(self.generation)
-
-    def __getitem__(self, index):
-        return self.generation[index]
     
     def initilaise(self):
         self.generation = [Genome(self, blank_initialise=False) for i in range(GENERATION_SIZE)]
 
     def advance_generation(self):
-        for genome in self:
+        for genome in self.generation:
             genome.mutate()
         
-        for genome in self:
-            for inputs in INPUTS:
-                genome.feed_forward(inputs)
-                
+        for genome in self.generation:
+            genome.list_of_outputs = []
+            for input_value in INPUTS:
+                genome.feed_forward(input_value)
+        
+        for genome in self.generation:
+            genome.fitness = fitness_function(genome)
+            if genome.fitness > 3.8:
+                print("FITNESS THRESHOLD REACHED")
+                genome.save_genome()
+                sys.exit()
+        
         species = self.speciation()
         number_of_offspring = GENERATION_SIZE
         population_average_adjusted_fitness = sum([calulate_total_adjusted_fitness(species[species_number]) for species_number in species]) / len(self.generation)
         
         number_of_offspring = GENERATION_SIZE
         
-        self.generation = []
+        new_generation = []
+
+
         for species_number in species:
             allowed_number_of_offspring = min(round((calulate_total_adjusted_fitness(species[species_number]) * len(species[species_number]) / population_average_adjusted_fitness)), number_of_offspring)
             number_of_offspring -= allowed_number_of_offspring
-            for i in repeat(number_of_offspring):
+            for i in range(allowed_number_of_offspring):
                 mating_pool = self.roulette_wheel_selection(species[species_number])
-                self.generation.append(self.crossover(mating_pool))
+                new_generation.append(self.crossover(mating_pool))
         
         self.generation_number += 1
-        
+        self.generation = new_generation
     
 
     def speciation(self):
@@ -77,21 +81,20 @@ class Population:
 
     def roulette_wheel_selection(self, genomes, mating_pool_size=2):
         mating_pool = []
-        total_species_fitness = sum([fitness_function(genome) for genome in genomes])
-        max_percent_genomes = sorted([genome for genome in genomes], key=fitness_function)[-int(len(genomes) * PERCENTAGE_OF_GENOMES_ALLOWED_TO_REPRODUCE):]
+        total_species_fitness = sum([genome.fitness for genome in genomes])
+        max_percent_genomes = sorted(genomes)[-int(len(genomes) * PERCENTAGE_OF_GENOMES_ALLOWED_TO_REPRODUCE):]
         
-        max_percent_genome_fitness_values = sorted([fitness_function(genome) for genome in genomes])[-int(len(genomes) * PERCENTAGE_OF_GENOMES_ALLOWED_TO_REPRODUCE):]
+        max_percent_genome_fitness_values = sorted([genome.fitness for genome in genomes])[-int(len(genomes) * PERCENTAGE_OF_GENOMES_ALLOWED_TO_REPRODUCE):]
         total_max_percent_species_fitness = sum(max_percent_genome_fitness_values)
 
         genome_selection_probability =[(genome_fitness_value / total_max_percent_species_fitness) for genome_fitness_value in max_percent_genome_fitness_values]
-
-        return self.rng.choice(max_percent_genomes, p=genome_selection_probability,size=mating_pool_size), total_species_fitness / len(genomes)
+        return self.rng.choice(max_percent_genomes, p=genome_selection_probability,size=mating_pool_size)
         
 
     def crossover(self, parents):
         parent1, parent2  = parents
         
-        fittest_parent = max(parent1, parent2, key=fitness_function)
+        fittest_parent = max(parent1, parent2)
         child = copy_genome(fittest_parent)
         shared_connections = get_shared_connections(parent1, parent2)
         weights_of_shared_connections = get_weights_of_shared_connections(parent1, parent2)
@@ -99,6 +102,7 @@ class Population:
             for index, shared_connection_gene in enumerate(shared_connections):
                 if connection_gene.innovation_id == shared_connection_gene.innovation_id:
                     connection_gene.weight = self.rng.choice(weights_of_shared_connections[index], 1)[0]
+
         return child
 
         
@@ -150,7 +154,7 @@ class Population:
 
 
 def copy_genome(genome):
-    copied_genome = Genome()
+    copied_genome = Genome(genome.generation)
     copied_genome.node_genes = genome.node_genes.copy()
     copied_genome.connection_genes = genome.connection_genes.copy()
     return copied_genome
@@ -158,32 +162,44 @@ def copy_genome(genome):
 def get_weights_of_shared_connections(genome1, genome2):
     return [(connection_gene_1.weight, connection_gene_2.weight) for connection_gene_1, connection_gene_2 in zip(genome1.connection_genes, genome2.connection_genes) if connection_gene_1.innovation_id == connection_gene_2.innovation_id]
 
+def get_shared_connections(genome1, genome2):
+    return [connection_gene_1 for connection_gene_1, connection_gene_2 in zip(genome1.connection_genes, genome2.connection_genes) if connection_gene_1.innovation_id == connection_gene_2.innovation_id]
+
 def get_average_enabled_weight_difference(genome1, genome2):
         weights_of_shared_connections = get_weights_of_shared_connections(genome1, genome2)
         if weights_of_shared_connections:
             return sum(abs(weight_1 - weight_2) for weight_1, weight_2 in weights_of_shared_connections) / len(weights_of_shared_connections)
         else:
             return inf
+
 def calulate_total_adjusted_fitness(genomes):
-    return sum([fitness_function(genome) / len(genomes) for genome in genomes])
+    return sum([genome.fitness / len(genomes) for genome in genomes])
 
 def fitness_function(genome):
-    return 1 - sum((e-a)**2 for a, e in zip(genome.outputs, EXPECTED_OUTPUTS))
+    fitness = 4
+    for output, expected_output in zip(genome.list_of_outputs, EXPECTED_OUTPUTS):
+        fitness -= (output - expected_output) ** 2
     
+    return fitness    
 
 
 if __name__ == "__main__":
     population = Population(0, 100)
     population.initilaise()
 
-    for genome in population.generation:
-        genome.set_node_layers()
-        print(genome.node_genes[0].layer)
-        for ff_input in INPUTS:
-            genome.feed_forward(ff_input)
-            print(genome.outputs)
-    sys.exit()
-    for i in range(100):
+    while True:
         population.advance_generation()
-    best_genome = max(population, key=fitness_function)
-    save_genome(best_genome)
+    
+    # best_genome = max(population.generation, key=fitness_function)
+    # print(fitness_function(best_genome))
+    # best_genome.save_genome()
+    
+    # genome = load_genome("100_0.pickle")
+    # for input_value in INPUTS:
+    #     genome.feed_forward(input_value)
+    
+    
+    # for input_value, output_value in zip(INPUTS, genome.list_of_outputs):
+    #     print(f"{input_value} -? {output_value}")
+
+    # print(genome.fitness)
