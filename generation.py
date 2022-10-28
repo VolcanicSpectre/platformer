@@ -5,6 +5,7 @@ from genome import Genome, load_genome
 from math import inf
 import sys
 import pygame
+from random import choices
 
 
 class Population:
@@ -38,66 +39,41 @@ class Population:
                 print("FITNESS THRESHOLD REACHED")
                 genome.save_genome()
                 sys.exit()
-
+        print(f"MAX FITNESS: {max(self.generation).fitness}")
         print(f"GEN {self.generation_number}")
-        print(f"AVERAGE FITNESS: {total_fitness / 100}")
+        print(f"AVERAGE FITNESS: {total_fitness / 50}")
 
-        species = self.speciation()
-        print(len(species.keys()))
-        print("\n\n")
-
+        # species = self.speciation()
+        # print(f"SPECIES: {len(species.keys())}")
+        # print(f"THRESHOLD: {self.distance_threshold}")
+        print("------------------------------")
         number_of_offspring = GENERATION_SIZE
-        population_average_adjusted_fitness = sum(
-            [calulate_total_adjusted_fitness(species[species_number]) for species_number in species]) / len(
-            self.generation)
+        population_average_adjusted_fitness = calulate_total_adjusted_fitness(self.generation) / len(self.generation)
 
         number_of_offspring = GENERATION_SIZE
 
         new_generation = []
 
-        for species_number in species:
-            allowed_number_of_offspring = min(round((calulate_total_adjusted_fitness(species[species_number]) * len(
-                species[species_number]) / population_average_adjusted_fitness)), number_of_offspring)
-            number_of_offspring -= allowed_number_of_offspring
-            for i in range(allowed_number_of_offspring):
-                mating_pool = self.roulette_wheel_selection(species[species_number])
-                new_generation.append(self.crossover(mating_pool))
+        for i in range(GENERATION_SIZE):
+            mating_pool = self.roulette_wheel_selection(self.generation)
+            print(mating_pool)
+            new_generation.append(self.crossover(mating_pool))
 
         self.generation_number += 1
         self.generation = new_generation
 
-    def speciation(self):
-        current_species_number = 0
-        genomes = self.generation[:]
-        species = {}
-        while genomes:
-            current_species_number += 1
-            random_genome = self.rng.choice(genomes, 1)[0]
-            genomes.remove(random_genome)
-            species[current_species_number] = [random_genome]
-            for genome in genomes[:]:
-                if self.get_distance_between_2_genomes(random_genome, genome) < self.distance_threshold:
-                    species[current_species_number].append(genome)
-                    genomes.remove(genome)
-
-        if len(species.keys()) < TARGET_NUMBER_OF_SPECIES:
-            self.distance_threshold += DISTANCE_THRESHOLD_STEP
-        elif len(species.keys()) > TARGET_NUMBER_OF_SPECIES:
-            self.distance_threshold -= DISTANCE_THRESHOLD_STEP
-
-        return species
-
     def roulette_wheel_selection(self, genomes, mating_pool_size=2):
         mating_pool = []
         total_species_fitness = sum([genome.fitness for genome in genomes])
-        max_percent_genomes = sorted(genomes)
+        max_percent_genomes = sorted(genomes)[-int(len(genomes) * 0.5):]
 
-        max_percent_genome_fitness_values = sorted([genome.fitness for genome in genomes])
+        max_percent_genome_fitness_values = [genome.fitness for genome in max_percent_genomes]
         total_max_percent_species_fitness = sum(max_percent_genome_fitness_values)
 
         genome_selection_probability = [(genome_fitness_value / total_max_percent_species_fitness) for
                                         genome_fitness_value in max_percent_genome_fitness_values]
-        return self.rng.choice(max_percent_genomes, p=genome_selection_probability, size=mating_pool_size)
+
+        return choices(max_percent_genomes, weights=genome_selection_probability, k=2)
 
     def crossover(self, parents):
         parent1, parent2 = parents
@@ -112,37 +88,6 @@ class Population:
                     connection_gene.weight = self.rng.choice(weights_of_shared_connections[index], 1)[0]
 
         return child
-
-    def get_excess_and_disjoint_connection_genes(genome1, genome2):
-        genome1.connection_genes.sort(key=lambda connection_gene: connection_gene.innovation_id)
-        genome2.connection_genes.sort(key=lambda connection_gene: connection_gene.innovation_id)
-
-        genome_1_excess_and_disjoint_connection_genes = []
-        genome_2_excess_and_disjoint_connection_genes = []
-        disjoint_connection_genes = []
-        excess_connection_genes = []
-
-        genome_1_maximum_innovation_id = max(
-            [connection_gene.innovation_id for connection_gene in genome1.connection_genes]),
-        genome_2_maximum_innovation_id = max(
-            [connection_gene.innovation_id for connection_gene in genome2.connection_genes])
-
-        for connection_gene_1 in genome1.connection_genes:
-            if connection_gene_1.innovation_id not in [connection_gene_2.innovation_id for connection_gene_2 in
-                                                       genome2.connection_genes]:
-                genome_1_excess_and_disjoint_connection_genes.append(connection_gene_1)
-
-        for connection_gene_2 in genome2.connection_genes:
-            if connection_gene_2.innovation_id not in [connection_gene_1.innovation_id for connection_gene_1 in
-                                                       genome1.connection_genes]:
-                genome_2_excess_and_disjoint_connection_genes.append(connection_gene_2)
-
-        for connection_gene_1 in genome_1_excess_and_disjoint_connection_genes:
-            if connection_gene_1.innovation_id > genome_2_maximum_innovation_id:
-                excess_connection_genes.append(connection_gene_1)
-        for connection_gene_2 in genome_2_excess_and_disjoint_connection_genes:
-            if connection_gene_2.innovation_id > genome_1_maximum_innovation_id:
-                excess_connection_genes.append(connection_gene_2)
 
     def get_number_of_excess_and_disjoint_connection_genes(self, genome1, genome2):
         # Will need to be able to get the exxcess and disjoint connections later
@@ -163,9 +108,9 @@ class Population:
 
     def get_distance_between_2_genomes(self, genome1, genome2):
         # Could Normalise the Number of Excess and Disjoint Connections by N
-        return self.get_number_of_excess_and_disjoint_connection_genes(genome1,
-                                                                       genome2) + get_average_enabled_weight_difference(
-            genome1, genome2)
+        return (self.get_number_of_excess_and_disjoint_connection_genes(genome1,
+                                                                        genome2) + get_average_enabled_weight_difference(
+            genome1, genome2))
 
 
 def copy_genome(genome):
@@ -192,8 +137,6 @@ def get_average_enabled_weight_difference(genome1, genome2):
     if weights_of_shared_connections:
         return sum(abs(weight_1 - weight_2) for weight_1, weight_2 in weights_of_shared_connections) / len(
             weights_of_shared_connections)
-    else:
-        return inf
 
 
 def calulate_total_adjusted_fitness(genomes):
@@ -209,7 +152,7 @@ def fitness_function(genome):
 
 
 if __name__ == "__main__":
-    population = Population(0, 2)
+    population = Population(0, 0.7)
     population.initilaise()
     running = True
     while running:
