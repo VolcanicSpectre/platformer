@@ -20,8 +20,6 @@ def main(pr=None):
 
 
 if __name__ == "__main__":
-    print(eval("5 + 5"))
-
     if DEBUG:
         with cProfile.Profile() as pr:
             main(pr)
