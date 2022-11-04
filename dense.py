@@ -1,4 +1,5 @@
 from layer import Layer
+from calc import relu
 import numpy as np
 
 class Dense(Layer):
