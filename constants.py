@@ -1,7 +1,6 @@
 from os import path
 from time import strftime
 from calc import relu, sigmoid, tanh
-
 DEBUG = False
 DEBUG_FILENAME = (strftime("%m-%d-%Y")) + "_RENDER_QUEUE_CAP_120.prof"
 WIDTH, HEIGHT = 1920, 1080
@@ -22,9 +21,10 @@ PLAYER_FOLDER = path.join(ASSETS_FOLDER, "player")
 # Neural Network
 z = 0.01
 
+NUM_STACKED_FRAMES = 4
 MEMORY_BUFFER_MAX_SIZE = 2000
 
 INITIAL_GAMMA_VALUE = 0.6
 INITIAL_EPSILION_VALUE = 0.1
 
-KERNEL_SIZES = ((8, 8), (4, 4), (3, 3))
+KERNEL_SIZES = ((32, 8, 8), (64, 4, 4), (64, 3, 3))

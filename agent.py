@@ -18,4 +18,5 @@ class Agent:
 	@staticmethod
 	def build_network():
 		model = []
-		model.append(ConvolutionalLayer((DS_WIDTH, DS_HEIGHT, 4))
+		for kernel_shape in KERNEL_SIZES:
+			model.append(ConvolutionalLayer((NUM_STACKED_FRAMES, DS_WIDTH, DS_HEIGHT), )

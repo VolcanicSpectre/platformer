@@ -1,6 +1,6 @@
 from numba import njit
-from numpy import exp, power
-from constants import z
+from numpy import exp, power, zeros, flipud, fliplr
+from numba import guvectorize, int64, float64
 
 def move_towards(current, target, max_delta):
     """Returns the value closest to the target value with a maximimm change of max_delta"""
@@ -8,6 +8,30 @@ def move_towards(current, target, max_delta):
         return max(current - max_delta, target)
     else:
         return min(current + max_delta, target)
+
+def convolve2d(image, kernel, stride, output_shape, crosscorrelate=True):
+    if crosscorrelate:
+        kernel = flipud(fliplr(kernel))
+    kernel_size = kernel.shape[0]
+    
+    output = zeros(output_shape) 
+    for y in range(image.shape[1]):
+        if y > image.shape[1] - kernel_size:
+            break
+        
+        if y % stride == 0:
+            for x in range(image.shape[0]):
+                # Go to next row once kernel is out of bounds
+                if x > image.shape[0] - kernel_size:
+                    break
+                try:
+                    # Only Convolve if x has moved by the specified Strides
+                    if x % strides == 0:
+                        output[x, y] = (kernel * image[x: x + kernel_size, y: y + kernel_size]).sum()
+                except:
+                    break
+
+    return output
 
 
 @njit()

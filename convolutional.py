@@ -1,5 +1,5 @@
 import numpy as np
-from scipy.signal import correlate2d, convolve2d
+from calc import convolve2d
 from layer import Layer
 
 class ConvolutionalLayer(Layer):
@@ -12,19 +12,16 @@ class ConvolutionalLayer(Layer):
 		self.output_shape = (number_of_filters, (self.input_height - kernel_size) // self.stride + 1, (self.input_width - kernel_size) // self.stride + 1)
 		self.kernel_shape = (number_of_filters, kernel_size, kernel_size)
 		self.kernels = np.random.randn(*self.kernel_shape)
-		print(self.kernels)
 		self.biases = np.random.randn(*self.output_shape)
 
 	def forward_propogation(self, a):
 		self.input = a
 		self.output = np.copy(self.biases)
 
-		for i in range(self.number_of_filters):
-			for j in range(self.input_depth):
-					print(self.kernels[i, j])
-					self.output[i] += correlate2d(self.input[j], self.kernels[i, j], "valid")
+		for i, channel in enumerate(self.input):
+			for j, kernel in enumerate(self.kernels):
+				self.output[i] = np.add(self.output[i], convolve2d(channel, kernel, self.stride, self.output_shape[1:]))
 
-		print(self.output.shape)
 	
 	def backward_propogation(self, output_gradient, learning_rate):
 		kernels_gradient = np.zeros(self.kernel_shape)
@@ -33,14 +30,21 @@ class ConvolutionalLayer(Layer):
 		for i in range(self.number_of_filters):
 			for j in range(self.input_depth):
 				 kernels_gradient[i, j] = correlate2d(self.input[j], output_gradient[i], "valid")
-				 input_gradient[j] += convolve2d(output_gradient[i], self.kernels[i, j], "full")
+				 input_gradient[j] += convolve2d(output_gradient[i], self.kernels[i, j],)
 
 		self.kernels -= learning_rate * kernels_gradient
 		self.biases -= learning_rate * output_gradient
 
 		return input_gradient
 
+	def backward_propogation(self, output_gradient, learning_rate):
+		kernels_gradient = np.zeros(self.kernel_shape)
+		input_gradient = np.zeros(self.input_shape)
 
+		for i, channel in enumerate(self.input):
+			for j, kernel in enumerate(self.kernels):
+				kernel = convolve2d(self.input[j], output_gradient[i])
+				input_gradient[j] = 
 if __name__ == "__main__":
 	layer = ConvolutionalLayer((4, 84, 84), 4, 8, 32)
 	print(layer.output_shape)
