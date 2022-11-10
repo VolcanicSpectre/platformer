@@ -1,6 +1,8 @@
 from numba import njit
 from numpy import exp, power, zeros, flipud, fliplr
 from numba import guvectorize, int64, float64
+from constants import *
+
 
 def move_towards(current, target, max_delta):
     """Returns the value closest to the target value with a maximimm change of max_delta"""
@@ -34,6 +36,12 @@ def convolve2d(image, kernel, stride, output_shape, crosscorrelate=True):
     return output
 
 
+def get_mean_squared_error(predicted, labels):
+    mse = np.sum((predicted - labels)**2)
+    derivative = 2 * (predicted - labels)
+
+    return mse, derivative
+
 @njit()
 def relu(a):
     return max(0, a)
@@ -43,11 +51,11 @@ def relu_prime(a):
      return 1 if a > 0 else 0
 
 
-@njit()
+
 def leaky_relu(a):
     return max(a, z*a)
 
-@njit()
+
 def leaky_relu_prime(a):
     return 1 if a > 0 else z
 

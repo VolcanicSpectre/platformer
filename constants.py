@@ -1,6 +1,6 @@
 from os import path
 from time import strftime
-from calc import relu, sigmoid, tanh
+
 DEBUG = False
 DEBUG_FILENAME = (strftime("%m-%d-%Y")) + "_RENDER_QUEUE_CAP_120.prof"
 WIDTH, HEIGHT = 1920, 1080

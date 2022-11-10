@@ -1,6 +1,8 @@
 import numpy as np
-from calc import convolve2d
+from calc import convolve2d, get_mean_squared_error, leaky_relu_prime, leaky_relu
 from layer import Layer
+from activation import ActivationLayer
+
 
 class ConvolutionalLayer(Layer):
 	def __init__(self, input_shape, stride, kernel_size, number_of_filters):
@@ -37,17 +39,13 @@ class ConvolutionalLayer(Layer):
 
 		return input_gradient
 
-	def backward_propogation(self, output_gradient, learning_rate):
-		kernels_gradient = np.zeros(self.kernel_shape)
-		input_gradient = np.zeros(self.input_shape)
-
-		for i, channel in enumerate(self.input):
-			for j, kernel in enumerate(self.kernels):
-				kernel = convolve2d(self.input[j], output_gradient[i])
-				input_gradient[j] = 
+	
 if __name__ == "__main__":
 	layer = ConvolutionalLayer((4, 84, 84), 4, 8, 32)
-	print(layer.output_shape)
+	alayer = ActivationLayer(leaky_relu, leaky_relu_prime)
 	a = np.random.rand(4, 84, 84)
-	print(a.shape)
+
 	layer.forward_propogation(a)
+	
+
+	layer.backward_propogation(alayer.backward_propogation(alayer.forward_propogation(layer.output)))
