@@ -1,6 +1,6 @@
 from collections import deque
-
-from activation import ActivationLayer
+from calc import relu, relu_prime, leaky_relu, leaky_relu_prime
+from activation import ActivationLayer3D
 from convolutional import ConvolutionalLayer
 from dense import DenseLayer
 from constants import *
@@ -18,5 +18,11 @@ class Agent:
 	@staticmethod
 	def build_network():
 		model = []
-		for kernel_shape in KERNEL_SIZES:
-			model.append(ConvolutionalLayer((NUM_STACKED_FRAMES, DS_WIDTH, DS_HEIGHT), )
+		for kernel_shape, stride in KERNEL_SIZES, STRIDES:
+			model.append(ConvolutionalLayer((NUM_STACKED_FRAMES, DS_WIDTH, DS_HEIGHT), stride, kernel_shape)
+			model.append(ActivationLayer3D(leaky_relu, leaky_relu_prime))
+		
+
+		model.append(DenseLayer(model[-1].output_shape), DENSE_OUTPUT_SIZES[0])
+		model.append(ActivationLayer3D(relu, relu_prime))
+		model.append(DenseLayer(DENSE_OUTPUT_SIZES), DENSE_OUTPUT_SIZES[1])
