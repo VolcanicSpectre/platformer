@@ -3,10 +3,14 @@ import pygame
 from constants import *
 from states import IDLE
 from collision_types import CollisionTypes
-
+from agent import Agent
 
 class Entity:
-    def __init__(self, x: int, y: int, size: tuple[int, int]):
+    def __init__(self, x: int, y: int, size: tuple[int, int], use_ai=False):
+        self.use_ai = True
+        if self.use_ai:
+            self.agent = Agent()
+            self.agent.build_network()
         self.state = IDLE(self)
         self.SIZE = size
         self.image = pygame.Surface(size)

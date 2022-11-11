@@ -1,6 +1,6 @@
 from numba import njit
 from numpy import exp, power, zeros, flipud, fliplr
-from numba import guvectorize, int64, float64
+from numba import vectorize, int64, float64
 from constants import *
 
 
@@ -49,8 +49,6 @@ def relu(a):
 @njit()
 def relu_prime(a):
      return 1 if a > 0 else 0
-
-
 
 def leaky_relu(a):
     return max(a, z*a)
