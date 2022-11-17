@@ -1,3 +1,0 @@
-nx1.tmx
-1xn.tmx
-3x3.tmx
