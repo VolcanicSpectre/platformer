@@ -1,5 +1,4 @@
 import pygame
-from typing import List
 
 
 class StaticRenderer:
@@ -22,11 +21,11 @@ class StaticRenderer:
 		surface.blit(self.static_frame, (x, y))
 
 class AnimatedRenderer(StaticRenderer):
-	def __init__(self, frames: List[pygame.Surface], current_frame_index: int=0):
+	def __init__(self, frames: list[pygame.Surface], current_frame_index: int=0):
 		"""Creates an AnimatedRenderer component for an animated object
 		
 		Args:
-		    frames (List[pygame.Surface]): The list of each possible frame for the animated object
+		    frames (list[pygame.Surface]): The list of each possible frame for the animated object
 		    current_frame_index (int, optional): If specified the starting frame will be the frame specified at the given index, otherwise the first one is selected
 		"""
 		self.frames = frames
