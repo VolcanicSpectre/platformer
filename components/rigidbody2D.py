@@ -18,11 +18,11 @@ class RigidBody2D:
 		self.velocity = Vector2D(0, 0)
 
 	def add_force(self, force: Vector2D, dt: float, force_mode: ForceModes=ForceModes.FORCE ) -> None:
-		"""Summary
+		"""Adds a force to the rigid body
 		
 		Args:
-		    force (Vector2D): Description
-		    dt (float): Description
+		    force (Vector2D): The unscaled force that will act on the body
+		    dt (float): The time difference between the previous frame that was drawn and the current frame
 		    force_mode (ForceModes, optional): The mode that the force can be applied
 		
 		Raises:
