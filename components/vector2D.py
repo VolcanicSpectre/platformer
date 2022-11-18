@@ -1,16 +1,15 @@
 from __future__ import annotations
+from typing import NamedTuple
 from math import sqrt
-class Vector2D:
-	def __init__(self, x_component: float, y_component: float) -> None:
-		"""Creates a 2 dimensional vector
-		
-		Args:
-		    x_component (float): The x component of the vector
-		    y_component (float): The y component of the vector
-		"""
-		self.x = x_component
-		self.y = y_component
 
+class Vector2D(NamedTuple):
+
+	"""Creates a 2 dimensional vector
+	"""
+
+	x: float
+	y:float
+	
 	def __repr__(self) -> str:
 		"""Returns a string representation of the vector displaying the both the x and y components
 		
@@ -18,7 +17,18 @@ class Vector2D:
 		    String: The resulting representation of the vector
 		"""
 		return f"Vector2D: ({self.x, self.y})"
-	
+		
+	def __add__(self, other: Vector2D) -> Vector2D:
+		"""Calculates the sum of 2 vectors
+		
+		Args:
+		    other (Vector2D): The other vector to add
+		
+		Returns:
+		    Vector2D: The sum of the 2 vectors
+		"""
+		return Vector2D(self.x + other.x, self.y + other.y)
+
 	def __mul__(self, other: Vector2D) -> float:
 		"""Calculates the dot product with the other vector
 		
@@ -41,22 +51,19 @@ class Vector2D:
 		"""
 		return Vector2D(self.x / self.magnitude(), self.y / self.magnitude())
 
-	def normalise_in_place(self) -> None:
-		"""Normalises the vector in place so that its length is 1 but with the same direction
-		"""
-		self.x /= self.magnitude()
-		self.y /= self.magnitude()
-
-	def scale(self, scale_factor: float):
+	def scale(self, scale_factor: float) -> Vector2D:
 		"""Scales the vector by a given scale factor
 		
 		Args:
 		    scale_factor (float): The amount that the vector is scaled by
+		
+		Returns:
+		    Vector2D: The scaled vector
 		"""
-		self.x *= scale_factor
-		self.y *= scale_factor
-
-	def scale_to_length(self, length: float) -> None:
+		
+		return Vector2D(self.x *scale_factor, self.y * scale_factor)
+	
+	def scale_to_length(self, length: float) -> Vector2D:
 		"""Scales the vector to a given length
 		
 		Args:
@@ -64,13 +71,15 @@ class Vector2D:
 		
 		Raises:
 		    ValueError: Raises a ValueError when the magnitude of the vector is 0 as that can't be scaled to a given length
+		
+		Returns:
+		    Vector2D: The vector scaled to the given length
 		"""
 		if self.magnitude() == 0:
 			raise ValueError("The Magnitude of the vector must be greater than zero")
 		
-		self.normalise_in_place()
-		self.scale(length)
 		
+		return self.normalise().scale(length)
 
 	def dot(self, other: Vector2D) -> float:
 		"""Calculates the dot product with the other vector
