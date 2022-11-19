@@ -6,5 +6,3 @@ class BaseEntity:
 		self.x = x
 		self.y = y
 
-		
-
