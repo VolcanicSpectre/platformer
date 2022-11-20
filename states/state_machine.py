@@ -2,7 +2,7 @@ from state import State
 
 class StateMachine:
 	def __init__(self, starting_state: State) -> None:
-		"""A template for state machine for an entity
+		"""A state machine for an entity
 		
 		Args:
 		    starting_state (State): The starting state for the entity
