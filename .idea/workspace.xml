@@ -2,20 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5f9d6df4-80da-4126-884e-58c448feba29" name="Changes" comment="commit master">
-      <change beforePath="$PROJECT_DIR$/.idea/.name" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.name" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/animation_handler.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/base_entity.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/calc.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/collision_types.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/action_space.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/vector2D.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/engine.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/entity.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/game.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/level.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/map_loader.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/states.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/input.py" beforeDir="false" afterPath="$PROJECT_DIR$/components/input.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/rigidbody2D.py" beforeDir="false" afterPath="$PROJECT_DIR$/components/rigidbody2D.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/player/action_space.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/render_object.py" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

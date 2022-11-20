@@ -2,9 +2,6 @@ from constants import *
 
 
 class Camera:
-    """
-    Adjusts the scroll values to follow a target
-    """
     def __init__(self, width, height):
         self.width = width * TILE_SIZE
         self.height = height * TILE_SIZE

@@ -1,6 +1,6 @@
 from enum import Enum, auto
 
-class Actions(Enum):
+class PlayerActionSpace(Enum):
 	LEFT = auto()
 	RIGHT = auto()
 	UP = auto()

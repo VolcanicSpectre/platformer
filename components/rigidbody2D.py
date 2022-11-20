@@ -1,7 +1,15 @@
 from enum import Enum, auto
-from vector2D import Vector2D
+from calc.vector2D import Vector2D
 
 class ForceModes(Enum):
+
+	"""Provides a container for the valid ways for a force to be applied to a rigid body
+	
+	Attributes:
+	    FORCE (TYPE): Add a continuous force to the rigidbody, using its mass
+	    IMPULSE (TYPE): Add an instant force impulse to the rigidbody, using its mass.
+	"""
+
 	FORCE = auto()
 	IMPULSE = auto()
 
