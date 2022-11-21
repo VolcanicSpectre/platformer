@@ -1,6 +1,7 @@
 from time import perf_counter
 
-from entity.base_entity import BaseEntity
+from Platformer.entity.base_entity import BaseEntity
+
 
 class State:
 	def __init__(self, entity: BaseEntity, state_name: str) -> None:
