@@ -16,6 +16,11 @@ class Player(BaseEntity):
 		self.input = Input(PlayerActionSpace)
 		self.rb = RigidBody2D(5, 3)
 		
+		self.x_run_speed = 5
+		self.acceleration_rate = 2
+		self.deceleration_rate = 5
+		self.velocity_power = 0.6
+
 	def start(self):
 		"""Creates the state machine for the player
 		"""

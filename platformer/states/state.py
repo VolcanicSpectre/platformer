@@ -1,6 +1,5 @@
 from time import perf_counter
-
-from Platformer.entity.base_entity import BaseEntity
+from entity.base_entity import BaseEntity
 
 
 class State:
