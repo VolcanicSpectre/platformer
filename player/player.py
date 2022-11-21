@@ -21,4 +21,7 @@ class Player(BaseEntity):
 		"""
 		self.state_machine = StateMachine(self.idle_state)
 
+	def update(self):
+		pass
+
 		
