@@ -25,7 +25,7 @@ class State:
 		"""
 		pass
 
-	def update(self) -> None:
+	def update(self, dt: float) -> None:
 		"""Called each frame
 		"""
 		self.do_checks()

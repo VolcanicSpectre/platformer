@@ -1,5 +1,8 @@
+import os
+print(f"CWD: {os.getcwd()}")
 from enum import Enum, auto
 from calc.vector2D import Vector2D
+from calc.sign import sign
 
 class ForceModes(Enum):
 
@@ -48,6 +51,20 @@ class RigidBody2D:
 
 
 
+
+
+rb = RigidBody2D(5, 2)
+rb.add_force(Vector2D(50, 0), 1/120)
+
+for i in range(200):
+	target_speed = 0
+	speed_difference = target_speed - rb.velocity.x
+
+	acceleration_rate = 0.8
+
+	movement = pow(abs(speed_difference) * acceleration_rate, 2) * sign(speed_difference)
+
+	rb.add_force(Vector2D(1, 0).scale(movement), 1/120)
 
 
 

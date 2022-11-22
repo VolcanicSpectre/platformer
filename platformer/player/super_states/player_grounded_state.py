@@ -8,12 +8,12 @@ class PlayerGroundedState(State):
 		self.player = player
 		self.state_name = state_name
 
-	
-	def update(self):
-		super().update()
+	def input_handler(self):
 		self.move_input = self.player.input.get_axis_raw()
+	
+	def update(self, dt: float):
+		super().update()
 
 
-t = PlayerGroundedState
 
 		
