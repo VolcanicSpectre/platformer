@@ -1,6 +1,6 @@
 from math import pow
 from calc.sign import sign
-from calc.vector2D import Vector2D
+from calc.vector2d import Vector2D
 from player.player import Player
 from player.super_states.player_grounded_state import PlayerGroundedState
 

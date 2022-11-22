@@ -2,7 +2,7 @@ import pygame
 
 from base_component import BaseComponent
 from player.player_action_space import PlayerActionSpace
-from calc.vector2D import Vector2D
+from calc.vector2d import Vector2D
 
 class Input(BaseComponent):
 	def __init__(self, action_space: type[PlayerActionSpace], action_bindings: list[int]):

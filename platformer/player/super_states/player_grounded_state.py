@@ -1,4 +1,4 @@
-from calc.vector2D import Vector2D
+from calc.vector2d import Vector2D
 from states.state import State
 from player.player import Player
 

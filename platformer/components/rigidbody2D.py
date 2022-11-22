@@ -1,8 +1,8 @@
 import os
 print(f"CWD: {os.getcwd()}")
 from enum import Enum, auto
-from calc.vector2D import Vector2D
-from calc.sign import sign
+from platformer.calc.vector2d import Vector2D
+
 
 class ForceModes(Enum):
 
