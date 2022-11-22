@@ -1,6 +1,6 @@
 from math import pow
-from calc.sign import sign
-from calc.vector2d import Vector2D
+from platformer.calc.sign import sign
+from platformer.calc.vector2d import Vector2D
 from player.player import Player
 from player.super_states.player_grounded_state import PlayerGroundedState
 
@@ -9,7 +9,7 @@ class PlayerRunState(PlayerGroundedState):
 		super(PlayerRunState, self).__init__(player, state_name)
 
 	def input_handler(self):
-
+		pass
 	def update(self, dt: float):
 		super().update(dt)
 		if self.player.rb.velocity.x == 0:

@@ -1,8 +1,6 @@
-import os
-print(f"CWD: {os.getcwd()}")
 from enum import Enum, auto
 from platformer.calc.vector2d import Vector2D
-
+from platformer.calc.sign import sign
 
 class ForceModes(Enum):
 
@@ -28,7 +26,7 @@ class RigidBody2D:
 		self.gravity_scale = gravity_scale
 		self.velocity = Vector2D(0, 0)
 
-	def add_force(self, force: Vector2D, dt: float, force_mode: ForceModes=ForceModes.FORCE ) -> None:
+	def add_force(self, force: Vector2D, dt: float=0, force_mode: ForceModes=ForceModes.FORCE ) -> None:
 		"""Adds a force to the rigid body
 		
 		Args:
@@ -54,20 +52,20 @@ class RigidBody2D:
 
 
 rb = RigidBody2D(5, 2)
-rb.add_force(Vector2D(50, 0), 1/120)
+rb.add_force(Vector2D(2, 0), 1/120)
 
-for i in range(200):
+for i in range(1000):
 	target_speed = 0
 	speed_difference = target_speed - rb.velocity.x
 
-	acceleration_rate = 0.8
-
-	movement = pow(abs(speed_difference) * acceleration_rate, 2) * sign(speed_difference)
+	acceleration_rate = 10
+	amount =  -1 * sign(rb.velocity.x) * min(abs(rb.velocity.x), 0.5)
+	movement = speed_difference * acceleration_rate
 
 	rb.add_force(Vector2D(1, 0).scale(movement), 1/120)
+	rb.add_force(Vector2D(1, 0).scale(amount), force_mode=ForceModes.IMPULSE)
 
-
-
+print(rb.velocity.x)
 
 
 

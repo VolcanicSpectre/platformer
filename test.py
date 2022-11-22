@@ -1,0 +1,1 @@
+import platformer.components.rigidbody2d
