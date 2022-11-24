@@ -46,26 +46,3 @@ class RigidBody2D:
 
 			case _:
 				raise ValueError(f"The given force_type: {force_mode} is not in {[member.value for member in ForceModes]}")
-
-
-
-
-
-rb = RigidBody2D(5, 2)
-rb.add_force(Vector2D(2, 0), 1/120)
-
-for i in range(1000):
-	target_speed = 0
-	speed_difference = target_speed - rb.velocity.x
-
-	acceleration_rate = 10
-	amount =  -1 * sign(rb.velocity.x) * min(abs(rb.velocity.x), 0.5)
-	movement = speed_difference * acceleration_rate
-
-	rb.add_force(Vector2D(1, 0).scale(movement), 1/120)
-	rb.add_force(Vector2D(1, 0).scale(amount), force_mode=ForceModes.IMPULSE)
-
-print(rb.velocity.x)
-
-
-

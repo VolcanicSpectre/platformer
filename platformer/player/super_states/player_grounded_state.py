@@ -1,12 +1,13 @@
 from platformer.calc.vector2d import Vector2D
-from platformer.states.state import State
+from player.player_action_space import PlayerActionSpace
+from platformer.states.player_state import PlayerState
 from player.player import Player
 
-class PlayerGroundedState(State):
+class PlayerGroundedState(PlayerState):
 	move_input: Vector2D
-	def __init__(self, player: Player, state_name: str):
+	def __init__(self, player: Player, PlayerPlayerState_name: str):
 		self.player = player
-		self.state_name = state_name
+		self.PlayerPlayerState_name = PlayerPlayerState_name
 		self.start_time
 
 	def input_handler(self):
@@ -14,6 +15,9 @@ class PlayerGroundedState(State):
 	
 	def update(self, dt: float):
 		super().update(dt)
+
+		if self.player.input.get_action_down(PlayerActionSpace.UP):
+			self.player.state_machine.change_state(self.player.jump_state)
 
 
 

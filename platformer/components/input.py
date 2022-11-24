@@ -40,7 +40,7 @@ class Input(BaseComponent):
 				if event.key == binding:
 					self.__actions_performed_on_current_frame[action] = True
 
-	def get_key_down(self, action: PlayerActionSpace) -> bool:
+	def get_action_down(self, action: PlayerActionSpace) -> bool:
 		"""Returns true during the frame the user starts pressing down the key identified by the action action enum parameter.
 		
 		Args:

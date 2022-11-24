@@ -7,6 +7,6 @@ class PlayerIdleState(PlayerGroundedState):
 
 	def update(self, dt: float):
 		super().update(dt)
-
+		
 		if self.move_input.x:
 			self.player.state_machine.change_state(self.player.run_state)
