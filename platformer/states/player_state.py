@@ -3,7 +3,7 @@ from player.player import Player
 
 
 class PlayerState:
-	def __init__(self, player: Player, PlayerPlayerState_name: str) -> None:
+	def __init__(self, player: Player, state_name: str) -> None:
 		"""A template PlayerPlayerState class
 		
 		Args:
@@ -11,7 +11,7 @@ class PlayerState:
 		    PlayerPlayerState_name (str): The string representation of the PlayerPlayerState
 		"""
 		self.player = player
-		self.PlayerPlayerState_name: str = PlayerPlayerState_name
+		self.state_name: str = state_name
 		self.start_time: float
 
 	def enter(self) -> None:
