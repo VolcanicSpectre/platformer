@@ -5,10 +5,9 @@ from player.player import Player
 
 class PlayerGroundedState(PlayerState):
 	move_input: Vector2D
-	def __init__(self, player: Player, PlayerPlayerState_name: str):
-		self.player = player
-		self.PlayerPlayerState_name = PlayerPlayerState_name
-		self.start_time
+	
+	def __init__(self, player: Player, state_name: str):
+		super(PlayerGroundedState, self).__init__(player, state_name)
 
 	def input_handler(self):
 		self.move_input = self.player.input.get_axis_raw()
