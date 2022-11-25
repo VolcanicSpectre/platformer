@@ -1,7 +1,7 @@
-from state import State
+from player_state import PlayerState
 
 class StateMachine:
-	def __init__(self, starting_state: State) -> None:
+	def __init__(self, starting_state: PlayerState) -> None:
 		"""A state machine for an entity
 		
 		Args:
@@ -9,7 +9,7 @@ class StateMachine:
 		"""
 		self.__current_state = starting_state
 
-	def change_state(self, new_state: State) -> None:
+	def change_state(self, new_state: PlayerState) -> None:
 		"""Provides functionlaity for changing state
 		
 		Args:
@@ -19,7 +19,7 @@ class StateMachine:
 		self.__current_state = new_state
 		self.__current_state.enter()
 		
-	def get_current_state(self) -> State:
+	def get_current_state(self) -> PlayerState:
 		"""A getter for current_state
 		
 		Returns:

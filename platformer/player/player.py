@@ -14,7 +14,7 @@ class Player(BaseEntity):
 	def __init__(self):
 		self.idle_state = PlayerIdleState(self, "idle")
 		self.run_state = PlayerRunState(self, "run")
-		self.jump_state = PLayerJumpState(self, "jump")
+		self.jump_state = PlayerJumpState(self, "jump")
 		
 		self.renderer = AnimatedRenderer()
 		self.input = Input(PlayerActionSpace)
@@ -30,11 +30,12 @@ class Player(BaseEntity):
 	def start(self):
 		"""Creates the PlayerPlayerState machine for the player
 		"""
-		self.state_machine = StateMachine(self.idle_PlayerPlayerState)
+		self.state_machine = StateMachine(self.idle_state)
 
-	def update(self):
+	def update(self, dt):
 		x_velocity_component = near_zero(self.rb.velocity.x)
 		y_velocity_component = near_zero(self.rb.velocity.y)
 		self.rb.velocity = Vector2D(x_velocity_component, y_velocity_component)
 
+		self.state_machine.get_current_state().update(dt)
 		

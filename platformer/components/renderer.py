@@ -21,7 +21,7 @@ class StaticRenderer:
 		surface.blit(self.static_frame, (x, y))
 
 class AnimatedRenderer(StaticRenderer):
-	def __init__(self, frames: list[pygame.Surface], current_frame_index: int=0):
+	def __init__(self, frames: dict[str, pygame.Surface], current_frame_index: int=0):
 		"""Creates an AnimatedRenderer component for an animated object
 		
 		Args:
@@ -31,9 +31,10 @@ class AnimatedRenderer(StaticRenderer):
 		self.frames = frames
 		self.__current_frame_index = current_frame_index
 
-	def render_entity(self, surface: pygame.Surface, x: int, y: int):
+	def render_entity(self, state_name:str, surface: pygame.Surface, x: int, y: int):
 		"""Renders the current frame onto the surface at the given position
 		Args:
+			state_name (str): Description
 		    surface (pygame.Surface): Description
 		    x (int): The x position that the static frame is rendered onto
 		    y (int): The y position that the static frame is rendered onto
