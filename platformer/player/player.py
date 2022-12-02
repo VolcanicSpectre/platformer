@@ -8,7 +8,7 @@ from player.sub_states.player_idle_state import PlayerIdleState
 from player.sub_states.player_run_state import PlayerRunState
 from player.sub_states.player_jump_state import PlayerJumpState
 from player.player_action_space import PlayerActionSpace
-from platformer.states.state_machine import StateMachine
+from platformer.states.player_state_machine import StateMachine
 
 class Player(BaseEntity):
 	def __init__(self):
