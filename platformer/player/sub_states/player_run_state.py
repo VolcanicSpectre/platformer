@@ -16,8 +16,7 @@ class PlayerRunState(PlayerGroundedState):
 	def update(self, dt: float):
 		super().update(dt)
 		
-		if self.
-		if self.player.rb.velocity.x == 0:
+		if self.player.rb.velocity.x == 0 and self.player.input.get_axis_raw().x == 0:
 			self.player.state_machine.change_state(self.player.idle_state)
 
 		target_speed = self.move_input.x * self.player.x_run_speed
