@@ -9,8 +9,8 @@ class PlatformerConfig:
 
     def __init__(self):
         # Debug
-        self.__debug: bool = False
-        debug_filename: str = ""
+        self.__debug = False
+        debug_filename = ""
         self.__debug_file = (strftime("%m-%d-%Y")) + debug_filename
 
         # Directories
@@ -41,7 +41,7 @@ class PlatformerConfig:
         self.__chunk_size = 4
 
     @property
-    def debug(self):
+    def debug(self) -> bool:
         """A getter for debug
 
         Returns:
@@ -50,7 +50,7 @@ class PlatformerConfig:
         return self.__debug
 
     @property
-    def debug_file(self):
+    def debug_file(self) -> str:
         """A getter for debug_file
 
         Returns:
@@ -59,32 +59,57 @@ class PlatformerConfig:
         return self.__debug_file
 
     @property
-    def directories(self):
+    def directories(self) -> dict[str, str]:
         """A getter for directories
 
         Returns:
-            Dict[str: str]: The value of directories
+            dict[str: str]: The value of directories
         """
         return self.__directories
 
     @property
-    def resoloution(self):
+    def resoloution(self) -> tuple[int, int]:
+        """A getter for resoloution
+
+        Returns:
+            tuple[int, int]: The value of resoloution
+        """
         return self.__resoloution
 
     @property
-    def internal_resoloution(self):
+    def internal_resoloution(self) -> tuple[int, int]:
+        """A getter for internal_resoloution
+
+        Returns:
+            tuple[int, int]: The value of resoloution
+        """
         return self.__internal_resoloution
 
     @property
-    def fps(self):
+    def fps(self) -> int:
+        """A getter for fps
+
+        Returns:
+            int: The value of fps
+        """
         return self.__fps
 
     @property
-    def internal_fps(self):
+    def internal_fps(self) -> int:
+        """A getter for internal_fps
+
+        Returns:
+            int: The value of internal_fps
+        """
         return self.__internal_fps
 
     @property
-    def chunk_size(self):
+    def chunk_size(self) -> int:
+        """A getter for chunk_size
+
+        Returns:
+            int: The value of chunk_size
+        """
         return self.__chunk_size
 
     def get_int_setting(self, setting: str) -> int:

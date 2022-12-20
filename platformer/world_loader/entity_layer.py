@@ -1,16 +1,18 @@
-"""Provides an interface for loding entities from and LDTK entity layer 
+"""Provides an interface for loading entities from and LDTK entity layer
 """
-from typing import Any, Dict
-from layer import Layer
+from dataclasses import dataclass
+from entity import Entity
+from layer import Layer, set_attr
 
 
+@dataclass(frozen=True)
 class EntityLayer(Layer):
-	"""_summary_
+    """An interface for loading entities from an LDTK entity layer"""
 
-	Args:
-		Layer (_type_): _description_
-	"""
-	def __init__(self, data: Dict[str, Any]):
-		super(EntityLayer, self).__init__(data)
-		self.entity_instances = data["entityInstances"]
-		
+    def __post_init__(self):
+        super().__post_init__()
+        entities: list[Entity] = [
+            Entity(entity_instance) for entity_instance in self.data["entityInstances"]
+        ]
+
+        set_attr(self, "entities", entities)
