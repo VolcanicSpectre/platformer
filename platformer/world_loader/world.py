@@ -3,10 +3,10 @@
 
 from json import load
 from os import path
-from level import Level
-from tileset import Tileset
-from collision_types import CollisionTypes
+
 from platformer.config import PlatformerConfig
+from platformer.world_loader.level import Level
+from platformer.world_loader.tileset import Tileset
 
 
 class World:
@@ -23,9 +23,5 @@ class World:
             self.data = load(world_json)
 
         self.tileset = Tileset(self.data["tilesets"][0], config.directories["worlds"])
-        
-        for enum in self.data["enums"]:
-            if enum["identifer"] == "CollisionTypes":
-                CollisionTypes(enum["uid"], [value["id"] for value in enum["values"]])
 
         self.levels = [Level(level_data) for level_data in self.data["levels"]]

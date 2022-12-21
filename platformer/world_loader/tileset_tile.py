@@ -1,7 +1,7 @@
 """A class representation of a generic tile from a tile set"""
 from dataclasses import dataclass
 from pygame import Surface
-from collision_types import CollisionTypes
+from platformer.world_loader.collision_types import CollisionTypes
 
 
 @dataclass

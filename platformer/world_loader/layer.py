@@ -18,5 +18,5 @@ class Layer:
 
 
 def set_attr(self: Layer, name: str, val: Any):
-    """Frozen dataclasses have an overwrittend __setatt__,"""
+    """Frozen dataclasses have an overwrittend __setattr__,"""
     object.__setattr__(self, name, val)

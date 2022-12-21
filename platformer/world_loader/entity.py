@@ -23,5 +23,5 @@ class Entity:
 
 
 def set_attr(self: Entity, name: str, val: Any):
-    """Frozen dataclasses have an overwrittend __setatt__,"""
+    """Frozen dataclasses have an overwrittend __setattr__,"""
     object.__setattr__(self, name, val)

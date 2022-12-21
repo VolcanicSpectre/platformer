@@ -1,6 +1,6 @@
 from typing import Any
-from entity_layer import EntityLayer
-from tile_layer import TileLayer
+from platformer.world_loader.entity_layer import EntityLayer
+from platformer.world_loader.tile_layer import TileLayer
 
 
 class Level:
@@ -22,7 +22,7 @@ class Level:
                 layer_instance["__identifier"] == "Entities"
                 and self.entity_layer is not None
             ):
-                self.entity_layer = EntityLayer(layer_instance)
+                self.entity_layer = EntityLayer()
 
             if (
                 layer_instance["__identifier"] == "Tiles"

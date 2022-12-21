@@ -1,8 +1,8 @@
 """Provides an interface for loading entities from and LDTK entity layer
 """
 from dataclasses import dataclass
-from entity import Entity
-from layer import Layer, set_attr
+from platformer.world_loader.entity import Entity
+from platformer.world_loader.layer import Layer, set_attr
 
 
 @dataclass(frozen=True)

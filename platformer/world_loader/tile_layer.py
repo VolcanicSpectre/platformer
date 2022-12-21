@@ -5,6 +5,6 @@ class TileLayer(Layer):
     def __post_init__(self):
         super().__post_init__()
 
-        grid_tiles: list[]
+        grid_tiles: list[MapTile]
     
     
