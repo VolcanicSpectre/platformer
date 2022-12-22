@@ -11,13 +11,8 @@ class Tileset:
     """A class to store the data about the tileset for an LDTK world and create TilesetTile objects for each tile"""
 
     def __init__(self, data: dict[str, Any], world_path: str):
-        grid_height: int = data["__cWid"]
-        grid_width: int = data["__cHei"]
-
-        if grid_height != grid_width:
-            raise ValueError("Grid height and Grid width must be equal")
-
-        self.grid_size = grid_height
+        self.grid_height: int = data["__cWid"]
+        self.grid_width: int = data["__cHei"]
 
         self.pixel_width: int = data["pxWid"]
         self.pixel_height: int = data["pxHei"]
@@ -67,14 +62,14 @@ class Tileset:
         Returns:
             pygame.Surface: The pygame surface of the tile image
         """
-        grid_tile_x = identifier - (self.grid_size * (identifier // self.grid_size))
-        pixel_tile_x = self.padding + (grid_tile_x * (self.spacing + self.grid_size))
+        grid_tile_x = identifier - (self.tile_grid_size * (identifier // self.tile_grid_size))
+        pixel_tile_x = self.padding + (grid_tile_x * (self.spacing + self.tile_grid_size))
 
-        grid_tile_y = identifier // self.grid_size
-        pixel_tile_y = self.padding + (grid_tile_y * (self.spacing + self.grid_size))
+        grid_tile_y = identifier // self.tile_grid_size
+        pixel_tile_y = self.padding + (grid_tile_y * (self.spacing + self.tile_grid_size))
 
         handle_tileset = self.tileset_image.copy()
-        clip_rect = Rect(pixel_tile_x, pixel_tile_y, self.grid_size, self.grid_size)
+        clip_rect = Rect(pixel_tile_x, pixel_tile_y, self.tile_grid_size, self.tile_grid_size)
         handle_tileset.set_clip(clip_rect)
         tile_image = self.tileset_image.subsurface(handle_tileset.get_clip())
 

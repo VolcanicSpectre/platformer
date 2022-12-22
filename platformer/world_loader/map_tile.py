@@ -1,8 +1,11 @@
-from dataclasses import dataclass
+"""A class representation of a specific tile from a level"""
 from pygame import Rect
-from tileset_tile import TilesetTile
+from platformer.world_loader.tileset_tile import TilesetTile
 
 
-@dataclass
 class MapTile(TilesetTile):
-    rect: Rect
+    """A class representation of a specific tile from a level
+    """
+    def __init__(self, tile: TilesetTile, rect: Rect):
+        super().__init__(tile.identifier, tile.image, tile.collision_type)
+        self.rect = rect

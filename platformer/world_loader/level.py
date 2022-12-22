@@ -16,13 +16,13 @@ class Level:
 
         self.entity_layer = None
         self.tile_layer = None
-
+        
         for layer_instance in self.data["layerInstances"]:
             if (
                 layer_instance["__identifier"] == "Entities"
                 and self.entity_layer is not None
             ):
-                self.entity_layer = EntityLayer()
+                self.entity_layer = EntityLayer(data=layer_instance)
 
             if (
                 layer_instance["__identifier"] == "Tiles"
