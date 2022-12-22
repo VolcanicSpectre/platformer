@@ -1,0 +1,8 @@
+TODO:
+
+> Jump State
+> Dash State
+
+Enemy w/ Recursion
+
+GUI

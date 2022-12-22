@@ -1,0 +1,15 @@
+
+
+
+
+WIDTH, HEIGHT = 1920, 1080
+DS_WIDTH, DS_HEIGHT = 576, 320
+FPS = 120
+
+# Map
+TARGET_FPS = 120
+CHUNK_SIZE = 4
+TILE_SIZE = 16
+
+# Directories
+
