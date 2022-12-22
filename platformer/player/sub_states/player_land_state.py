@@ -3,7 +3,7 @@ from player.super_states.player_grounded_state import PlayerGroundedState
 
 class PlayerLandState(PlayerGroundedState):
 	def __init__(self, player: Player, state_name: str):
-		super(PlayerLandState, self).__init__(player, state_name)
+		super().__init__(player, state_name)
 
 	def update(self, dt: float):
 		super().update(dt)

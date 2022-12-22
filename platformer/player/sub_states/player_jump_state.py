@@ -5,7 +5,7 @@ from player.super_states.player_grounded_state import PlayerAbilityState
 
 class PlayerJumpState(PlayerAbilityState):
 	def __init__(self, player: Player, state_name: str):
-		super(PlayerJumpState, self).__init__(player, state_name)
+		super().__init__(player, state_name)
 
 	def enter(self):
 		super().enter()

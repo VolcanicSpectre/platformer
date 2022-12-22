@@ -7,7 +7,7 @@ class PlayerAbilityState(PlayerState):
 	is_ability_done: bool
 
 	def __init__(self, player: Player, state_name: str):
-		super(PlayerAbilityState, self).__init__(player, state_name)
+		super().__init__(player, state_name)
 
 	def enter(self):
 		self.is_ability_done = False

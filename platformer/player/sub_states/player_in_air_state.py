@@ -5,4 +5,4 @@ from player.player import Player
 
 class PlayerInAirState(PlayerState):
 	def __init__(self, player: Player, state_name: str):
-		super(PlayerInAirState, self).__init__(player, state_name)
+		super().__init__(player, state_name)

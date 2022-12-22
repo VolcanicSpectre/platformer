@@ -1,13 +1,22 @@
-from typing import Any, Dict
+"""A base class for an LDTK layer"""
+from dataclasses import dataclass
+from typing import Any
 
+
+@dataclass(frozen=True)
 class Layer:
-    def __init__(self, data: Dict[str, Any]):
-        self.data = data
-        self.grid_height = data["__cHei"]
-        self.grid_width = data["__cWid"]
+    """Base class for an LDTK layer"""
 
-        self.grid_size = data["__gridSize"]
-        self.identifer = data["__identifer"]
+    data: dict[str, Any]
 
-        self.type = data["__type"]
-        
+    def __post_init__(self):
+        set_attr(self, "grid_height", self.data["__cHei"])
+        set_attr(self, "grid_width", self.data["__cWid"])
+        set_attr(self, "grid_size", self.data["__gridSize"])
+        set_attr(self, "identifer", self.data["__identifer"])
+        set_attr(self, "_type", self.data["__type"])
+
+
+def set_attr(self: Layer, name: str, val: Any):
+    """Frozen dataclasses have an overwrittend __setattr__,"""
+    object.__setattr__(self, name, val)

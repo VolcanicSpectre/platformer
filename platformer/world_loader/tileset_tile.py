@@ -1,7 +1,12 @@
-from pygame.surface import Surface
+"""A class representation of a generic tile from a tile set"""
+from dataclasses import dataclass
+from pygame import Surface
+from platformer.world_loader.collision_types import CollisionTypes
 
+
+@dataclass
 class TilesetTile:
-	def __init__(self, image: Surface, collision_type):
-		self.image = image
-		self.collision_type = collision_type
-
+    """A class representation of a tile"""
+    identifier: int
+    image: Surface
+    collision_type: CollisionTypes
