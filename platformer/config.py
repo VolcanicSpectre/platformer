@@ -20,7 +20,7 @@ class PlatformerConfig:
         worlds_folder = path.join(assets_folder, "worlds")
         self.__directories = {
             "game": game_folder,
-            "assets": "assets_folder",
+            "assets": assets_folder,
             "player": player_folder,
             "worlds": worlds_folder,
         }
