@@ -1,11 +1,13 @@
 from typing import Any
 from platformer.world_loader.entity_layer import EntityLayer
 from platformer.world_loader.tile_layer import TileLayer
+from platformer.world_loader.tileset import Tileset
 
 
 class Level:
-    def __init__(self, data: dict[str, Any]):
+    def __init__(self, data: dict[str, Any], tileset: Tileset):
         self.data = data
+
         self.identifer: str = self.data["identifer"]
 
         self.px_height: int = self.data["pxHei"]
@@ -16,7 +18,7 @@ class Level:
 
         self.entity_layer = None
         self.tile_layer = None
-        
+
         for layer_instance in self.data["layerInstances"]:
             if (
                 layer_instance["__identifier"] == "Entities"
@@ -28,4 +30,4 @@ class Level:
                 layer_instance["__identifier"] == "Tiles"
                 and self.tile_layer is not None
             ):
-                self.tile_layer = TileLayer(layer_instance)
+                self.tile_layer = TileLayer(data=layer_instance, tileset=tileset)

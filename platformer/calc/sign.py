@@ -1,6 +1,10 @@
+"""Returns the sign of flt. Return value is 1 when flt is positive or zero, -1 when flt is negative.
+"""
+
+
 def sign(flt: float) -> float:
     """Returns the sign of flt.
-    Return value is 1 when flt is positive or zero, -1 when flt is negative.
+        Return value is 1 when flt is positive or zero, -1 when flt is negative.
 
 
     Args:

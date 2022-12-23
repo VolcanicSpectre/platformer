@@ -1,3 +1,4 @@
+"""Provides a Vector class in the 2-Dimensional plane with the associated methods for vectors"""
 from __future__ import annotations
 from typing import NamedTuple
 from math import sqrt
@@ -30,6 +31,11 @@ class Vector2D(NamedTuple):
         return Vector2D(self.x + other.x, self.y + other.y)
 
     def magnitude(self) -> float:
+        """Returns the magnitude of the vector
+
+        Returns:
+            float: The magnitude of the vector
+        """
         return sqrt(self.x * self.x + self.y * self.y)
 
     def normalise(self) -> Vector2D:
@@ -59,7 +65,8 @@ class Vector2D(NamedTuple):
             length (float): The length that the vector is scaled to
 
         Raises:
-            ValueError: Raises a ValueError when the magnitude of the vector is 0 as that can't be scaled to a given length
+            ValueError: Raises a ValueError when the magnitude of the vector is 0 as
+            that can't be scaled to a given length
 
         Returns:
             Vector2D: The vector scaled to the given length

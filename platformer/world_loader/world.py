@@ -24,4 +24,4 @@ class World:
 
         self.tileset = Tileset(self.data["tilesets"][0], config.directories["worlds"])
 
-        self.levels = [Level(level_data) for level_data in self.data["levels"]]
+        self.levels = [Level(level_data, self.tileset) for level_data in self.data["levels"]]
