@@ -30,8 +30,8 @@ class PlatformerConfig:
         height = self.get_int_setting("y_resolution")
         self.resoloution = (width, height)
 
-        ds_width = 576
-        ds_height = 320
+        ds_width = 256
+        ds_height = 128
         self.internal_resoloution = (ds_width, ds_height)
 
         self.fps = self.get_int_setting("fps")
