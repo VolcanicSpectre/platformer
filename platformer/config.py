@@ -16,11 +16,13 @@ class PlatformerConfig:
         # Directories
         game_folder = path.dirname(__file__)
         assets_folder = path.join(game_folder, "assets")
+        background_folder = path.join(assets_folder, "background")
         player_folder = path.join(assets_folder, "player")
         worlds_folder = path.join(assets_folder, "worlds")
         self.directories = {
             "game": game_folder,
             "assets": assets_folder,
+            "background": background_folder,
             "player": player_folder,
             "worlds": worlds_folder,
         }
@@ -30,8 +32,8 @@ class PlatformerConfig:
         height = self.get_int_setting("y_resolution")
         self.resoloution = (width, height)
 
-        ds_width = 256
-        ds_height = 128
+        ds_width = 384
+        ds_height = 216
         self.internal_resoloution = (ds_width, ds_height)
 
         self.fps = self.get_int_setting("fps")

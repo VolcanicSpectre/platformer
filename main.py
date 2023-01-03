@@ -1,28 +1,18 @@
 import cProfile
-
-import pygame
-
-from constants import *
-from game import Game
-
-pygame.init()
-
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
-display_surface = pygame.Surface((DS_WIDTH, DS_HEIGHT))
+from platformer.menu.platformer import Platformer
+from platformer.config import PlatformerConfig
 
 
 def main(pr=None):
-    game = Game(pr)
+    platformer = Platformer(config)
     running = True
-    game.start(screen, display_surface)
     while running:
-        game.update()
+        platformer.update()
 
 
 if __name__ == "__main__":
-    print(eval("5 + 5"))
-
-    if DEBUG:
+    config = PlatformerConfig()
+    if config.debug:
         with cProfile.Profile() as pr:
             main(pr)
     else:
