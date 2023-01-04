@@ -12,9 +12,13 @@ class SplashScreenLayer:
 
     def __init__(self, image: Surface):
         self.image = image
-        self.sine_scale_factor = uniform(1.5, 2)
-        print(self.sine_scale_factor)
-        self.sine_stretch_factor = uniform(5, 8)
+        
+        # self.sine_scale_factor = 0.01
+        # self.sine_stretch_factor = pow(10, 20)
+        # self.sine_translation_factor = 0.5
+        self.sine_scale_factor = uniform(0.001, 0.1)
+        self.sine_stretch_factor = pow(10, 20)
+        self.sine_translation_factor = uniform(0.1, 0.7)
 
         self.x_scroll = 0
 
@@ -26,7 +30,7 @@ class SplashScreenLayer:
         """
         self.x_scroll += self.sine_scale_factor * abs(sin(
             perf_counter() * self.sine_stretch_factor
-        ))
+        )) + self.sine_translation_factor
 
         x_scroll = int(self.x_scroll) % (self.image.get_width() // 2)
 
