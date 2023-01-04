@@ -12,8 +12,9 @@ class SplashScreenLayer:
 
     def __init__(self, image: Surface):
         self.image = image
-        self.sine_scale_factor = uniform(0.2, 0.4)
-        self.sine_stretch_factor = uniform(5, 10)
+        self.sine_scale_factor = uniform(1.5, 2)
+        print(self.sine_scale_factor)
+        self.sine_stretch_factor = uniform(5, 8)
 
         self.x_scroll = 0
 
@@ -23,9 +24,9 @@ class SplashScreenLayer:
         Returns:
             Surface: The sub image according to the newly generated scroll value
         """
-        self.x_scroll += 1.1 * self.sine_scale_factor + self.sine_scale_factor * sin(
+        self.x_scroll += self.sine_scale_factor * abs(sin(
             perf_counter() * self.sine_stretch_factor
-        )
+        ))
 
         x_scroll = int(self.x_scroll) % (self.image.get_width() // 2)
 
