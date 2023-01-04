@@ -1,9 +1,9 @@
 import cProfile
-from platformer.menu.platformer import Platformer
+from platformer.platformer import Platformer
 from platformer.config import PlatformerConfig
 
 
-def main(pr=None):
+def main(profile: cProfile.Profile =None):
     platformer = Platformer(config)
     running = True
     while running:
@@ -13,7 +13,8 @@ def main(pr=None):
 if __name__ == "__main__":
     config = PlatformerConfig()
     if config.debug:
-        with cProfile.Profile() as pr:
-            main(pr)
-    else:
+        with cProfile.Profile() as profile:
+            main(profile)
+    else: 
         main()
+        

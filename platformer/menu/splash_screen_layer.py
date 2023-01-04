@@ -1,4 +1,5 @@
 from math import sin
+from time import perf_counter
 from random import uniform
 from pygame import Rect, Surface
 
@@ -11,8 +12,8 @@ class SplashScreenLayer:
 
     def __init__(self, image: Surface):
         self.image = image
-        self.sine_scale_factor = uniform(0.1, 0.5)
-        self.sine_stretch_factor = uniform(4, 14)
+        self.sine_scale_factor = uniform(0.2, 0.4)
+        self.sine_stretch_factor = uniform(5, 10)
 
         self.x_scroll = 0
 
@@ -23,7 +24,7 @@ class SplashScreenLayer:
             Surface: The sub image according to the newly generated scroll value
         """
         self.x_scroll += 1.1 * self.sine_scale_factor + self.sine_scale_factor * sin(
-            self.x_scroll * self.sine_stretch_factor
+            perf_counter() * self.sine_stretch_factor
         )
 
         x_scroll = int(self.x_scroll) % (self.image.get_width() // 2)

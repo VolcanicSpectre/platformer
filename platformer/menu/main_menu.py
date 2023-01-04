@@ -1,4 +1,5 @@
-import os
+from os import listdir, path
+from pathlib import Path
 import pygame
 from pygame.image import load
 from pygame import Surface
@@ -14,19 +15,21 @@ class MainMenu(Window):
         self,
         screen: Surface,
         display_surface: Surface,
-        splash_screen_image_layers_path: str,
-        splash_screen_opacity_percentage: float = 0,
+        splash_screen_image_layers_path: Path,
+        splash_screen_transparency_percentage: float = 1,
     ):
         super().__init__(screen, display_surface)
+
         self.splash_screen_layers = [
             SplashScreenLayer(
-                load(os.path.join(filename, splash_screen_image_layers_path)).convert()
+                load(path.join(splash_screen_image_layers_path, filename))
             )
-            for filename in sorted(os.listdir(splash_screen_image_layers_path))
+            for filename in sorted(listdir(splash_screen_image_layers_path))
             if filename.endswith(".png") and filename != "-1.png"
         ]
-
-        self.set_splash_screen_opacity_percentage(splash_screen_opacity_percentage)
+        self.set_splash_screen_transparency_percentage(
+            splash_screen_transparency_percentage
+        )
 
     def draw(self):
         self.display_surface.fill((0, 0, 0))
@@ -34,24 +37,28 @@ class MainMenu(Window):
         for button in self.buttons:
             self.display_surface.blit(button.current_image, button.rect.topleft)
 
-        for layer in self.splash_screen_layers:
-            self.display_surface.blit(layer.get_new_sub_image(), (0, 0))
-
+        self.display_surface.blit(self.splash_screen_layers[0].image, (0, 0))
+        self.display_surface.blit(self.splash_screen_layers[1].get_new_sub_image(), (0, 0))
+        self.display_surface.blit(self.splash_screen_layers[2].image, (0, 0))
+        self.display_surface.blit(self.splash_screen_layers[3].get_new_sub_image(), (0, 0))
+        self.display_surface.blit(self.splash_screen_layers[4].get_new_sub_image(), (0, 0))
+        self.display_surface.blit(self.splash_screen_layers[5].get_new_sub_image(), (0, 0))
+        
         pygame.transform.scale(
             self.display_surface, self.screen.get_size(), dest_surface=self.screen
         )
         pygame.display.flip()
 
-    def set_splash_screen_opacity_percentage(self, opacity_percentage: float):
-        """Sets the opacity for the splash screen image as a number between 0 and 255 from a percenatge
+    def set_splash_screen_transparency_percentage(self, transparency_percentage: float):
+        """Sets the transparency for the splash screen image as a number between 0 and 255 from a percenatge
 
         Args:
-            opacity_percentage (float): The percentage opacity for the splash screen image (0= fully transparent, 1=fully opaque)
+            transparency_percentage (float): The percentage transparency for the splash screen image (0= fully transparent, 1=fully opaque)
 
         Raises:
-            ValueError: Raised when the opacity percentage is not between 0 and 1 inclusive
+            ValueError: Raised when the transparency percentage is not between 0 and 1 inclusive
         """
-        if opacity_percentage < 0 or opacity_percentage > 1:
+        if transparency_percentage < 0 or transparency_percentage > 1:
             raise ValueError("Percentage must be between 0 and 1 inlcusive")
         for layer in self.splash_screen_layers:
-            layer.image.set_alpha(int(255 * opacity_percentage))
+            layer.image.set_alpha(int(255 * transparency_percentage))

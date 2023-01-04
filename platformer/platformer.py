@@ -13,14 +13,14 @@ class Platformer(Root):
             self.config.internal_resoloution,
             self.config.internal_fps,
         )
-        self.show_window(MainMenu)
-
         self.windows[MainMenu] = MainMenu(
             self.screen, self.display_surface, config.directories["background"]
         )
 
+        self.show_window(MainMenu)
+        self.engine
+
     def update(self):
-        self.engine.update()
         self.get_events()
         super().update()
 

@@ -1,11 +1,24 @@
 """Provides an interface for storing and loading game wide values"""
 from json import load
-from os import path
+from pathlib import Path
 from time import strftime
 
 
 class PlatformerConfig:
     """Handles loading of the settings.json file"""
+
+    debug: bool
+    debug_file: str
+
+    directories: dict[str, Path]
+
+    resoloution: tuple[int, int]
+    internal_resoloution: tuple[int, int]
+
+    fps: int
+    internal_fps: int
+
+    chunk_size: int
 
     def __init__(self):
         # Debug
@@ -14,17 +27,20 @@ class PlatformerConfig:
         self.debug_file = (strftime("%m-%d-%Y")) + debug_filename
 
         # Directories
-        game_folder = path.dirname(__file__)
-        assets_folder = path.join(game_folder, "assets")
-        background_folder = path.join(assets_folder, "background")
-        player_folder = path.join(assets_folder, "player")
-        worlds_folder = path.join(assets_folder, "worlds")
+        platformer_folder = Path(__file__).absolute().parent
+        game_folder = platformer_folder.parent
+        assets_folder = game_folder / "assets"
+        background_folder = assets_folder / "background"
+        player_folder = assets_folder / "player"
+        worlds_folder = assets_folder / "worlds"
+
         self.directories = {
             "game": game_folder,
             "assets": assets_folder,
             "background": background_folder,
             "player": player_folder,
             "worlds": worlds_folder,
+            "platformer": platformer_folder,
         }
 
         # Display
@@ -54,8 +70,8 @@ class PlatformerConfig:
         Returns:
             int: The value of the specified setting
         """
-        with open(
-            path.join(self.directories["game"], "settings.json"), encoding="utf-8"
+        with (self.directories["platformer"] / "settings.json").open(
+            mode="r"
         ) as settings_json:
             settings = load(settings_json)
             if isinstance(settings[setting], int):
@@ -75,8 +91,8 @@ class PlatformerConfig:
         Returns:
             float: The value of the specified setting
         """
-        with open(
-            path.join(self.directories["game"], "settings.json"), encoding="utf-8"
+        with (self.directories["platformer"] / "settings.json").open(
+            mode="r"
         ) as settings_json:
             settings = load(settings_json)
             if isinstance(settings[setting], (float, int)):
