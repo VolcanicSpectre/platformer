@@ -1,17 +1,17 @@
 import cProfile
-from platformer.platformer import Platformer
-from platformer.config import PlatformerConfig
+from nea_game.nea_game import NeaGame
+from nea_game.config import NeaGameConfig
 
 
 def main(profile: cProfile.Profile =None):
-    platformer = Platformer(config)
+    nea_game = NeaGame(config)
     running = True
     while running:
-        platformer.update()
+        nea_game.update()
 
 
 if __name__ == "__main__":
-    config = PlatformerConfig()
+    config = NeaGameConfig()
     if config.debug:
         with cProfile.Profile() as profile:
             main(profile)
