@@ -8,14 +8,14 @@ from nea_game.game.engine import Engine
 class Root:
     screen: Surface
     active_window: Window
-    windows: dict[Type[Window], Window]
+    windows: dict[str, Window]
     engine: Engine
 
     def __init__(
         self,
         screen_resolution: tuple[int, int],
         display_surafce_resolution: tuple[int, int],
-        fps: int
+        fps: int,
     ):
 
         pygame.init()
@@ -24,7 +24,7 @@ class Root:
         self.engine = Engine(fps)
         self.windows = {}
 
-    def show_window(self, window: Type[Window]):
+    def show_window(self, window: str):
         self.active_window = self.windows[window]
 
     def update(self):

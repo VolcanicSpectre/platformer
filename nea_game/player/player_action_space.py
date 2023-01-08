@@ -1,9 +1,9 @@
-from enum import Enum, auto
+from enum import Enum
 
 
 class PlayerActionSpace(Enum):
-    LEFT = auto()
-    RIGHT = auto()
-    UP = auto()
-    DOWN = auto()
-    DASH = auto()
+    LEFT = 0
+    RIGHT = 1
+    UP = 2
+    DOWN = 3
+    DASH = 3

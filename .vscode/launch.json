@@ -8,9 +8,9 @@
             "name": "Python: Current File",
             "type": "python",
             "request": "launch",
-            "program": "${file}",
+            "program": "C:/Users/sl12d/Platformer/main.py",
             "console": "integratedTerminal",
             "justMyCode": true
         }
-    ]
+    ],
 }

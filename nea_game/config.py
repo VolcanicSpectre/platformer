@@ -20,6 +20,8 @@ class NeaGameConfig:
 
     chunk_size: int
 
+    key_bindings: list[int]
+
     def __init__(self):
         # Debug
         self.debug = False
@@ -60,6 +62,8 @@ class NeaGameConfig:
         # World
         self.chunk_size = 4
 
+        self.key_bindings = self.get_integer_list_setting("key_bindings")
+
     def get_int_setting(self, setting: str) -> int:
         """_summary_
 
@@ -91,7 +95,7 @@ class NeaGameConfig:
             ValueError: If the value of the specified setting is not of type [float]  or [int]
 
         Returns:
-            float: The value of the specified setting
+            list[int]: The value of the specified setting
         """
         with (self.directories["platformer"] / "settings.json").open(
             mode="r"
@@ -101,3 +105,27 @@ class NeaGameConfig:
                 return settings[setting]
 
             raise ValueError
+
+    def get_integer_list_setting(self, setting: str) -> list[int]:
+        """Gets the relevant setting from settings.json that is a list of integers
+
+        Args:
+            setting (str): the identifier of the setting in [settings.json]
+
+        Raises:
+            ValueError: If the value of the specified setting is not of type [float]  or [int]
+
+        Returns:
+            float: The value of the specified setting
+        """
+        with (self.directories["platformer"] / "settings.json").open(
+            mode="r"
+        ) as settings_json:
+            settings = load(settings_json)
+            if all(isinstance(element, int) for element in settings[setting]):
+                return settings[setting]
+
+            raise ValueError
+
+    def reload(self):
+        self.__init__()

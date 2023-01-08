@@ -15,15 +15,16 @@ class NeaGame(Root):
             self.config.internal_resoloution,
             self.config.internal_fps,
         )
-        self.windows[MainMenu] = MainMenu(
+        self.windows["main_menu"] = MainMenu(
+            self,
             self.screen,
             self.display_surface,
             config.directories["assets"] / "title.png",
             config.directories["background"],
-            config.directories["buttons"],
+            config.directories["buttons"] / "main_menu",
         )
 
-        self.show_window(MainMenu)
+        self.show_window("main_menu")
 
     def update(self):
         self.get_events()

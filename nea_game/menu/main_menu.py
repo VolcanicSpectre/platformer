@@ -1,23 +1,31 @@
+from __future__ import annotations
 from os import listdir, path
 from pathlib import Path
 from sys import exit as sys_exit
-from time import sleep
+import typing
 import pygame
 from pygame.image import load
+from pygame.mouse import get_pos as get_mouse_pos, get_pressed as get_mouse_pressed
 from pygame import Surface
+from nea_game.menu.settings import Settings
 from nea_game.menu.splash_screen_layer import SplashScreenLayer
 from nea_game.gui.button import Button
 from nea_game.gui.title import Title
 from nea_game.gui.window import Window
 
+if typing.TYPE_CHECKING:
+    from nea_game.nea_game import NeaGame
+
 
 class MainMenu(Window):
+    buttons: dict[str, Button]
     splash_screen_layers: list[SplashScreenLayer]
     splash_screen_opacity: int
     title: Title
 
     def __init__(
         self,
+        parent: NeaGame,
         screen: Surface,
         display_surface: Surface,
         title_image_path: Path,
@@ -26,7 +34,8 @@ class MainMenu(Window):
         splash_screen_transparency_percentage: float = 1,
     ):
         super().__init__(screen, display_surface)
-
+        self.parent = parent
+        self.buttons = {}
         self.title_image = load(title_image_path).convert_alpha()
 
         self.splash_screen_layers = [
@@ -44,6 +53,7 @@ class MainMenu(Window):
         self.title.rect.y = 0
         self.title.center_on_x_axis(self.display_surface.get_width())
 
+        print(button_folder_path)
         for button in listdir(button_folder_path):
             self.buttons[button] = Button(button_folder_path / button)
 
@@ -57,10 +67,29 @@ class MainMenu(Window):
         self.buttons["exit"].center_on_x_axis(self.display_surface.get_width())
 
     def update(self, dt: float):
-        super().update(dt)
+        mouse_pos: tuple[int, int] = get_mouse_pos()
+        scaled_mouse_pos: tuple[int, int] = (
+            mouse_pos[0] // self.scale_factor,
+            mouse_pos[1] // self.scale_factor,
+        )
+        mouse_clicked = get_mouse_pressed()[0]
+        for button in self.buttons.values():
+            button.update(scaled_mouse_pos, mouse_clicked, dt)
+
         if self.buttons["exit"].clicked:
             pygame.quit()
             sys_exit()
+
+        if self.buttons["settings"].clicked:
+            window = Settings(
+                self.parent,
+                self.screen,
+                self.display_surface,
+                self.parent.config.directories["assets"] / "actions",
+                self.parent.config.key_bindings,
+            )
+            self.parent.windows["settings"] = window
+            self.parent.show_window("settings")
 
     def draw(self):
         self.display_surface.fill((0, 0, 0))
