@@ -1,8 +1,10 @@
 from __future__ import annotations
 import typing
 import pygame
-from pygame import Surface
+from pygame import Rect, Surface
+from nea_game.game.camera import Camera
 from nea_game.gui.window import Window
+from nea_game.ldtk_world_loader.world import World
 
 if typing.TYPE_CHECKING:
     from nea_game.nea_game import NeaGame
@@ -24,18 +26,27 @@ class Game(Window):
         self.world_number = world_number
         self.level_number = level_number
 
-        self.world = LdtkWorld(self.config, self.world_number)
-
-        self.current_ldtk_level = self.world.levels[self.level_number - 1]
+        self.world = World(self.world_number, self.config.directories["worlds"])
+        self.camera = Camera(
+            self.world.levels[0].height,
+            self.world.levels[0].width,
+            self.display_surface.get_height(),
+            self.display_surface.get_width(),
+        )
 
     def update(self, dt: float):
-        pass
+        self.camera.update(Rect((39, 200), (4, 8)))
 
     def draw(self):
         self.display_surface.fill((0, 0, 0))
-        for tile_layer in self.current_ldtk_level.tile_layers:
-            for tile in tile_layer.grid_tiles:
-                self.display_surface.blit(tile.image, tile.rect.topleft)
+        for tile in self.world.levels[0].level_data:
+            self.display_surface.blit(
+                tile.image,
+                (
+                    tile.rect.left - self.camera.get_scroll_x(),
+                    tile.rect.top - self.camera.get_scroll_y(),
+                ),
+            )
 
         pygame.transform.scale(
             self.display_surface, self.screen.get_size(), dest_surface=self.screen

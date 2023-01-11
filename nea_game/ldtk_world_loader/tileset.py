@@ -6,7 +6,7 @@ from nea_game.ldtk_world_loader.collision_types import CollisionTypes
 from nea_game.ldtk_world_loader.tileset_tile import TilesetTile
 
 
-class TileSet:
+class Tileset:
     grid_height: int
     grid_width: int
     grid_size: int
@@ -35,7 +35,7 @@ class TileSet:
                 tiles[tile_id] = collision_type["enumValueId"]
 
         self.tiles = {}
-        for tile_id in tiles:
+        for tile_id, collision_type in tiles.items():
             grid_x = tile_id - (self.grid_width * (tile_id // self.grid_width))
             pixel_x = self.padding + (grid_x * (self.grid_size + self.spacing))
 
@@ -47,5 +47,5 @@ class TileSet:
             handle_image.set_clip(clip_rect)
             tile_image = self.image.subsurface(handle_image.get_clip())
 
-            print(getattr(CollisionTypes, key.upper()))
-            self.tiles[tile_id] = TilesetTile(tile_id, tile_image)
+        
+            self.tiles[tile_id] = TilesetTile(tile_id, tile_image, getattr(CollisionTypes, collision_type.upper()), self.grid_size)

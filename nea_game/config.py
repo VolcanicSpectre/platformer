@@ -61,9 +61,6 @@ class NeaGameConfig:
         self.fps = self.get_int_setting("fps")
         self.internal_fps = 60
 
-        # World
-        self.chunk_size = 4
-
         self.key_bindings = self.get_integer_list_setting("key_bindings")
 
         self.unlocked_levels = self.get_bool_list_setting("unlocked_levels")
