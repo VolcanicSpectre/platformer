@@ -54,7 +54,7 @@ class Settings(Window):
                 key_binding,
             )
 
-        self.buttons["back"].rect.bottomright = (384, 215)
+        self.buttons["back"].rect.bottomright = (383, 215)
         self.action_buttons["up"].rect.topleft = (20, 20)
         self.action_buttons["down"].rect.topleft = (20, 60)
         self.action_buttons["left"].rect.topleft = (20, 100)
@@ -116,7 +116,7 @@ class Settings(Window):
         pygame.display.flip()
 
     def save_controls(self):
-        with (self.parent.config.directories["platformer"] / "settings.json").open(
+        with (self.parent.config.directories["platformer"] / "config.json").open(
             mode="r"
         ) as settings_json:
             new_settings_json = load_json(settings_json)
@@ -125,7 +125,7 @@ class Settings(Window):
                 action_button.key for action_button in self.action_buttons.values()
             ]
 
-        with (self.parent.config.directories["platformer"] / "settings.json").open(
+        with (self.parent.config.directories["platformer"] / "config.json").open(
             mode="w"
         ) as settings_json:
             dump(new_settings_json, settings_json, indent=4)

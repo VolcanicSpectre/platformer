@@ -17,6 +17,7 @@ class Button:
     rect: Rect
     mask: Mask
 
+    can_be_clicked: bool
     clicked: bool
     click_delay: float
     click_timer: float
@@ -31,8 +32,9 @@ class Button:
         self.mask = from_surface(self.passive_image)
         self.rect.topleft = 0, 0
 
+        self.can_be_clicked = True
         self.clicked = False
-        self.click_delay = 0.2
+        self.click_delay = 0.08
         self.click_timer = -1
 
     def update(self, mouse_pos: tuple[int, int], mouse_clicked: bool, dt: float):
@@ -47,7 +49,7 @@ class Button:
         self.clicked = False
 
         if self.rect.collidepoint(mouse_pos) and self.mask.get_at(mouse_pos_in_mask):
-            if mouse_clicked:
+            if mouse_clicked and self.can_be_clicked:
                 self.current_image = self.on_click_image
 
                 if self.click_timer == -1:

@@ -8,5 +8,9 @@
         97,
         100,
         119
+    ],
+    "unlocked_levels": [
+        true,
+        false
     ]
 }

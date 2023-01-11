@@ -18,7 +18,7 @@ class Window:
             raise ValueError("Display surface and screen must be proportional")
 
     def update(self, dt: float):
-        """Updates each button element of the window"""
+        """Updates window"""
 
     def draw(self):
-        """Draws each button element of the window"""
+        """Draws window"""

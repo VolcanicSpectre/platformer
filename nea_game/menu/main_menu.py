@@ -7,6 +7,7 @@ import pygame
 from pygame.image import load
 from pygame.mouse import get_pos as get_mouse_pos, get_pressed as get_mouse_pressed
 from pygame import Surface
+from nea_game.menu.level_selection import LevelSelection
 from nea_game.menu.settings import Settings
 from nea_game.menu.splash_screen_layer import SplashScreenLayer
 from nea_game.gui.button import Button
@@ -53,7 +54,6 @@ class MainMenu(Window):
         self.title.rect.y = 0
         self.title.center_on_x_axis(self.display_surface.get_width())
 
-        print(button_folder_path)
         for button in listdir(button_folder_path):
             self.buttons[button] = Button(button_folder_path / button)
 
@@ -76,10 +76,11 @@ class MainMenu(Window):
         for button in self.buttons.values():
             button.update(scaled_mouse_pos, mouse_clicked, dt)
 
-        if self.buttons["exit"].clicked:
-            pygame.quit()
-            sys_exit()
-
+        if self.buttons["play_game"].clicked:
+            window = LevelSelection(self.parent, self.screen, self.display_surface, self.parent.config.directories["assets"] / "buttons/level_selection")
+            self.parent.windows["play_game"] = window
+            self.parent.show_window("play_game")
+        
         if self.buttons["settings"].clicked:
             window = Settings(
                 self.parent,
@@ -90,6 +91,10 @@ class MainMenu(Window):
             )
             self.parent.windows["settings"] = window
             self.parent.show_window("settings")
+
+        if self.buttons["exit"].clicked:
+            pygame.quit()
+            sys_exit()
 
     def draw(self):
         self.display_surface.fill((0, 0, 0))

@@ -1,63 +1,43 @@
-import pstats
-from sys import exit
-
+from __future__ import annotations
+import typing
 import pygame
-from constants import *
-from engine import Engine
-from level import Level
+from pygame import Surface
+from nea_game.gui.window import Window
+
+if typing.TYPE_CHECKING:
+    from nea_game.nea_game import NeaGame
 
 
-class Game:
-    """
-    Provides an interface for creating a game with levels and managing the game logic
-    """
-    def __init__(self, pr):
-        self.pr = pr
-        self.current_level_num = 0
-        self.current_level = None
-        self.engine = Engine()
+class Game(Window):
+    def __init__(
+        self,
+        parent: NeaGame,
+        screen: Surface,
+        display_surface: Surface,
+        world_number: int,
+        level_number: int,
+    ):
+        super().__init__(screen, display_surface)
+        self.parent = parent
+        self.config = self.parent.config
 
-    def start(self, screen, display_surface):
-        """Creates a level and starts the game
+        self.world_number = world_number
+        self.level_number = level_number
 
-        Args:
-            screen (pygame.Surface): the screen that the will display the scaled version of display_surface
-            display_surface (pygame.Surface): the surface that will contain all of the render_objects
-        """
-        self.create_level(screen, display_surface)
+        self.world = LdtkWorld(self.config, self.world_number)
 
-    def update(self):
-        """Updates the engine and if a level exists then the level is updated
-        """
-        pygame.display.set_caption(
-            "{:.2f}".format(self.engine.clock.get_fps()))
-        self.engine.update()
-        self.events()
-        if self.current_level is not None:
-            self.current_level.global_update()
+        self.current_ldtk_level = self.world.levels[self.level_number - 1]
 
-    def events(self):
-        """Provides a general event manager, if the events are not detected here then the events are sent to the level's event manager
-        """
-        for event in pygame.event.get():
-            if self.current_level is not None:
-                self.current_level.event_handler(event)
+    def update(self, dt: float):
+        pass
 
-            if event.type == pygame.QUIT or event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-                if DEBUG:
-                    stats = pstats.Stats(self.pr)
-                    stats.sort_stats(pstats.SortKey.TIME)
-                    stats.dump_stats(filename=DEBUG_FILENAME)
+    def draw(self):
+        self.display_surface.fill((0, 0, 0))
+        for tile_layer in self.current_ldtk_level.tile_layers:
+            for tile in tile_layer.grid_tiles:
+                self.display_surface.blit(tile.image, tile.rect.topleft)
 
-                pygame.quit()
-                exit(0)
-
-    def create_level(self, screen, display_surface):
-        """Assigns a level object to self.current_level
-
-        Args:
-            screen (pygame.Surface): _description_
-            display_surface (pygame.Surface): _description_
-        """
-        self.current_level = Level(
-            self.engine, self.current_level_num, screen, display_surface)
+        pygame.transform.scale(
+            self.display_surface, self.screen.get_size(), dest_surface=self.screen
+        )
+        pygame.display.flip()

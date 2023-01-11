@@ -5,7 +5,7 @@ from time import strftime
 
 
 class NeaGameConfig:
-    """Handles loading of the settings.json file"""
+    """Handles loading of the config.json file"""
 
     debug: bool
     debug_file: str
@@ -21,6 +21,8 @@ class NeaGameConfig:
     chunk_size: int
 
     key_bindings: list[int]
+
+    unlocked_levels: list[bool]
 
     def __init__(self):
         # Debug
@@ -64,11 +66,13 @@ class NeaGameConfig:
 
         self.key_bindings = self.get_integer_list_setting("key_bindings")
 
+        self.unlocked_levels = self.get_bool_list_setting("unlocked_levels")
+
     def get_int_setting(self, setting: str) -> int:
         """_summary_
 
         Args:
-            setting (str): the identifier of the setting in [settings.json]
+            setting (str): the identifier of the setting in [config.json]
 
         Raises:
             ValueError: If the value of the specified setting is not of type [int]
@@ -76,7 +80,7 @@ class NeaGameConfig:
         Returns:
             int: The value of the specified setting
         """
-        with (self.directories["platformer"] / "settings.json").open(
+        with (self.directories["platformer"] / "config.json").open(
             mode="r"
         ) as settings_json:
             settings = load(settings_json)
@@ -89,7 +93,7 @@ class NeaGameConfig:
         """_summary_
 
         Args:
-            setting (str): the identifier of the setting in [settings.json]
+            setting (str): the identifier of the setting in [config.json]
 
         Raises:
             ValueError: If the value of the specified setting is not of type [float]  or [int]
@@ -97,7 +101,7 @@ class NeaGameConfig:
         Returns:
             list[int]: The value of the specified setting
         """
-        with (self.directories["platformer"] / "settings.json").open(
+        with (self.directories["platformer"] / "config.json").open(
             mode="r"
         ) as settings_json:
             settings = load(settings_json)
@@ -107,18 +111,18 @@ class NeaGameConfig:
             raise ValueError
 
     def get_integer_list_setting(self, setting: str) -> list[int]:
-        """Gets the relevant setting from settings.json that is a list of integers
+        """Gets the relevant setting from config.json that is a list of integers
 
         Args:
-            setting (str): the identifier of the setting in [settings.json]
+            setting (str): the identifier of the setting in [config.json]
 
         Raises:
-            ValueError: If the value of the specified setting is not of type [float]  or [int]
+            ValueError: If the value of the specified setting is not of type [float] or [int]
 
         Returns:
-            float: The value of the specified setting
+            list[int]: The value of the specified setting
         """
-        with (self.directories["platformer"] / "settings.json").open(
+        with (self.directories["platformer"] / "config.json").open(
             mode="r"
         ) as settings_json:
             settings = load(settings_json)
@@ -127,5 +131,33 @@ class NeaGameConfig:
 
             raise ValueError
 
+    def get_bool_list_setting(self, setting: str) -> list[bool]:
+        """Gets the relevant setting from config.json that is a list of bools
+
+        Args:
+            setting (str): the identifier of the setting in [config.json]
+
+        Raises:
+            ValueError: If the value of the specified setting is not of type [bool]
+
+        Returns:
+            list[bool]: The value of the specified setting
+        """
+        with (self.directories["platformer"] / "config.json").open(
+            mode="r"
+        ) as settings_json:
+            settings = load(settings_json)
+            if all(isinstance(element, bool) for element in settings[setting]):
+                return settings[setting]
+
+            raise ValueError
+
     def reload(self):
-        self.__init__()
+        """Reloads the settings from config.json"""
+        width = self.get_int_setting("x_resolution")
+        height = self.get_int_setting("y_resolution")
+        self.resoloution = (width, height)
+
+        self.fps = self.get_int_setting("fps")
+
+        self.key_bindings = self.get_integer_list_setting("key_bindings")
