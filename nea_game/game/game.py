@@ -5,6 +5,7 @@ from pygame import Rect, Surface
 from nea_game.game.camera import Camera
 from nea_game.gui.window import Window
 from nea_game.ldtk_world_loader.world import World
+from nea_game.player.player import Player
 
 if typing.TYPE_CHECKING:
     from nea_game.nea_game import NeaGame
@@ -27,6 +28,7 @@ class Game(Window):
         self.level_number = level_number
 
         self.world = World(self.world_number, self.config.directories["worlds"])
+        self.player = Player(self.config.directories["player"])
         self.camera = Camera(
             self.world.levels[0].height,
             self.world.levels[0].width,
@@ -35,7 +37,7 @@ class Game(Window):
         )
 
     def update(self, dt: float):
-        self.camera.update(Rect((39, 200), (4, 8)))
+        self.camera.update(Rect((39, 168), (4, 8)))
 
     def draw(self):
         self.display_surface.fill((0, 0, 0))
@@ -47,6 +49,13 @@ class Game(Window):
                     tile.rect.top - self.camera.get_scroll_y(),
                 ),
             )
+
+        self.player.renderer.render_entity(
+            "idle",
+            self.display_surface,
+            39 - self.camera.get_scroll_x(),
+            168 - self.camera.get_scroll_y(),
+        )
 
         pygame.transform.scale(
             self.display_surface, self.screen.get_size(), dest_surface=self.screen

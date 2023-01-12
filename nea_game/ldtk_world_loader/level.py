@@ -1,6 +1,8 @@
 from typing import Any
+from nea_game.config import NeaGameConfig
 from nea_game.ldtk_world_loader.level_tile import LevelTile
 from nea_game.ldtk_world_loader.tileset import Tileset
+from nea_game.player.player import Player
 
 
 class Level:
@@ -30,7 +32,6 @@ class Level:
 
             if layer["__identifier"] == "Tiles":
                 for tile in layer["gridTiles"]:
-                    print(tile["t"])
                     level_data.append(
                         LevelTile.from_tileset_tile(
                             self.tileset.tiles[tile["t"]], tile["px"]

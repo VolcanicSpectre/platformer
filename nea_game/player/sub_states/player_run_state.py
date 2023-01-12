@@ -1,10 +1,14 @@
+from __future__ import annotations
+import typing
 from math import pow
 from nea_game.calc.near_zero import near_zero
 from nea_game.calc.sign import sign
 from nea_game.calc.vector2d import Vector2D
 from nea_game.components.rigidbody2d import ForceModes
-from nea_game.player.player import Player
 from nea_game.player.super_states.player_grounded_state import PlayerGroundedState
+
+if typing.TYPE_CHECKING:
+    from nea_game.player.player import Player
 
 
 class PlayerRunState(PlayerGroundedState):

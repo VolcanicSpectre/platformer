@@ -1,5 +1,9 @@
-from nea_game.player.player import Player
+from __future__ import annotations
+import typing
 from nea_game.player.super_states.player_grounded_state import PlayerGroundedState
+
+if typing.TYPE_CHECKING:
+    from nea_game.player.player import Player
 
 
 class PlayerIdleState(PlayerGroundedState):

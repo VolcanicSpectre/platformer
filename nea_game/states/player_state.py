@@ -1,5 +1,9 @@
+from __future__ import annotations
+import typing
 from time import perf_counter
-from nea_game.player.player import Player
+
+if typing.TYPE_CHECKING:
+    from nea_game.player.player import Player
 
 
 class PlayerState:
