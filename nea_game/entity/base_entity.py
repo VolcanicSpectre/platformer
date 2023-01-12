@@ -10,6 +10,5 @@ class BaseEntity:
         self.x = x
         self.y = y
 
-    def update(self) -> None:
+    def update(self, dt: float) -> None:
         """Called each frame in order to update the entity"""
-        pass

@@ -25,7 +25,9 @@ class PlayerState:
 
     def exit(self) -> None:
         """Called when leaving the PlayerPlayerState"""
-        pass
+
+    def input_handler(self):
+        """Handles the inputs for a given event"""
 
     def update(self, dt: float) -> None:
         """Called each frame"""
@@ -33,4 +35,3 @@ class PlayerState:
 
     def do_checks(self) -> None:
         """Performs checks for the entity"""
-        pass

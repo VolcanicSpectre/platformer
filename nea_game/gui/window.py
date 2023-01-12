@@ -1,3 +1,4 @@
+from pygame.event import Event
 from pygame import Surface
 
 
@@ -16,6 +17,13 @@ class Window:
             != self.screen.get_height() // self.display_surface.get_height()
         ):
             raise ValueError("Display surface and screen must be proportional")
+
+    def event_handler(self, event: Event):
+        """Passes down the event to the event_handler for any relvant operations
+
+        Args:
+            event (Event): A pygame event
+        """
 
     def update(self, dt: float):
         """Updates window"""

@@ -1,9 +1,13 @@
 from __future__ import annotations
+from os import listdir
+from pathlib import Path
 import typing
 import pygame
+from pygame.event import Event
 from pygame import Rect, Surface
 from nea_game.game.camera import Camera
 from nea_game.gui.window import Window
+from nea_game.menu.background_layer import BackgroundLayer
 from nea_game.ldtk_world_loader.world import World
 from nea_game.player.player import Player
 
@@ -19,16 +23,29 @@ class Game(Window):
         display_surface: Surface,
         world_number: int,
         level_number: int,
+        background_image_layers_path: Path,
     ):
         super().__init__(screen, display_surface)
         self.parent = parent
         self.config = self.parent.config
 
+        self.x = 17
+        self.y = 160
+
         self.world_number = world_number
         self.level_number = level_number
 
         self.world = World(self.world_number, self.config.directories["worlds"])
-        self.player = Player(self.config.directories["player"])
+
+        self.background_layers = [
+            BackgroundLayer(pygame.image.load(background_image_layers_path / filename))
+            for filename in sorted(listdir(background_image_layers_path))
+            if filename.endswith(".png") and filename not in ["-1.png", "2.png"]
+        ]
+
+        self.player = Player(
+            self.config.directories["player"], self.config.key_bindings
+        )
         self.camera = Camera(
             self.world.levels[0].height,
             self.world.levels[0].width,
@@ -36,11 +53,22 @@ class Game(Window):
             self.display_surface.get_width(),
         )
 
+    def event_handler(self, event: Event):
+        self.player.event_handler(event)
+
     def update(self, dt: float):
-        self.camera.update(Rect((39, 168), (4, 8)))
+        self.camera.update(Rect((self.x, self.y), (4, 8)))
+        self.player.update(dt)
 
     def draw(self):
         self.display_surface.fill((0, 0, 0))
+
+        self.display_surface.blit(self.background_layers[0].image, (0, 0))
+        for background_layer in self.background_layers[1:2]:
+            self.display_surface.blit(
+                background_layer.get_new_sub_image(), (0, 0)
+            )
+
         for tile in self.world.levels[0].level_data:
             self.display_surface.blit(
                 tile.image,
@@ -53,8 +81,8 @@ class Game(Window):
         self.player.renderer.render_entity(
             "idle",
             self.display_surface,
-            39 - self.camera.get_scroll_x(),
-            168 - self.camera.get_scroll_y(),
+            self.x - self.camera.get_scroll_x(),
+            self.y - self.camera.get_scroll_y(),
         )
 
         pygame.transform.scale(

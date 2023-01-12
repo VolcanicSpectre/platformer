@@ -70,7 +70,14 @@ class LevelSelection(Window):
             self.parent.show_window("main_menu")
 
         if self.buttons["1-1"].clicked:
-            window = Game(self.parent, self.screen, self.display_surface, 1, 1)
+            window = Game(
+                self.parent,
+                self.screen,
+                self.display_surface,
+                1,
+                1,
+                self.parent.config.directories["background"] / "sky_mountain",
+            )
             self.parent.windows["game"] = window
             self.parent.show_window("game")
 

@@ -20,7 +20,7 @@ class NeaGame(Root):
             self.screen,
             self.display_surface,
             config.directories["assets"] / "title.png",
-            config.directories["background"],
+            config.directories["background"] / "sky_mountain",
             config.directories["buttons"] / "main_menu",
         )
 
@@ -37,3 +37,5 @@ class NeaGame(Root):
             ):
                 pygame.quit()
                 sys_exit()
+
+            self.active_window.event_handler(event)

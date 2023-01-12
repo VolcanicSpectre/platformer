@@ -8,7 +8,7 @@ class StateMachine:
         Args:
             starting_state (State): The starting state for the entity
         """
-        self.__current_state = starting_state
+        self.current_state = starting_state
 
     def change_state(self, new_state: PlayerState) -> None:
         """Provides functionlaity for changing state
@@ -16,9 +16,9 @@ class StateMachine:
         Args:
             new_state (State): The new state that the entity will change to
         """
-        self.__current_state.exit()
-        self.__current_state = new_state
-        self.__current_state.enter()
+        self.current_state.exit()
+        self.current_state = new_state
+        self.current_state.enter()
 
     def get_current_state(self) -> PlayerState:
         """A getter for current_state
@@ -26,4 +26,4 @@ class StateMachine:
         Returns:
             State: The current state of the entity
         """
-        return self.__current_state
+        return self.current_state

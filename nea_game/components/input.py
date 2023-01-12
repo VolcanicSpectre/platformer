@@ -7,6 +7,8 @@ from nea_game.calc.vector2d import Vector2D
 class Input(BaseComponent):
     """Provides an interface for accessing the inputs of a player given actions"""
 
+    actions: dict[PlayerActionSpace, int]
+
     def __init__(
         self, action_space: type[PlayerActionSpace], action_bindings: list[int]
     ):
@@ -16,13 +18,12 @@ class Input(BaseComponent):
             action_space (type[PlayerActionSpace]): An Enum for each possible action the player can make
             action_bindings (list[int]): The binding for each corresponding action in action_space
         """
-        self.__action_space = action_space
+        self.action_space = action_space
 
-        self.__actions = dict(
-            zip([member.value for member in self.__action_space], action_bindings)
-        )
-        self.__actions_performed_on_current_frame = {
-            action: False for action in [member.value for member in self.__action_space]
+        self.actions = dict(zip(list(self.action_space), action_bindings))
+        
+        self.actions_performed_on_current_frame = {
+            action: False for action in list(self.action_space)
         }
 
     def get_axis_raw(self) -> Vector2D:
@@ -30,23 +31,24 @@ class Input(BaseComponent):
 
         Returns:
             Vector2D: The vector of the directional inputs"""
+
         horizontal = (
             -1
-            if pygame.key.get_pressed()[self.__actions[self.__action_space.LEFT]]
+            if pygame.key.get_pressed()[self.actions[self.action_space.LEFT]]
             else 1
             * (
-                pygame.key.get_pressed()[self.__actions[self.__action_space.LEFT]]
-                ^ pygame.key.get_pressed()[self.__actions[self.__action_space.RIGHT]]
+                pygame.key.get_pressed()[self.actions[self.action_space.LEFT]]
+                ^ pygame.key.get_pressed()[self.actions[self.action_space.RIGHT]]
             )
         )
 
         vertical = (
             -1
-            if pygame.key.get_pressed()[self.__actions[self.__action_space.DOWN]]
+            if pygame.key.get_pressed()[self.actions[self.action_space.DOWN]]
             else 1
             * (
-                pygame.key.get_pressed()[self.__actions[self.__action_space.DOWN]]
-                ^ pygame.key.get_pressed()[self.__actions[self.__action_space.UP]]
+                pygame.key.get_pressed()[self.actions[self.action_space.DOWN]]
+                ^ pygame.key.get_pressed()[self.actions[self.action_space.UP]]
             )
         )
 
@@ -60,13 +62,13 @@ class Input(BaseComponent):
         Args:
             event (pygame.Event): An event
         """
-        self.__actions_performed_on_current_frame = {
-            action: False for action in self.__action_space
+        self.actions_performed_on_current_frame = {
+            action: False for action in self.action_space
         }
         if event.type == pygame.KEYDOWN:
-            for action, binding in self.__actions.items():
+            for action, binding in self.actions.items():
                 if event.key == binding:
-                    self.__actions_performed_on_current_frame[action] = True
+                    self.actions_performed_on_current_frame[action] = True
 
     def get_action_down(self, action: PlayerActionSpace) -> bool:
         """Returns true during the frame the user starts pressing down the key identified by the action action enum parameter.
@@ -77,4 +79,5 @@ class Input(BaseComponent):
         Returns:
             bool: Whether that action was performed that frame
         """
-        return self.__actions_performed_on_current_frame[action]
+        print(action)
+        return self.actions_performed_on_current_frame[action]
