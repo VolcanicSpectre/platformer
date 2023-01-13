@@ -44,10 +44,10 @@ class RigidBody2D:
         """
         match force_mode:
             case ForceModes.FORCE:
-                self.velocity += force.scale(dt / self.mass)
+                self.velocity = force.scale(dt / self.mass)
 
             case ForceModes.IMPULSE:
-                self.velocity += force.scale(1 / self.mass)
+                self.velocity = force.scale(1 / self.mass)
 
             case _:
                 raise ValueError(

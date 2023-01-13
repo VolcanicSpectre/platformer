@@ -29,9 +29,6 @@ class Game(Window):
         self.parent = parent
         self.config = self.parent.config
 
-        self.x = 17
-        self.y = 160
-
         self.world_number = world_number
         self.level_number = level_number
 
@@ -55,8 +52,15 @@ class Game(Window):
 
     def update(self, dt: float):
         self.player.input_handler()
-        self.camera.update(self.player.rect)
         self.player.update(dt)
+        self.camera.update(self.player.rect)
+        # print()
+        # print(f"PLAYER WORLD FLOAT X: {self.player.x}")
+        # print(f"PLAYER WORLD  X: {self.player.rect.x}")
+        # print(f"PLAYER BLIT X: {self.player.rect.x - self.camera.get_scroll_x()}")
+        # print(f"PLAYER FLOAT POS BLIT: {self.player.x - self.camera.get_scroll_x()}")
+        # print(f"CAMERA INT SCROLL X: {self.camera.get_scroll_x()}")
+        # print(f"CAMERA FLOAT SCROLL X: {self.camera.scroll_x}")
 
     def draw(self):
         self.display_surface.fill((0, 0, 0))
@@ -77,8 +81,8 @@ class Game(Window):
         self.player.renderer.render_entity(
             "idle",
             self.display_surface,
-            self.player.x - self.camera.get_scroll_x(),
-            self.player.y - self.camera.get_scroll_y(),
+            self.player.rect.x - self.camera.get_scroll_x(),
+            self.player.rect.y - self.camera.get_scroll_y(),
         )
 
         pygame.transform.scale(

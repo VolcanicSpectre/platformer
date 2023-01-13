@@ -1,6 +1,4 @@
 from __future__ import annotations
-from math import pow
-from nea_game.calc.near_zero import near_zero
 from nea_game.calc.sign import sign
 from nea_game.calc.vector2d import Vector2D
 from nea_game.components.rigidbody2d import ForceModes

@@ -20,7 +20,16 @@ class Player(BaseEntity):
     frames: dict[str, list[Surface]]
 
     def __init__(self, player_folder: Path, action_bindings: list[int], x: int, y: int):
+        """Defines player movement constants and starts the player in the idle state
+
+        Args:
+            player_folder (Path): The path to the player folder
+            action_bindings (list[int]): The list of the key bindings for the player actions
+            x (int): The x position of the player
+            y (int): The y position of the player
+        """
         super().__init__(x, y)
+
         self.idle_state = PlayerIdleState(self, "idle")
         self.run_state = PlayerRunState(self, "run")
         self.jump_state = PlayerJumpState(self, "jump")
@@ -36,27 +45,25 @@ class Player(BaseEntity):
 
         self.renderer = AnimatedRenderer(frames)
         self.input = Input(PlayerActionSpace, action_bindings)
-        self.rb = RigidBody2D(5, 3)
+        self.rb = RigidBody2D(2, 3)
         self.state_machine = StateMachine(self.idle_state)
 
-        self.x_run_speed = 5
+        self.rect = Rect((self.x, self.y), self.renderer.frames["idle"][0].get_size())
+
+        self.x_run_speed = 3000
         self.acceleration_rate = 2
         self.deceleration_rate = 5
         self.velocity_power = 0.6
 
         self.friction = 2
 
-    @property
-    def rect(self):
-        return Rect((self.x, self.y), self.renderer.frames[self.state_machine.current_state.state_name][self.renderer.current_frame_index].get_size())
-
     def input_handler(self):
         self.state_machine.current_state.input_handler()
 
     def update(self, dt: float):
         self.state_machine.current_state.update(dt)
-        x_velocity_component = near_zero(self.rb.velocity.x)
-        y_velocity_component = near_zero(self.rb.velocity.y)
-        self.rb.velocity = Vector2D(x_velocity_component, y_velocity_component)
+        self.x += self.rb.velocity.x
+        self.y += self.rb.velocity.y
 
-        # self.state_machine.get_current_state().update(dt)
+        self.rect.x = int(self.x)
+        self.rect.y = int(self.y)

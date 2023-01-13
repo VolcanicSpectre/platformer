@@ -13,7 +13,7 @@ class NeaGame(Root):
         super().__init__(
             self.config.resoloution,
             self.config.internal_resoloution,
-            self.config.internal_fps,
+            self.config.fps,
         )
         self.windows["main_menu"] = MainMenu(
             self,
@@ -32,7 +32,7 @@ class NeaGame(Root):
 
     def get_events(self):
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+            if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
                 pygame.quit()
                 sys_exit()
 
