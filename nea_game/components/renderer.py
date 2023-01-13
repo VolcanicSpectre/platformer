@@ -10,7 +10,7 @@ class StaticRenderer:
         """
         self.static_frame = static_frame
 
-    def render_entity(self, surface: pygame.Surface, x: int, y: int):
+    def render_entity(self, surface: pygame.Surface, x: float, y: float):
         """Renders the static frame onto the surface at the given position
 
         Args:
@@ -34,7 +34,9 @@ class AnimatedRenderer:
         self.frames = frames
         self.current_frame_index = current_frame_index
 
-    def render_entity(self, state_name: str, surface: pygame.Surface, x: int, y: int):
+    def render_entity(
+        self, state_name: str, surface: pygame.Surface, x: float, y: float
+    ):
         """Renders the current frame onto the surface at the given position
         Args:
             state_name (str): The current state of the entity

@@ -79,5 +79,4 @@ class Input(BaseComponent):
         Returns:
             bool: Whether that action was performed that frame
         """
-        print(action)
         return self.actions_performed_on_current_frame[action]

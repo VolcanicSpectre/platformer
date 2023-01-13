@@ -1,4 +1,5 @@
 from __future__ import annotations
+from pygame.event import Event
 from nea_game.calc.vector2d import Vector2D
 from nea_game.player.player_action_space import PlayerActionSpace
 from nea_game.states.player_state import PlayerState

@@ -1,5 +1,6 @@
 from __future__ import annotations
 import typing
+from pygame.event import Event
 from time import perf_counter
 
 if typing.TYPE_CHECKING:
@@ -27,7 +28,7 @@ class PlayerState:
         """Called when leaving the PlayerPlayerState"""
 
     def input_handler(self):
-        """Handles the inputs for a given event"""
+        """Handles the inputs"""
 
     def update(self, dt: float) -> None:
         """Called each frame"""

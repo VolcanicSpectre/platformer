@@ -1,9 +1,8 @@
 from os.path import isdir
 from os import listdir
 from pathlib import Path
-from pygame.event import Event
 from pygame.image import load
-from pygame import Surface
+from pygame import Rect, Surface
 from nea_game.calc.near_zero import near_zero
 from nea_game.calc.vector2d import Vector2D
 from nea_game.components.input import Input
@@ -20,7 +19,8 @@ from nea_game.states.player_state_machine import StateMachine
 class Player(BaseEntity):
     frames: dict[str, list[Surface]]
 
-    def __init__(self, player_folder: Path, action_bindings: list[int]):
+    def __init__(self, player_folder: Path, action_bindings: list[int], x: int, y: int):
+        super().__init__(x, y)
         self.idle_state = PlayerIdleState(self, "idle")
         self.run_state = PlayerRunState(self, "run")
         self.jump_state = PlayerJumpState(self, "jump")
@@ -46,13 +46,17 @@ class Player(BaseEntity):
 
         self.friction = 2
 
-    def event_handler(self, event: Event):
-        self.state_machine.current_state.input_handler(event)
+    @property
+    def rect(self):
+        return Rect((self.x, self.y), self.renderer.frames[self.state_machine.current_state.state_name][self.renderer.current_frame_index].get_size())
+
+    def input_handler(self):
+        self.state_machine.current_state.input_handler()
 
     def update(self, dt: float):
         self.state_machine.current_state.update(dt)
-        # x_velocity_component = near_zero(self.rb.velocity.x)
-        # y_velocity_component = near_zero(self.rb.velocity.y)
-        # self.rb.velocity = Vector2D(x_velocity_component, y_velocity_component)
+        x_velocity_component = near_zero(self.rb.velocity.x)
+        y_velocity_component = near_zero(self.rb.velocity.y)
+        self.rb.velocity = Vector2D(x_velocity_component, y_velocity_component)
 
         # self.state_machine.get_current_state().update(dt)

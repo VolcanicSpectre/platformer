@@ -8,9 +8,6 @@ from nea_game.player.super_states.player_grounded_state import PlayerGroundedSta
 
 
 class PlayerRunState(PlayerGroundedState):
-    def input_handler(self):
-        pass
-
     def update(self, dt: float):
         super().update(dt)
 

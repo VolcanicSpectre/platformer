@@ -1,5 +1,5 @@
-from typing import Type
 import pygame
+from pygame.event import Event
 from pygame import Surface
 from nea_game.gui.window import Window
 from nea_game.game.engine import Engine

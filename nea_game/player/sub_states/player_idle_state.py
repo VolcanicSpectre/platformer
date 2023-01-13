@@ -1,4 +1,5 @@
 from __future__ import annotations
+from pygame.event import Event
 from nea_game.player.super_states.player_grounded_state import PlayerGroundedState
 
 

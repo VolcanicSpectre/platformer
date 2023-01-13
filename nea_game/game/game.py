@@ -44,7 +44,7 @@ class Game(Window):
         ]
 
         self.player = Player(
-            self.config.directories["player"], self.config.key_bindings
+            self.config.directories["player"], self.config.key_bindings, 17, 160
         )
         self.camera = Camera(
             self.world.levels[0].height,
@@ -53,11 +53,9 @@ class Game(Window):
             self.display_surface.get_width(),
         )
 
-    def event_handler(self, event: Event):
-        self.player.event_handler(event)
-
     def update(self, dt: float):
-        self.camera.update(Rect((self.x, self.y), (4, 8)))
+        self.player.input_handler()
+        self.camera.update(self.player.rect)
         self.player.update(dt)
 
     def draw(self):
@@ -65,9 +63,7 @@ class Game(Window):
 
         self.display_surface.blit(self.background_layers[0].image, (0, 0))
         for background_layer in self.background_layers[1:2]:
-            self.display_surface.blit(
-                background_layer.get_new_sub_image(), (0, 0)
-            )
+            self.display_surface.blit(background_layer.get_new_sub_image(), (0, 0))
 
         for tile in self.world.levels[0].level_data:
             self.display_surface.blit(
@@ -81,8 +77,8 @@ class Game(Window):
         self.player.renderer.render_entity(
             "idle",
             self.display_surface,
-            self.x - self.camera.get_scroll_x(),
-            self.y - self.camera.get_scroll_y(),
+            self.player.x - self.camera.get_scroll_x(),
+            self.player.y - self.camera.get_scroll_y(),
         )
 
         pygame.transform.scale(
