@@ -22,7 +22,7 @@ class BackgroundLayer:
 
         self.x_scroll = 0
 
-    def get_new_sub_image(self, x_scroll: float = 0, y_scroll: float = 0) -> Surface:
+    def get_new_sub_image(self) -> Surface:
         """Generates a new scroll value to adjust which subsection of the image is returned
 
         Returns:
@@ -31,13 +31,13 @@ class BackgroundLayer:
         self.x_scroll += (
             self.sine_scale_factor * abs(sin(perf_counter() * self.sine_stretch_factor))
             + self.sine_translation_factor
-        ) + x_scroll
+        )
 
         x_scroll = int(self.x_scroll) % (self.image.get_width() // 2)
 
         handle_image = self.image.copy()
         clip_rect = Rect(
-            x_scroll, y_scroll, self.image.get_width() // 2, self.image.get_height()
+            x_scroll, 0, self.image.get_width() // 2, self.image.get_height()
         )
         handle_image.set_clip(clip_rect)
         return self.image.subsurface(handle_image.get_clip())

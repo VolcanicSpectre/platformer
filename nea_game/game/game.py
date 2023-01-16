@@ -32,7 +32,11 @@ class Game(Window):
         self.world_number = world_number
         self.level_number = level_number
 
-        self.world = World(self.world_number, self.config.directories["worlds"])
+        self.world = World(
+            self.world_number,
+            self.config.directories["worlds"],
+            self.screen.get_width() // self.display_surface.get_width(),
+        )
 
         self.background_layers = [
             BackgroundLayer(pygame.image.load(background_image_layers_path / filename))
@@ -69,8 +73,12 @@ class Game(Window):
         for background_layer in self.background_layers[1:2]:
             self.display_surface.blit(background_layer.get_new_sub_image(), (0, 0))
 
+        pygame.transform.scale(
+            self.display_surface, self.screen.get_size(), dest_surface=self.screen
+        )
+
         for tile in self.world.levels[0].level_data:
-            self.display_surface.blit(
+            self.screen.blit(
                 tile.image,
                 (
                     tile.rect.left - self.camera.scroll_x,
@@ -80,12 +88,9 @@ class Game(Window):
 
         self.player.renderer.render_entity(
             "idle",
-            self.display_surface,
+            self.screen,
             self.player.rect.x - self.camera.scroll_x,
             self.player.rect.y - self.camera.scroll_y,
         )
 
-        pygame.transform.scale(
-            self.display_surface, self.screen.get_size(), dest_surface=self.screen
-        )
         pygame.display.flip()
