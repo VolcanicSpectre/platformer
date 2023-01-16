@@ -70,6 +70,7 @@ class Player(BaseEntity):
         self.velocity_power = 0.6
 
         self.jump_force = 18
+        self.max_fall = 3
         self.friction = 10
 
     def get_collisions(self) -> list[LevelTile]:

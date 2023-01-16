@@ -50,4 +50,4 @@ class PlayerInAirState(PlayerState):
                 dt,
                 ForceMode.ACCELERATION,
             )
-            self.player.rb.velocity = Vector2D(self.player.rb.velocity.x , max(self.player.rb.velocity.y, ))
+            self.player.rb.velocity = Vector2D(self.player.rb.velocity.x , min(self.player.rb.velocity.y, self.player.max_fall))
