@@ -2,7 +2,7 @@ from enum import Enum, auto
 from nea_game.calc.vector2d import Vector2D
 
 
-class ForceModes(Enum):
+class ForceMode(Enum):
 
     """Provides a container for the valid ways for a force to be applied to a rigid body
 
@@ -13,12 +13,13 @@ class ForceModes(Enum):
 
     FORCE = auto()
     IMPULSE = auto()
+    ACCELERATION = auto()
 
 
 class RigidBody2D:
-    """Creates a 2D rigid body that forces can be applied to
-    """
-    def __init__(self, mass: float, gravity_scale: float) -> None:
+    """Creates a 2D rigid body that forces can be applied to"""
+
+    def __init__(self, mass: float, gravity_scale: float, internal_fps: int) -> None:
         """Creates a 2D rigid body
 
         Args:
@@ -27,10 +28,11 @@ class RigidBody2D:
         """
         self.mass = mass
         self.gravity_scale = gravity_scale
+        self.internal_fps = internal_fps
         self.velocity = Vector2D(0, 0)
 
     def add_force(
-        self, force: Vector2D, dt: float = 0, force_mode: ForceModes = ForceModes.FORCE
+        self, force: Vector2D, dt: float = 0, force_mode: ForceMode = ForceMode.FORCE
     ) -> None:
         """Adds a force to the rigid body
 
@@ -42,14 +44,17 @@ class RigidBody2D:
         Raises:
             ValueError: A ValueError is raised when the given force_mode is not a valid force_type
         """
+        dt *= self.internal_fps
         match force_mode:
-            case ForceModes.FORCE:
-                self.velocity = force.scale(dt / self.mass)
-
-            case ForceModes.IMPULSE:
-                self.velocity = force.scale(1 / self.mass)
-
+            case ForceMode.FORCE:
+                self.velocity += force.scale(dt / self.mass)
+            case ForceMode.IMPULSE:
+                self.velocity += force.scale(1 / self.mass)
+            case ForceMode.ACCELERATION:
+                self.velocity += force.scale(dt)
             case _:
                 raise ValueError(
-                    f"The given force_type: {force_mode} is not in {[member.value for member in ForceModes]}"
+                    f"The given force_type: {force_mode} is not in {[member.value for member in ForceMode]}"
                 )
+
+        self.velocity = self.velocity.near_zero()

@@ -3,11 +3,11 @@
     "y_resolution": 1080,
     "fps": 60,
     "key_bindings": [
-        32,
+        119,
         115,
         97,
         100,
-        119
+        32
     ],
     "unlocked_levels": [
         true,

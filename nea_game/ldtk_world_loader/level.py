@@ -14,7 +14,6 @@ class Level:
         self.tileset = tileset
         self.height = self.data["pxHei"]
         self.width = self.data["pxWid"]
-
         self.level_data = self.generate_level_data()
 
     def generate_level_data(self):

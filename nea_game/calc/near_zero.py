@@ -3,7 +3,7 @@
 from math import isclose
 from functools import partial
 
-THRESHOLD = 1e-5
+THRESHOLD = 1e-1
 is_close_to_zero = partial(isclose, b=0, abs_tol=THRESHOLD)
 
 

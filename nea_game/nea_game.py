@@ -1,4 +1,5 @@
 from sys import exit as sys_exit
+from pygame.event import Event
 import pygame
 from nea_game.config import NeaGameConfig
 from nea_game.gui.root import Root
@@ -31,9 +32,14 @@ class NeaGame(Root):
         super().update()
 
     def get_events(self):
+        events: list[Event]
+        events = []
         for event in pygame.event.get():
-            if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
+            if event.type == pygame.QUIT or (
+                event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE
+            ):
                 pygame.quit()
                 sys_exit()
-
-            self.active_window.event_handler(event)
+            else:
+                events.append(event)
+        self.active_window.event_handler(events)

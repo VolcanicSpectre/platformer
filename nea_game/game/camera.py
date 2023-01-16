@@ -26,13 +26,23 @@ class Camera:
         Args:
             target_rect (Rect): The rect for a given target
         """
+        self.scroll_x += int(
+            (
+                target_rect.x
+                - self.scroll_x
+                - (self.surface_width + target_rect.width) // 2
+            )
+            * 0.2
+        )
 
-        self.scroll_x += int((target_rect.x - self.scroll_x - self.surface_width // 2) * 0.2)
+        self.scroll_y += int(
+            (
+                target_rect.y
+                - self.scroll_y
+                - (self.surface_height + target_rect.height) // 2
+            )
+            * 0.2
+        )
 
-        self.scroll_y += int((target_rect.centery - self.scroll_y - self.surface_height // 2) * 0.2)
-
-    def get_scroll_x(self):
-        return int(self.scroll_x)
-
-    def get_scroll_y(self):
-        return int(self.scroll_y)
+        self.scroll_x = min(max(0, self.scroll_x), self.width - self.surface_width)
+        self.scroll_y = min(max(0, self.scroll_y), self.height - self.surface_height)

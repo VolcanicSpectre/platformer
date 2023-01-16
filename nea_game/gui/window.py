@@ -18,11 +18,11 @@ class Window:
         ):
             raise ValueError("Display surface and screen must be proportional")
 
-    def event_handler(self, event: Event):
+    def event_handler(self, events: list[Event]):
         """Passes down the event to the event_handler for any relvant operations
 
         Args:
-            event (Event): A pygame event
+            events (list[Event]): A list of pygame events
         """
 
     def update(self, dt: float):

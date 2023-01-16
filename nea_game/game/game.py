@@ -41,7 +41,12 @@ class Game(Window):
         ]
 
         self.player = Player(
-            self.config.directories["player"], self.config.key_bindings, 17, 160
+            self.config.directories["player"],
+            self.world.levels[0].level_data,
+            self.config.key_bindings,
+            self.config.internal_fps,
+            17,
+            160,
         )
         self.camera = Camera(
             self.world.levels[0].height,
@@ -50,17 +55,12 @@ class Game(Window):
             self.display_surface.get_width(),
         )
 
+    def event_handler(self, events: list[Event]):
+        self.player.event_handler(events)
+
     def update(self, dt: float):
-        self.player.input_handler()
         self.player.update(dt)
         self.camera.update(self.player.rect)
-        # print()
-        # print(f"PLAYER WORLD FLOAT X: {self.player.x}")
-        # print(f"PLAYER WORLD  X: {self.player.rect.x}")
-        # print(f"PLAYER BLIT X: {self.player.rect.x - self.camera.get_scroll_x()}")
-        # print(f"PLAYER FLOAT POS BLIT: {self.player.x - self.camera.get_scroll_x()}")
-        # print(f"CAMERA INT SCROLL X: {self.camera.get_scroll_x()}")
-        # print(f"CAMERA FLOAT SCROLL X: {self.camera.scroll_x}")
 
     def draw(self):
         self.display_surface.fill((0, 0, 0))
@@ -73,16 +73,16 @@ class Game(Window):
             self.display_surface.blit(
                 tile.image,
                 (
-                    tile.rect.left - self.camera.get_scroll_x(),
-                    tile.rect.top - self.camera.get_scroll_y(),
+                    tile.rect.left - self.camera.scroll_x,
+                    tile.rect.top - self.camera.scroll_y,
                 ),
             )
 
         self.player.renderer.render_entity(
             "idle",
             self.display_surface,
-            self.player.rect.x - self.camera.get_scroll_x(),
-            self.player.rect.y - self.camera.get_scroll_y(),
+            self.player.rect.x - self.camera.scroll_x,
+            self.player.rect.y - self.camera.scroll_y,
         )
 
         pygame.transform.scale(

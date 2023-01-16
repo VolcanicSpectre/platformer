@@ -2,7 +2,7 @@ from pathlib import Path
 from typing import Any
 from pygame.image import load
 from pygame import Rect
-from nea_game.ldtk_world_loader.collision_types import CollisionTypes
+from nea_game.ldtk_world_loader.collision_type import CollisionType
 from nea_game.ldtk_world_loader.tileset_tile import TilesetTile
 
 
@@ -47,5 +47,9 @@ class Tileset:
             handle_image.set_clip(clip_rect)
             tile_image = self.image.subsurface(handle_image.get_clip())
 
-        
-            self.tiles[tile_id] = TilesetTile(tile_id, tile_image, getattr(CollisionTypes, collision_type.upper()), self.grid_size)
+            self.tiles[tile_id] = TilesetTile(
+                tile_id,
+                tile_image,
+                getattr(CollisionType, collision_type.upper()),
+                self.grid_size,
+            )

@@ -3,9 +3,9 @@
 from enum import Enum, auto
 
 
-class CollisionTypes(Enum):
-    """An enum for the collision types a tile can have
-    """
+class CollisionType(Enum):
+    """An enum for the collision types a tile can have"""
+
     WALL = auto()
     SPIKE = auto()
     PLATFORM = auto()

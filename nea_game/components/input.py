@@ -1,3 +1,4 @@
+from pygame.event import Event
 import pygame
 from nea_game.components.base_component import BaseComponent
 from nea_game.player.player_action_space import PlayerActionSpace
@@ -21,7 +22,7 @@ class Input(BaseComponent):
         self.action_space = action_space
 
         self.actions = dict(zip(list(self.action_space), action_bindings))
-        
+
         self.actions_performed_on_current_frame = {
             action: False for action in list(self.action_space)
         }
@@ -54,21 +55,17 @@ class Input(BaseComponent):
 
         return Vector2D(horizontal, vertical)
 
-    def update_actions_performed_on_current_frame(
-        self, event: pygame.event.Event
-    ) -> None:
-        """Updates the dictionary corresponding to the actions performed on the current frame
+    def update_actions_performed_on_current_frame(self, events: list[Event]):
+        """Updates the dictionary corresponding to the actions performed on the current frame"""
 
-        Args:
-            event (pygame.Event): An event
-        """
         self.actions_performed_on_current_frame = {
             action: False for action in self.action_space
         }
-        if event.type == pygame.KEYDOWN:
-            for action, binding in self.actions.items():
-                if event.key == binding:
-                    self.actions_performed_on_current_frame[action] = True
+        for event in events:
+            if event.type == pygame.KEYDOWN:
+                for action, binding in self.actions.items():
+                    if event.key == binding:
+                        self.actions_performed_on_current_frame[action] = True
 
     def get_action_down(self, action: PlayerActionSpace) -> bool:
         """Returns true during the frame the user starts pressing down the key identified by the action action enum parameter.

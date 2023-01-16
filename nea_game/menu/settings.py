@@ -55,11 +55,8 @@ class Settings(Window):
             )
 
         self.buttons["back"].rect.bottomright = (383, 215)
-        self.action_buttons["up"].rect.topleft = (20, 20)
-        self.action_buttons["down"].rect.topleft = (20, 60)
-        self.action_buttons["left"].rect.topleft = (20, 100)
-        self.action_buttons["right"].rect.topleft = (20, 140)
-        self.action_buttons["dash"].rect.topleft = (20, 180)
+        for index, action_button in enumerate(self.action_buttons.values()):
+            action_button.rect.topleft = (20, 20 + 40 * index)
 
     def update(self, dt: float):
         mouse_pos: tuple[int, int] = get_mouse_pos()
