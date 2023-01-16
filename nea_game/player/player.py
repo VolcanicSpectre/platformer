@@ -3,7 +3,6 @@ from os import listdir
 from pathlib import Path
 from pygame.event import Event
 from pygame.image import load
-from pygame.transform import scale_by
 from pygame import Rect, Surface
 from nea_game.calc.vector2d import Vector2D
 from nea_game.components.input import Input
@@ -52,7 +51,7 @@ class Player(BaseEntity):
         for folder in listdir(player_folder):
             if isdir(player_folder / folder):
                 frames[folder] = [
-                    scale_by(load(player_folder / (f"{folder}/{image_name}")), 5)
+                    load(player_folder / (f"{folder}/{image_name}"))
                     for image_name in listdir(player_folder / folder)
                 ]
 

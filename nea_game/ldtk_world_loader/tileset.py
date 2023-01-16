@@ -17,7 +17,7 @@ class Tileset:
     collision_types: list[dict[str, Any]]
     tiles: dict[int, TilesetTile]
 
-    def __init__(self, data: dict[str, Any], world_path: Path, scale_factor: int):
+    def __init__(self, data: dict[str, Any], world_path: Path):
         self.grid_height = data["__cHei"]
         self.grid_width = data["__cWid"]
         self.grid_size = data["tileGridSize"]
@@ -52,5 +52,4 @@ class Tileset:
                 tile_image,
                 getattr(CollisionType, collision_type.upper()),
                 self.grid_size,
-                scale_factor,
             )
