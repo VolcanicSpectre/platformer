@@ -1,3 +1,4 @@
+import ez_profile
 import cProfile
 from nea_game.nea_game import NeaGame
 from nea_game.config import NeaGameConfig
