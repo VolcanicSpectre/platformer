@@ -1,23 +1,9 @@
-import cProfile
-from nea_game.nea_game import NeaGame
+from os import system
 from nea_game.config import NeaGameConfig
-
-
-def main(profile: cProfile.Profile | None = None):
-    if profile:
-        nea_game = NeaGame(config, profile)
-    else:
-        nea_game = NeaGame(config)
-
-    running = True
-    while running:
-        nea_game.update()
-
 
 if __name__ == "__main__":
     config = NeaGameConfig()
     if config.debug:
-        with cProfile.Profile() as profile:
-            main(profile)
+        system(f"python app.py --fname {config.debug_file}")
     else:
-        main()
+        system("python app.py")

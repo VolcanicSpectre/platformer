@@ -1,5 +1,3 @@
-import cProfile
-import pstats
 from sys import exit as sys_exit
 from pygame.event import Event
 import pygame
@@ -9,9 +7,8 @@ from nea_game.menu.main_menu import MainMenu
 
 
 class NeaGame(Root):
-    def __init__(self, config: NeaGameConfig, profile: cProfile.Profile | None = None):
+    def __init__(self, config: NeaGameConfig):
         self.config = config
-        self.profile = profile
 
         pygame.display.set_caption("NEA Game")
         # pygame.display.set_icon()
@@ -43,11 +40,6 @@ class NeaGame(Root):
                 event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE
             ):
                 pygame.quit()
-                if self.profile:
-                    stats = pstats.Stats(self.profile)
-                    stats.sort_stats(pstats.SortKey.TIME)
-                    stats.dump_stats(filename=self.config.debug_file)
-
                 sys_exit()
             else:
                 events.append(event)

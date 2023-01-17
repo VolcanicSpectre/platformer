@@ -26,9 +26,9 @@ class NeaGameConfig:
 
     def __init__(self):
         # Debug
-        self.debug = False
-        debug_filename = "TestingPerfOnLaptop"
-        self.debug_file = (strftime("%m-%d-%Y")) + " " + debug_filename
+        self.debug = True
+        debug_filename = "Test"
+        self.debug_file = (strftime("%m-%d-%Y")) + "-" + debug_filename + ".prof"
 
         # Directories
         platformer_folder = Path(__file__).absolute().parent

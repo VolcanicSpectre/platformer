@@ -42,7 +42,7 @@ class PlayerInAirState(PlayerState):
             if perf_counter() - self.jump_input_time < self.player.jump_buffer_time:
                 self.player.state_machine.change_state(self.player.jump_state)
 
-            if self.player.rb.velocity.x == 0:
+            elif self.player.rb.velocity.x == 0:
                 self.player.state_machine.change_state(self.player.idle_state)
             else:
                 self.player.state_machine.change_state(self.player.run_state)
