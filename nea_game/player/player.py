@@ -65,12 +65,18 @@ class Player(BaseEntity):
 
         self.x_run_speed = 2
         self.acceleration_rate = 3
+        self.jump_hang_acceleration_mult = 2
+        self.jump_hang_max_speed_mult = 1.2
         self.deceleration_rate = 10
         self.air_acceleration_multiplier = 0.6
         self.velocity_power = 0.6
 
-        self.jump_force = 18
+        self.jump_force = 15
+        self.jump_hang_time_threshold = 1.2
+        self.coyote_time = 0.1
+        self.jump_buffer_time = 0.1
         self.max_fall = 3
+
         self.friction = 10
 
     def get_collisions(self) -> list[LevelTile]:
@@ -90,6 +96,25 @@ class Player(BaseEntity):
                 ):
                     return True
 
+        return False
+
+    @property
+    def is_touching_wall(self):
+        for collision in self.get_collisions():
+            match collision.collision_type:
+                case CollisionType.WALL:
+                    if (
+                        self.rect.right >= collision.rect.left
+                        and self.old_rect.right <= collision.rect.left
+                    ) or (
+                        self.rect.left <= collision.rect.right
+                        and self.old_rect.left >= collision.rect.right
+                    ):
+
+                        return True
+
+                case _:
+                    pass
         return False
 
     def handle_x_collisions(self):

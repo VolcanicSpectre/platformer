@@ -1,6 +1,5 @@
 from __future__ import annotations
 import typing
-from pygame.event import Event
 from time import perf_counter
 
 if typing.TYPE_CHECKING:
@@ -9,11 +8,11 @@ if typing.TYPE_CHECKING:
 
 class PlayerState:
     def __init__(self, player: Player, state_name: str) -> None:
-        """A template PlayerPlayerState class
+        """A template PlayerState class
 
         Args:
-            entity (BaseEntity): The entity that the PlayerPlayerState belongs to
-            PlayerPlayerState_name (str): The string representation of the PlayerPlayerState
+            player (Player): The entity that the PlayerState belongs to
+            state_name (str): The string representation of the PlayerState
         """
         self.player = player
         self.state_name: str = state_name
