@@ -1,6 +1,7 @@
 from __future__ import annotations
 from time import perf_counter
 import typing
+from nea_game.calc.lerp import lerp
 from nea_game.calc.sign import sign
 from nea_game.calc.vector2d import Vector2D
 from nea_game.components.rigidbody2d import ForceMode
@@ -26,6 +27,12 @@ class PlayerInAirState(PlayerState):
     def update(self, dt: float):
         # Coyote Time
         if (
+            self.player.is_touching_wall == self.player.input.get_axis_raw()
+            and self.player.input.get_action_down(PlayerActionSpace.UP)
+        ):
+            self.player.state_machine.change_state(self.player.wall_jump_state)
+
+        if (
             self.player.input.get_action_down(PlayerActionSpace.UP)
             and perf_counter() - self.start_time < self.player.coyote_time
             and issubclass(
@@ -46,11 +53,13 @@ class PlayerInAirState(PlayerState):
                 self.player.state_machine.change_state(self.player.idle_state)
             else:
                 self.player.state_machine.change_state(self.player.run_state)
-        elif self.player.is_touching_wall:
-            self.player.state_machine.change_state(self.player.wall_jump_state)
-            print("HERE")
+
         else:
             target_speed = self.move_input.x * self.player.x_run_speed
+            if self.player.state_machine.previous_state == self.player.wall_jump_state:
+                target_speed = lerp(
+                    self.player.rb.velocity.x, target_speed, self.player.wall_jump_lerp
+                )
             speed_difference = target_speed - self.player.rb.velocity.x
 
             acceleration_rate = (
@@ -82,13 +91,14 @@ class PlayerInAirState(PlayerState):
 
             if (
                 self.player.state_machine.previous_state == self.player.jump_state
-                and abs(self.player.rb.velocity.y) < 0.1
+                and abs(self.player.rb.velocity.y)
+                < self.player.jump_hang_time_threshold
             ):
 
-                gravity_scale = self.player.rb.gravity_scale * 0.5
+                gravity_scale = self.player.rb.gravity_scale * 0.75
 
             elif self.player.rb.velocity.y > 0:
-                gravity_scale = self.player.rb.gravity_scale * 1.5
+                gravity_scale = self.player.rb.gravity_scale * 1.25
 
             else:
                 gravity_scale = self.player.rb.gravity_scale

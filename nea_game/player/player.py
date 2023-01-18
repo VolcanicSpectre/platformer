@@ -59,7 +59,7 @@ class Player(BaseEntity):
 
         self.renderer = AnimatedRenderer(frames)
         self.input = Input(PlayerActionSpace, action_bindings)
-        self.rb = RigidBody2D(5, 0.3, internal_fps)
+        self.rb = RigidBody2D(4, 0.4, internal_fps)
         self.state_machine = StateMachine(self.idle_state)
 
         self.direction = 1
@@ -81,13 +81,15 @@ class Player(BaseEntity):
         self.max_fall = 3
 
         self.wall_jump_force = Vector2D(5, 10)
+        self.wall_jump_time = 1
+        self.wall_jump_lerp = 0.8
         self.friction = 10
 
     def get_collisions(self) -> list[LevelTile]:
         return [tile for tile in self.level_data if self.rect.colliderect(tile.rect)]
 
     @property
-    def is_grounded(self):
+    def is_grounded(self) -> bool:
         for collision in [
             tile
             for tile in self.level_data
@@ -103,8 +105,31 @@ class Player(BaseEntity):
         return False
 
     @property
-    def is_touching_wall(self):
-        pass
+    def is_touching_wall(self) -> int:
+        for collision in [
+            tile
+            for tile in self.level_data
+            if self.rect.move(1, 0).colliderect(tile.rect)
+        ]:
+            if collision.collision_type == CollisionType.WALL:
+                if (
+                    self.rect.right >= collision.rect.left
+                    and self.old_rect.right <= collision.rect.left
+                ):
+                    return -1
+
+        for collision in [
+            tile
+            for tile in self.level_data
+            if self.rect.move(-1, 0).colliderect(tile.rect)
+        ]:
+            if collision.collision_type == CollisionType.WALL:
+                if (
+                    self.rect.left <= collision.rect.right
+                    and self.old_rect.left >= collision.rect.right
+                ):
+                    return 1
+        return 0
 
     def handle_x_collisions(self):
         for collision in self.get_collisions():
