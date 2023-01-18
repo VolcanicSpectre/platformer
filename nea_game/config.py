@@ -26,7 +26,7 @@ class NeaGameConfig:
 
     def __init__(self):
         # Debug
-        self.debug = True
+        self.debug = False
         debug_filename = "Test"
         self.debug_file = (strftime("%m-%d-%Y")) + "-" + debug_filename + ".prof"
 

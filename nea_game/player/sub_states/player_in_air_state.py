@@ -46,7 +46,9 @@ class PlayerInAirState(PlayerState):
                 self.player.state_machine.change_state(self.player.idle_state)
             else:
                 self.player.state_machine.change_state(self.player.run_state)
-
+        elif self.player.is_touching_wall:
+            self.player.state_machine.change_state(self.player.wall_jump_state)
+            print("HERE")
         else:
             target_speed = self.move_input.x * self.player.x_run_speed
             speed_difference = target_speed - self.player.rb.velocity.x

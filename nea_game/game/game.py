@@ -80,6 +80,7 @@ class Game(Window):
 
         self.player.renderer.render_entity(
             "idle",
+            self.player.direction == -1,
             self.display_surface,
             self.player.rect.x - self.camera.scroll_x,
             self.player.rect.y - self.camera.scroll_y,

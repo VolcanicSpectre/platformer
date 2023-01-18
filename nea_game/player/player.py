@@ -15,6 +15,7 @@ from nea_game.player.sub_states.player_idle_state import PlayerIdleState
 from nea_game.player.sub_states.player_in_air_state import PlayerInAirState
 from nea_game.player.sub_states.player_run_state import PlayerRunState
 from nea_game.player.sub_states.player_jump_state import PlayerJumpState
+from nea_game.player.sub_states.player_wall_jump_state import PlayerWallJumpState
 from nea_game.player.player_action_space import PlayerActionSpace
 from nea_game.states.player_state_machine import StateMachine
 
@@ -45,6 +46,7 @@ class Player(BaseEntity):
         self.idle_state = PlayerIdleState(self, "Idle")
         self.run_state = PlayerRunState(self, "Run")
         self.jump_state = PlayerJumpState(self, "Jump")
+        self.wall_jump_state = PlayerWallJumpState(self, "WallJump")
         self.in_air_state = PlayerInAirState(self, "InAir")
         frames = {}
 
@@ -60,6 +62,7 @@ class Player(BaseEntity):
         self.rb = RigidBody2D(5, 0.3, internal_fps)
         self.state_machine = StateMachine(self.idle_state)
 
+        self.direction = 1
         self.rect = Rect((self.x, self.y), self.renderer.frames["idle"][0].get_size())
         self.old_rect = self.rect
 
@@ -77,6 +80,7 @@ class Player(BaseEntity):
         self.jump_buffer_time = 0.1
         self.max_fall = 3
 
+        self.wall_jump_force = Vector2D(5, 10)
         self.friction = 10
 
     def get_collisions(self) -> list[LevelTile]:
@@ -100,22 +104,7 @@ class Player(BaseEntity):
 
     @property
     def is_touching_wall(self):
-        for collision in self.get_collisions():
-            match collision.collision_type:
-                case CollisionType.WALL:
-                    if (
-                        self.rect.right >= collision.rect.left
-                        and self.old_rect.right <= collision.rect.left
-                    ) or (
-                        self.rect.left <= collision.rect.right
-                        and self.old_rect.left >= collision.rect.right
-                    ):
-
-                        return True
-
-                case _:
-                    pass
-        return False
+        pass
 
     def handle_x_collisions(self):
         for collision in self.get_collisions():
@@ -173,6 +162,9 @@ class Player(BaseEntity):
         self.state_machine.current_state.input_handler()
 
     def update(self, dt: float):
+        if self.input.get_axis_raw().x:
+            self.direction = self.input.get_axis_raw().x
+
         self.old_rect = self.rect.copy()
         self.input_handler()
         self.state_machine.current_state.update(dt)
