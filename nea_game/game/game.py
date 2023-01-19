@@ -60,7 +60,7 @@ class Game(Window):
 
     def update(self, dt: float):
         self.player.update(dt)
-        print(self.player.state_machine.current_state.state_name)
+        #print(self.player.state_machine.current_state.state_name)
         self.camera.update(self.player.rect)
 
     def draw(self):

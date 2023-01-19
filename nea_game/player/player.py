@@ -16,12 +16,15 @@ from nea_game.player.sub_states.player_in_air_state import PlayerInAirState
 from nea_game.player.sub_states.player_run_state import PlayerRunState
 from nea_game.player.sub_states.player_jump_state import PlayerJumpState
 from nea_game.player.sub_states.player_wall_jump_state import PlayerWallJumpState
+from nea_game.player.sub_states.player_slide_state import PlayerSlideState
 from nea_game.player.player_action_space import PlayerActionSpace
 from nea_game.states.player_state_machine import StateMachine
 
 
 class Player(BaseEntity):
     frames: dict[str, list[Surface]]
+
+    direction: int
 
     def __init__(
         self,
@@ -48,6 +51,7 @@ class Player(BaseEntity):
         self.jump_state = PlayerJumpState(self, "Jump")
         self.wall_jump_state = PlayerWallJumpState(self, "WallJump")
         self.in_air_state = PlayerInAirState(self, "InAir")
+        self.slide_state = PlayerSlideState(self, "Slide")
         frames = {}
 
         for folder in listdir(player_folder):
@@ -80,9 +84,9 @@ class Player(BaseEntity):
         self.jump_buffer_time = 0.1
         self.max_fall = 3
 
-        self.wall_jump_force = Vector2D(5, 10)
-        self.wall_jump_time = 1
-        self.wall_jump_lerp = 0.8
+        self.wall_jump_force = Vector2D(20, 20)
+        self.wall_jump_time = 3
+        self.wall_jump_lerp = 0.9
         self.friction = 10
 
     def get_collisions(self) -> list[LevelTile]:
@@ -116,7 +120,7 @@ class Player(BaseEntity):
                     self.rect.right >= collision.rect.left
                     and self.old_rect.right <= collision.rect.left
                 ):
-                    return -1
+                    return 1
 
         for collision in [
             tile
@@ -128,7 +132,7 @@ class Player(BaseEntity):
                     self.rect.left <= collision.rect.right
                     and self.old_rect.left >= collision.rect.right
                 ):
-                    return 1
+                    return -1
         return 0
 
     def handle_x_collisions(self):

@@ -25,13 +25,11 @@ class PlayerInAirState(PlayerState):
         self.move_input = self.player.input.get_axis_raw()
 
     def update(self, dt: float):
-        # Coyote Time
-        if (
-            self.player.is_touching_wall == self.player.input.get_axis_raw()
-            and self.player.input.get_action_down(PlayerActionSpace.UP)
-        ):
-            self.player.state_machine.change_state(self.player.wall_jump_state)
+        if self.player.input.get_axis_raw().x:
+            if self.player.is_touching_wall == self.player.input.get_axis_raw().x:
+                self.player.state_machine.change_state(self.player.slide_state)
 
+        # Coyote Time
         if (
             self.player.input.get_action_down(PlayerActionSpace.UP)
             and perf_counter() - self.start_time < self.player.coyote_time
@@ -57,9 +55,15 @@ class PlayerInAirState(PlayerState):
         else:
             target_speed = self.move_input.x * self.player.x_run_speed
             if self.player.state_machine.previous_state == self.player.wall_jump_state:
-                target_speed = lerp(
-                    self.player.rb.velocity.x, target_speed, self.player.wall_jump_lerp
-                )
+                if (
+                    perf_counter() - self.player.state_machine.previous_state.start_time
+                    > self.player.wall_jump_time
+                ):
+                    target_speed = lerp(
+                        self.player.rb.velocity.x,
+                        target_speed,
+                        self.player.wall_jump_lerp,
+                    )
             speed_difference = target_speed - self.player.rb.velocity.x
 
             acceleration_rate = (
