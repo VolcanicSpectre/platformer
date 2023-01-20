@@ -17,21 +17,19 @@ class PlayerState:
         self.player = player
         self.state_name: str = state_name
         self.start_time: float
+        self.is_exiting_state: bool
 
     def enter(self) -> None:
         """Called when entering the PlayerPlayerState"""
         self.start_time = perf_counter()
-        self.do_checks()
+        self.is_exiting_state = False
 
     def exit(self) -> None:
         """Called when leaving the PlayerPlayerState"""
+        self.is_exiting_state = True
 
     def input_handler(self):
         """Handles the inputs"""
 
     def update(self, dt: float) -> None:
         """Called each frame"""
-        self.do_checks()
-
-    def do_checks(self) -> None:
-        """Performs checks for the entity"""

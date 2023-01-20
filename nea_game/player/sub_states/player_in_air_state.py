@@ -26,7 +26,10 @@ class PlayerInAirState(PlayerState):
 
     def update(self, dt: float):
         if self.player.input.get_axis_raw().x:
-            if self.player.is_touching_wall == self.player.input.get_axis_raw().x:
+            if (
+                self.player.is_touching_wall == self.player.input.get_axis_raw().x
+                and self.player.rb.velocity.y > 0
+            ):
                 self.player.state_machine.change_state(self.player.slide_state)
 
         # Coyote Time
@@ -57,7 +60,7 @@ class PlayerInAirState(PlayerState):
             if self.player.state_machine.previous_state == self.player.wall_jump_state:
                 if (
                     perf_counter() - self.player.state_machine.previous_state.start_time
-                    > self.player.wall_jump_time
+                    < self.player.wall_jump_time
                 ):
                     target_speed = lerp(
                         self.player.rb.velocity.x,
@@ -74,7 +77,8 @@ class PlayerInAirState(PlayerState):
 
             if (
                 self.player.state_machine.previous_state == self.player.jump_state
-                and abs(self.player.rb.velocity.y) < 0.1
+                and abs(self.player.rb.velocity.y)
+                < self.player.jump_hang_time_threshold
             ):
                 acceleration_rate *= self.player.jump_hang_acceleration_mult
                 target_speed *= self.player.jump_hang_max_speed_mult
@@ -94,15 +98,20 @@ class PlayerInAirState(PlayerState):
                 )
 
             if (
-                self.player.state_machine.previous_state == self.player.jump_state
+                self.player.state_machine.previous_state
+                in (self.player.jump_state, self.player.wall_jump_state)
                 and abs(self.player.rb.velocity.y)
                 < self.player.jump_hang_time_threshold
             ):
 
-                gravity_scale = self.player.rb.gravity_scale * 0.75
+                gravity_scale = (
+                    self.player.rb.gravity_scale * self.player.jump_hang_gravity_mult
+                )
 
             elif self.player.rb.velocity.y > 0:
-                gravity_scale = self.player.rb.gravity_scale * 1.25
+                gravity_scale = (
+                    self.player.rb.gravity_scale * self.player.jump_fast_fall_mult
+                )
 
             else:
                 gravity_scale = self.player.rb.gravity_scale

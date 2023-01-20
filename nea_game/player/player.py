@@ -70,7 +70,7 @@ class Player(BaseEntity):
         self.rect = Rect((self.x, self.y), self.renderer.frames["idle"][0].get_size())
         self.old_rect = self.rect
 
-        self.x_run_speed = 2
+        self.x_run_speed = 1.8
         self.acceleration_rate = 3
         self.jump_hang_acceleration_mult = 2
         self.jump_hang_max_speed_mult = 1.2
@@ -80,13 +80,18 @@ class Player(BaseEntity):
 
         self.jump_force = 15
         self.jump_hang_time_threshold = 1.2
+        self.jump_hang_gravity_mult = 0.6
+        self.jump_fast_fall_mult = 1.25
         self.coyote_time = 0.1
         self.jump_buffer_time = 0.1
         self.max_fall = 3
 
-        self.wall_jump_force = Vector2D(20, 20)
+        self.wall_jump_force = Vector2D(11, 15)
         self.wall_jump_time = 3
-        self.wall_jump_lerp = 0.9
+        self.wall_jump_lerp = 0.05
+
+        self.wall_slide_velocity = 0.8
+
         self.friction = 10
 
     def get_collisions(self) -> list[LevelTile]:
