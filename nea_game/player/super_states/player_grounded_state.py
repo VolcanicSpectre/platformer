@@ -12,6 +12,13 @@ class PlayerGroundedState(PlayerState):
 
     def update(self, dt: float):
         super().update(dt)
+
+        if (
+            self.player.input.get_action_down(PlayerActionSpace.DASH)
+            and self.player.can_dash
+        ):
+            self.player.state_machine.change_state(self.player.dash_state)
+
         if self.player.input.get_action_down(PlayerActionSpace.UP):
             self.player.state_machine.change_state(self.player.jump_state)
 

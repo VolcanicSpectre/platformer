@@ -16,7 +16,7 @@ class PlayerAbilityState(PlayerState):
         super().update(dt)
 
         if self.is_ability_done:
-            if self.player.is_grounded and self.player.rb.velocity.y <= 0:
+            if self.player.is_grounded and self.player.rb.velocity.x == 0:
                 self.player.state_machine.change_state(self.player.idle_state)
             else:
                 self.player.state_machine.change_state(self.player.in_air_state)

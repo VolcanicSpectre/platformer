@@ -33,3 +33,5 @@ class PlayerState:
 
     def update(self, dt: float) -> None:
         """Called each frame"""
+        if self.player.is_grounded:
+            self.player.can_dash = True

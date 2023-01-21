@@ -16,6 +16,7 @@ from nea_game.player.sub_states.player_in_air_state import PlayerInAirState
 from nea_game.player.sub_states.player_run_state import PlayerRunState
 from nea_game.player.sub_states.player_jump_state import PlayerJumpState
 from nea_game.player.sub_states.player_wall_jump_state import PlayerWallJumpState
+from nea_game.player.sub_states.player_dash_state import PlayerDashState
 from nea_game.player.sub_states.player_slide_state import PlayerSlideState
 from nea_game.player.player_action_space import PlayerActionSpace
 from nea_game.states.player_state_machine import StateMachine
@@ -48,6 +49,7 @@ class Player(BaseEntity):
 
         self.idle_state = PlayerIdleState(self, "Idle")
         self.run_state = PlayerRunState(self, "Run")
+        self.dash_state = PlayerDashState(self, "Dash")
         self.jump_state = PlayerJumpState(self, "Jump")
         self.wall_jump_state = PlayerWallJumpState(self, "WallJump")
         self.in_air_state = PlayerInAirState(self, "InAir")
@@ -92,6 +94,9 @@ class Player(BaseEntity):
 
         self.wall_slide_velocity = 0.8
 
+        self.can_dash = False
+        self.dash_time = 0.8
+        self.dash_speed = 20
         self.friction = 10
 
     def get_collisions(self) -> list[LevelTile]:
@@ -196,13 +201,14 @@ class Player(BaseEntity):
         self.state_machine.current_state.input_handler()
 
     def update(self, dt: float):
+
         if self.input.get_axis_raw().x:
-            self.direction = self.input.get_axis_raw().x
+            self.direction = int(self.input.get_axis_raw().x)
 
         self.old_rect = self.rect.copy()
         self.input_handler()
         self.state_machine.current_state.update(dt)
-
+        print(self.state_machine.current_state)
         self.x += self.rb.velocity.x
         self.rect.x = int(self.x)
         self.handle_x_collisions()

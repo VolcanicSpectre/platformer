@@ -44,9 +44,9 @@ class Input(BaseComponent):
         )
 
         vertical = (
-            -1
+            1
             if pygame.key.get_pressed()[self.actions[self.action_space.DOWN]]
-            else 1
+            else -1
             * (
                 pygame.key.get_pressed()[self.actions[self.action_space.DOWN]]
                 ^ pygame.key.get_pressed()[self.actions[self.action_space.UP]]

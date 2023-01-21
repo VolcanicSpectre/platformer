@@ -25,6 +25,12 @@ class PlayerInAirState(PlayerState):
         self.move_input = self.player.input.get_axis_raw()
 
     def update(self, dt: float):
+        if (
+            self.player.input.get_action_down(PlayerActionSpace.DASH)
+            and self.player.can_dash
+        ):
+            self.player.state_machine.change_state(self.player.dash_state)
+
         if self.player.input.get_axis_raw().x:
             if (
                 self.player.is_touching_wall == self.player.input.get_axis_raw().x
