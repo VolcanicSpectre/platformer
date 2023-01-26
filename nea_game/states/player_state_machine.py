@@ -22,10 +22,3 @@ class StateMachine:
         self.current_state = new_state
         self.current_state.enter()
 
-    def get_current_state(self) -> PlayerState:
-        """A getter for current_state
-
-        Returns:
-            State: The current state of the entity
-        """
-        return self.current_state

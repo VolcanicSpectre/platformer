@@ -14,11 +14,15 @@ class PlayerDashState(PlayerAbilityState):
             self.is_ability_done = True
         else:
             self.player.rb.velocity = Vector2D(0, 0)
-            force = Vector2D(move_input.x, move_input.y).scale_to_length(
-                self.player.dash_speed
-            )
+            force = Vector2D(move_input.x, move_input.y).scale(self.player.dash_speed)
             self.player.rb.add_force(force, force_mode=ForceMode.IMPULSE)
             self.player.can_dash = False
+
+    def exit(self):
+        super().exit()
+        self.player.rb.velocity = Vector2D(
+            self.player.rb.velocity.x, self.player.rb.velocity.y * 0.2
+        )
 
     def update(self, dt: float):
         if self.player.is_grounded:

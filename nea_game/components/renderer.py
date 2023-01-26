@@ -1,4 +1,5 @@
 import pygame
+from nea_game.states.player_state import PlayerState
 
 
 class StaticRenderer:
@@ -32,10 +33,14 @@ class AnimatedRenderer:
             current_frame_index (int, optional): If specified the starting frame will be the frame specified at the given index, otherwise the first one is selected
         """
         self.frames = frames
-        self.current_frame_index = current_frame_index
 
     def render_entity(
-        self, state_name: str, flip_x: bool, surface: pygame.Surface, x: float, y: float
+        self,
+        state: PlayerState,
+        flip_x: bool,
+        surface: pygame.Surface,
+        x: float,
+        y: float,
     ):
         """Renders the current frame onto the surface at the given position
         Args:
@@ -46,23 +51,7 @@ class AnimatedRenderer:
         """
         surface.blit(
             pygame.transform.flip(
-                self.frames[state_name][self.current_frame_index], flip_x, False
+                self.frames[state.state_name][state.animation_index], flip_x, False
             ),
             (x, y),
         )
-
-    def set_current_frame(self, new_frame_index: int):
-        """Sets the index of the current frame to the index specified
-
-        Args:
-            new_frame_index (int): The new index of the current frame
-
-        Raises:
-            IndexError: Raises an IndexError if the given index is outside of the range
-        """
-        if new_frame_index < 0 or new_frame_index >= len(self.frames):
-            raise IndexError(
-                f"The given index: {new_frame_index} is outside of the range 0 <= new_frame_index <= {len(self.frames)})"
-            )
-
-        self.current_frame_index = new_frame_index

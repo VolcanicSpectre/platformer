@@ -10,14 +10,16 @@ from nea_game.components.renderer import AnimatedRenderer
 from nea_game.components.rigidbody2d import RigidBody2D
 from nea_game.entity.base_entity import BaseEntity
 from nea_game.ldtk_world_loader.collision_type import CollisionType
+from nea_game.ldtk_world_loader.level_data import LevelData
 from nea_game.ldtk_world_loader.level_tile import LevelTile
+from nea_game.player.sub_states.player_dash_state import PlayerDashState
 from nea_game.player.sub_states.player_idle_state import PlayerIdleState
 from nea_game.player.sub_states.player_in_air_state import PlayerInAirState
-from nea_game.player.sub_states.player_run_state import PlayerRunState
 from nea_game.player.sub_states.player_jump_state import PlayerJumpState
-from nea_game.player.sub_states.player_wall_jump_state import PlayerWallJumpState
-from nea_game.player.sub_states.player_dash_state import PlayerDashState
+from nea_game.player.sub_states.player_land_state import PlayerLandState
+from nea_game.player.sub_states.player_run_state import PlayerRunState
 from nea_game.player.sub_states.player_slide_state import PlayerSlideState
+from nea_game.player.sub_states.player_wall_jump_state import PlayerWallJumpState
 from nea_game.player.player_action_space import PlayerActionSpace
 from nea_game.states.player_state_machine import StateMachine
 
@@ -33,8 +35,7 @@ class Player(BaseEntity):
         level_data: list[LevelTile],
         action_bindings: list[int],
         internal_fps: int,
-        x: int,
-        y: int,
+        position: tuple[int, int],
     ):
         """Defines player movement constants and starts the player in the idle state
 
@@ -45,10 +46,11 @@ class Player(BaseEntity):
             x (int): The x position of the player
             y (int): The y position of the player
         """
-        super().__init__(x, y, level_data)
-
+        super().__init__(position)
+        self.level_data = level_data
         self.idle_state = PlayerIdleState(self, "Idle")
         self.run_state = PlayerRunState(self, "Run")
+        self.land_state = PlayerLandState(self, "Land")
         self.dash_state = PlayerDashState(self, "Dash")
         self.jump_state = PlayerJumpState(self, "Jump")
         self.wall_jump_state = PlayerWallJumpState(self, "WallJump")
@@ -65,11 +67,16 @@ class Player(BaseEntity):
 
         self.renderer = AnimatedRenderer(frames)
         self.input = Input(PlayerActionSpace, action_bindings)
-        self.rb = RigidBody2D(4, 0.4, internal_fps)
+        self.rb = RigidBody2D(4, 0.35, internal_fps)
         self.state_machine = StateMachine(self.idle_state)
 
         self.direction = 1
-        self.rect = Rect((self.x, self.y), self.renderer.frames["idle"][0].get_size())
+        self.rect = Rect(
+            (self.x, self.y),
+            self.renderer.frames[self.state_machine.current_state.state_name][
+                0
+            ].get_size(),
+        )
         self.old_rect = self.rect
 
         self.x_run_speed = 1.8
@@ -87,15 +94,16 @@ class Player(BaseEntity):
         self.coyote_time = 0.1
         self.jump_buffer_time = 0.1
         self.max_fall = 3
+        self.land_animation_time = 0.15
 
-        self.wall_jump_force = Vector2D(11, 15)
+        self.wall_jump_force = Vector2D(9, 15)
         self.wall_jump_time = 3
-        self.wall_jump_lerp = 0.05
+        self.wall_jump_lerp = 0.08
 
-        self.wall_slide_velocity = 0.8
+        self.wall_slide_velocity = 0.74
 
         self.can_dash = False
-        self.dash_time = 0.8
+        self.dash_time = 0.1
         self.dash_speed = 20
         self.friction = 10
 
@@ -208,7 +216,7 @@ class Player(BaseEntity):
         self.old_rect = self.rect.copy()
         self.input_handler()
         self.state_machine.current_state.update(dt)
-        print(self.state_machine.current_state)
+
         self.x += self.rb.velocity.x
         self.rect.x = int(self.x)
         self.handle_x_collisions()

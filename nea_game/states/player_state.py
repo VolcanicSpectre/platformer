@@ -16,17 +16,19 @@ class PlayerState:
         """
         self.player = player
         self.state_name: str = state_name
+        self.animation_index = 0
         self.start_time: float
-        self.is_exiting_state: bool
+        self.is_exiting_state = False
 
     def enter(self) -> None:
-        """Called when entering the PlayerPlayerState"""
+        """Called when entering the PlayerState"""
         self.start_time = perf_counter()
         self.is_exiting_state = False
 
     def exit(self) -> None:
-        """Called when leaving the PlayerPlayerState"""
+        """Called when leaving the PlayerState"""
         self.is_exiting_state = True
+        self.animation_index = 0
 
     def input_handler(self):
         """Handles the inputs"""

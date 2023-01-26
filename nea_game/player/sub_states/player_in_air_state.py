@@ -31,7 +31,7 @@ class PlayerInAirState(PlayerState):
         ):
             self.player.state_machine.change_state(self.player.dash_state)
 
-        if self.player.input.get_axis_raw().x:
+        elif self.player.input.get_axis_raw().x:
             if (
                 self.player.is_touching_wall == self.player.input.get_axis_raw().x
                 and self.player.rb.velocity.y > 0
@@ -55,11 +55,8 @@ class PlayerInAirState(PlayerState):
         if self.player.is_grounded:
             if perf_counter() - self.jump_input_time < self.player.jump_buffer_time:
                 self.player.state_machine.change_state(self.player.jump_state)
-
-            elif self.player.rb.velocity.x == 0:
-                self.player.state_machine.change_state(self.player.idle_state)
-            else:
-                self.player.state_machine.change_state(self.player.run_state)
+            elif self.player.rb.velocity.y >= 0:
+                self.player.state_machine.change_state(self.player.land_state)
 
         else:
             target_speed = self.move_input.x * self.player.x_run_speed
@@ -73,6 +70,7 @@ class PlayerInAirState(PlayerState):
                         target_speed,
                         self.player.wall_jump_lerp,
                     )
+
             speed_difference = target_speed - self.player.rb.velocity.x
 
             acceleration_rate = (
@@ -82,7 +80,8 @@ class PlayerInAirState(PlayerState):
             )
 
             if (
-                self.player.state_machine.previous_state == self.player.jump_state
+                self.player.state_machine.previous_state
+                in (self.player.jump_state, self.player.wall_jump_state)
                 and abs(self.player.rb.velocity.y)
                 < self.player.jump_hang_time_threshold
             ):

@@ -42,11 +42,10 @@ class Game(Window):
 
         self.player = Player(
             self.config.directories["player"],
-            self.world.levels[0].level_data,
+            self.world.levels[0].level_data["tiles"],
             self.config.key_bindings,
             self.config.internal_fps,
-            17,
-            160,
+            self.world.levels[0].level_data["player_position"],
         )
         self.camera = Camera(
             self.world.levels[0].height,
@@ -60,7 +59,6 @@ class Game(Window):
 
     def update(self, dt: float):
         self.player.update(dt)
-        #print(self.player.state_machine.current_state.state_name)
         self.camera.update(self.player.rect)
 
     def draw(self):
@@ -70,7 +68,7 @@ class Game(Window):
         for background_layer in self.background_layers[1:2]:
             self.display_surface.blit(background_layer.get_new_sub_image(), (0, 0))
 
-        for tile in self.world.levels[0].level_data:
+        for tile in self.world.levels[0].level_data["tiles"]:
             self.display_surface.blit(
                 tile.image,
                 (
@@ -80,7 +78,7 @@ class Game(Window):
             )
 
         self.player.renderer.render_entity(
-            "idle",
+            self.player.state_machine.current_state,
             self.player.direction == -1,
             self.display_surface,
             self.player.rect.x - self.camera.scroll_x,
