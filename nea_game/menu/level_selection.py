@@ -48,12 +48,10 @@ class LevelSelection(Window):
                     self.padding[1] + (world_num - 1) * self.spacing[1],
                 )
 
-        for button, unlocked in zip(
-            list(self.buttons.values())[:-1], self.parent.config.unlocked_levels
-        ):
+        for name, unlocked in self.parent.config.unlocked_levels.items():
             if not unlocked:
-                button.active_image = button.passive_image
-                button.on_click_image = button.passive_image
+                self.buttons[name].active_image = self.buttons[name].passive_image
+                self.buttons[name].on_click_image = self.buttons[name].passive_image
 
     def update(self, dt: float):
         mouse_pos: tuple[int, int] = get_mouse_pos()
@@ -69,17 +67,21 @@ class LevelSelection(Window):
         if self.buttons["back"].clicked:
             self.parent.show_window("main_menu")
 
-        if self.buttons["1-1"].clicked:
-            window = Game(
-                self.parent,
-                self.screen,
-                self.display_surface,
-                1,
-                1,
-                self.parent.config.directories["background"] / "sky_mountain",
-            )
-            self.parent.windows["game"] = window
-            self.parent.show_window("game")
+        for button_name, button in self.buttons.items():
+            if button_name == "back":
+                continue
+            if button.clicked:
+                world_and_level = button_name.split("-")
+                window = Game(
+                    self.parent,
+                    self.screen,
+                    self.display_surface,
+                    world_and_level[0],
+                    f"_{world_and_level[1]}",
+                    self.parent.config.directories["background"] / "sky_mountain",
+                )
+                self.parent.windows["game"] = window
+                self.parent.show_window("game")
 
     def draw(self):
         self.display_surface.fill((8, 169, 252))

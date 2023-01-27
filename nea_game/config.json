@@ -9,8 +9,8 @@
         100,
         32
     ],
-    "unlocked_levels": [
-        true,
-        false
-    ]
+    "unlocked_levels": {
+        "1-1": true,
+        "1-2": true
+    }
 }

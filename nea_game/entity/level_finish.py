@@ -1,7 +1,17 @@
+from pygame import Rect
 from nea_game.entity.base_entity import BaseEntity
 
 
 class LevelFinish(BaseEntity):
-    def __init__(self, position: tuple[int, int], next_level_index: int):
+    def __init__(
+        self,
+        position: tuple[int, int],
+        height: int,
+        width: int,
+        new_world: bool,
+        next_level_identifier: str,
+    ):
         super().__init__(position)
-        self.next_level_index = next_level_index
+        self.rect = Rect(self.x, self.y, width, height)
+        self.new_world = new_world
+        self.next_level_identifier = next_level_identifier

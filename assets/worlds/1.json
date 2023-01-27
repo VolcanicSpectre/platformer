@@ -11,7 +11,7 @@
 	"iid": "dfaaf080-7820-11ed-b1cb-91e8c8568e37",
 	"jsonVersion": "1.2.5",
 	"appBuildId": 464870,
-	"nextUid": 51,
+	"nextUid": 53,
 	"identifierStyle": "Capitalize",
 	"toc": [],
 	"worldLayout": "Free",
@@ -151,7 +151,75 @@
 			"limitBehavior": "PreventAdding",
 			"pivotX": 0,
 			"pivotY": 0,
-			"fieldDefs": []
+			"fieldDefs": [
+				{
+					"identifier": "NewWorld",
+					"doc": null,
+					"__type": "Bool",
+					"uid": 51,
+					"type": "F_Bool",
+					"isArray": false,
+					"canBeNull": false,
+					"arrayMinLength": null,
+					"arrayMaxLength": null,
+					"editorDisplayMode": "Hidden",
+					"editorDisplayPos": "Above",
+					"editorLinkStyle": "StraightArrow",
+					"editorAlwaysShow": false,
+					"editorShowInWorld": true,
+					"editorCutLongValues": true,
+					"editorTextSuffix": null,
+					"editorTextPrefix": null,
+					"useForSmartColor": false,
+					"min": null,
+					"max": null,
+					"regex": null,
+					"acceptFileTypes": null,
+					"defaultOverride": {
+						"id": "V_Bool",
+						"params": [ false ]
+					},
+					"textLanguageMode": null,
+					"symmetricalRef": false,
+					"autoChainRef": true,
+					"allowOutOfLevelRef": true,
+					"allowedRefs": "OnlySame",
+					"allowedRefTags": [],
+					"tilesetUid": null
+				},
+				{
+					"identifier": "next_level_identifier",
+					"doc": null,
+					"__type": "String",
+					"uid": 52,
+					"type": "F_String",
+					"isArray": false,
+					"canBeNull": false,
+					"arrayMinLength": null,
+					"arrayMaxLength": null,
+					"editorDisplayMode": "Hidden",
+					"editorDisplayPos": "Above",
+					"editorLinkStyle": "StraightArrow",
+					"editorAlwaysShow": false,
+					"editorShowInWorld": true,
+					"editorCutLongValues": true,
+					"editorTextSuffix": null,
+					"editorTextPrefix": null,
+					"useForSmartColor": false,
+					"min": null,
+					"max": null,
+					"regex": "/[0-9]+_[0-9]+/g",
+					"acceptFileTypes": null,
+					"defaultOverride": null,
+					"textLanguageMode": null,
+					"symmetricalRef": false,
+					"autoChainRef": true,
+					"allowOutOfLevelRef": true,
+					"allowedRefs": "OnlySame",
+					"allowedRefTags": [],
+					"tilesetUid": null
+				}
+			]
 		}
 	], "tilesets": [
 		{
@@ -239,7 +307,16 @@
 							"height": 48,
 							"defUid": 49,
 							"px": [511,48],
-							"fieldInstances": []
+							"fieldInstances": [
+								{ "__identifier": "NewWorld", "__value": false, "__type": "Bool", "__tile": null, "defUid": 51, "realEditorValues": [{
+									"id": "V_Bool",
+									"params": [ false ]
+								}] },
+								{ "__identifier": "next_level_identifier", "__value": "1_2", "__type": "String", "__tile": null, "defUid": 52, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["1_2"]
+								}] }
+							]
 						},
 						{
 							"__identifier": "Player",
@@ -776,6 +853,23 @@
 							"defUid": 4,
 							"px": [5,192],
 							"fieldInstances": []
+						},
+						{
+							"__identifier": "Finish",
+							"__grid": [123,120],
+							"__pivot": [0,0],
+							"__tags": [],
+							"__tile": null,
+							"__smartColor": "#BE4A2F",
+							"iid": "bc8b3a90-7820-11ed-8565-55de37082be4",
+							"width": 8,
+							"height": 8,
+							"defUid": 49,
+							"px": [123,120],
+							"fieldInstances": [
+								{ "__identifier": "NewWorld", "__value": false, "__type": "Bool", "__tile": null, "defUid": 51, "realEditorValues": [] },
+								{ "__identifier": "next_level_identifier", "__value": "", "__type": "String", "__tile": null, "defUid": 52, "realEditorValues": [] }
+							]
 						}
 					]
 				},
@@ -1023,6 +1117,23 @@
 							"defUid": 4,
 							"px": [33,192],
 							"fieldInstances": []
+						},
+						{
+							"__identifier": "Finish",
+							"__grid": [150,137],
+							"__pivot": [0,0],
+							"__tags": [],
+							"__tile": null,
+							"__smartColor": "#BE4A2F",
+							"iid": "be6ec7a0-7820-11ed-8565-b3ee856262d6",
+							"width": 8,
+							"height": 8,
+							"defUid": 49,
+							"px": [150,137],
+							"fieldInstances": [
+								{ "__identifier": "NewWorld", "__value": false, "__type": "Bool", "__tile": null, "defUid": 51, "realEditorValues": [] },
+								{ "__identifier": "next_level_identifier", "__value": "", "__type": "String", "__tile": null, "defUid": 52, "realEditorValues": [] }
+							]
 						}
 					]
 				},

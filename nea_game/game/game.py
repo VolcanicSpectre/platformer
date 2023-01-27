@@ -1,10 +1,11 @@
 from __future__ import annotations
+from json import dump, load as load_json
 from os import listdir
 from pathlib import Path
 import typing
 import pygame
 from pygame.event import Event
-from pygame import Rect, Surface
+from pygame import Surface
 from nea_game.game.camera import Camera
 from nea_game.gui.window import Window
 from nea_game.menu.background_layer import BackgroundLayer
@@ -21,18 +22,18 @@ class Game(Window):
         parent: NeaGame,
         screen: Surface,
         display_surface: Surface,
-        world_number: int,
-        level_number: int,
+        world_identifier: str,
+        level_identifier: str,
         background_image_layers_path: Path,
     ):
         super().__init__(screen, display_surface)
         self.parent = parent
         self.config = self.parent.config
 
-        self.world_number = world_number
-        self.level_number = level_number
+        self.world_identifier = world_identifier
+        self.level_identifier = level_identifier
 
-        self.world = World(self.world_number, self.config.directories["worlds"])
+        self.world = World(self.world_identifier, self.config.directories["worlds"])
 
         self.background_layers = [
             BackgroundLayer(pygame.image.load(background_image_layers_path / filename))
@@ -42,14 +43,14 @@ class Game(Window):
 
         self.player = Player(
             self.config.directories["player"],
-            self.world.levels[0].level_data["tiles"],
+            self.world.levels[self.level_identifier].level_data["tiles"],
             self.config.key_bindings,
             self.config.internal_fps,
-            self.world.levels[0].level_data["player_position"],
+            self.world.levels[self.level_identifier].level_data["player_position"],
         )
         self.camera = Camera(
-            self.world.levels[0].height,
-            self.world.levels[0].width,
+            self.world.levels[self.level_identifier].height,
+            self.world.levels[self.level_identifier].width,
             self.display_surface.get_height(),
             self.display_surface.get_width(),
         )
@@ -60,6 +61,32 @@ class Game(Window):
     def update(self, dt: float):
         self.player.update(dt)
         self.camera.update(self.player.rect)
+        self.check_level_finish()
+
+    def check_level_finish(self):
+        if self.player.rect.colliderect(
+            self.world.levels[self.level_identifier].level_data["level_finish"].rect
+        ):
+            level_finish = self.world.levels[self.level_identifier].level_data[
+                "level_finish"
+            ]
+            with (self.parent.config.directories["platformer"] / "config.json").open(
+                mode="r"
+            ) as settings_json:
+                new_settings_json = load_json(settings_json)
+                if level_finish.new_world:
+                    new_world = str(int(self.world_identifier) + 1)
+                else:
+                    new_world = self.world_identifier
+                new_level = level_finish.next_level_identifier[1:].replace("_", "-")
+                new_settings_json["unlocked_levels"][new_world + new_level] = True
+
+            with (self.parent.config.directories["platformer"] / "config.json").open(
+                mode="w"
+            ) as settings_json:
+                dump(new_settings_json, settings_json, indent=4)
+
+            self.parent.config.reload()
 
     def draw(self):
         self.display_surface.fill((0, 0, 0))
@@ -68,7 +95,7 @@ class Game(Window):
         for background_layer in self.background_layers[1:2]:
             self.display_surface.blit(background_layer.get_new_sub_image(), (0, 0))
 
-        for tile in self.world.levels[0].level_data["tiles"]:
+        for tile in self.world.levels[self.level_identifier].level_data["tiles"]:
             self.display_surface.blit(
                 tile.image,
                 (

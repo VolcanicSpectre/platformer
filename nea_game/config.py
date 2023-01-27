@@ -2,6 +2,7 @@
 from json import load
 from pathlib import Path
 from time import strftime
+from typing import Any
 
 
 class NeaGameConfig:
@@ -22,7 +23,7 @@ class NeaGameConfig:
 
     key_bindings: list[int]
 
-    unlocked_levels: list[bool]
+    unlocked_levels: dict[str, bool]
 
     def __init__(self):
         # Debug
@@ -59,11 +60,11 @@ class NeaGameConfig:
         self.internal_resoloution = (ds_width, ds_height)
 
         self.fps = self.get_int_setting("fps")
-        self.internal_fps = 60
+        self.internal_fps = 30
 
         self.key_bindings = self.get_integer_list_setting("key_bindings")
 
-        self.unlocked_levels = self.get_bool_list_setting("unlocked_levels")
+        self.unlocked_levels = self.get_setting("unlocked_levels")
 
     def get_int_setting(self, setting: str) -> int:
         """_summary_
@@ -128,26 +129,12 @@ class NeaGameConfig:
 
             raise ValueError
 
-    def get_bool_list_setting(self, setting: str) -> list[bool]:
-        """Gets the relevant setting from config.json that is a list of bools
-
-        Args:
-            setting (str): the identifier of the setting in [config.json]
-
-        Raises:
-            ValueError: If the value of the specified setting is not of type [bool]
-
-        Returns:
-            list[bool]: The value of the specified setting
-        """
+    def get_setting(self, setting: str) -> Any:
         with (self.directories["platformer"] / "config.json").open(
             mode="r"
         ) as settings_json:
             settings = load(settings_json)
-            if all(isinstance(element, bool) for element in settings[setting]):
-                return settings[setting]
-
-            raise ValueError
+            return settings[setting]
 
     def reload(self):
         """Reloads the settings from config.json"""
@@ -158,3 +145,4 @@ class NeaGameConfig:
         self.fps = self.get_int_setting("fps")
 
         self.key_bindings = self.get_integer_list_setting("key_bindings")
+        self.unlocked_levels = self.get_setting("unlocked_levels")

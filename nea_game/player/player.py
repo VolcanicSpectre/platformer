@@ -67,7 +67,7 @@ class Player(BaseEntity):
 
         self.renderer = AnimatedRenderer(frames)
         self.input = Input(PlayerActionSpace, action_bindings)
-        self.rb = RigidBody2D(4, 0.35, internal_fps)
+        self.rb = RigidBody2D(4, 0.4, internal_fps)
         self.state_machine = StateMachine(self.idle_state)
 
         self.direction = 1
@@ -79,7 +79,7 @@ class Player(BaseEntity):
         )
         self.old_rect = self.rect
 
-        self.x_run_speed = 1.8
+        self.x_run_speed = 1.6
         self.acceleration_rate = 3
         self.jump_hang_acceleration_mult = 2
         self.jump_hang_max_speed_mult = 1.2
@@ -87,16 +87,16 @@ class Player(BaseEntity):
         self.air_acceleration_multiplier = 0.6
         self.velocity_power = 0.6
 
-        self.jump_force = 15
-        self.jump_hang_time_threshold = 1.2
+        self.jump_force = 10
+        self.jump_hang_time_threshold = 0.5
         self.jump_hang_gravity_mult = 0.6
-        self.jump_fast_fall_mult = 1.25
+        self.jump_fast_fall_mult = 2
         self.coyote_time = 0.1
         self.jump_buffer_time = 0.1
         self.max_fall = 3
         self.land_animation_time = 0.15
 
-        self.wall_jump_force = Vector2D(9, 15)
+        self.wall_jump_force = Vector2D(8, 12)
         self.wall_jump_time = 3
         self.wall_jump_lerp = 0.08
 
@@ -104,7 +104,7 @@ class Player(BaseEntity):
 
         self.can_dash = False
         self.dash_time = 0.1
-        self.dash_speed = 20
+        self.dash_speed = 17
         self.friction = 10
 
     def get_collisions(self) -> list[LevelTile]:
