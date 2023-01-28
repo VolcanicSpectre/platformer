@@ -4,6 +4,7 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+        
         {
             "name": "Python: Current File",
             "type": "python",
@@ -11,6 +12,13 @@
             "program": "C:/Users/sl12d/Platformer/main.py",
             "console": "integratedTerminal",
             "justMyCode": true
+        },
+        {
+            "name": "NEA Game Main",
+            "type": "python",
+            "request": "launch",
+            "program": "C:/Users/sl12d/Platformer/main.py",
+            "console": "integratedTerminal"
         }
     ],
 }

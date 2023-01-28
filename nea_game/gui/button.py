@@ -59,7 +59,7 @@ class Button:
         else:
             self.current_image = self.passive_image
 
-        if self.click_timer > self.click_delay:
+        if self.click_timer > self.click_delay and self.can_be_clicked:
             self.clicked = True
             self.click_timer = -1
 

@@ -27,7 +27,7 @@ class LevelSelection(Window):
     ):
         super().__init__(screen, display)
         self.parent = parent
-
+        self.button_folder_path = button_folder_path
         self.padding = (30, 50)
         self.spacing = (59, 38)
 
@@ -52,6 +52,31 @@ class LevelSelection(Window):
             if not unlocked:
                 self.buttons[name].active_image = self.buttons[name].passive_image
                 self.buttons[name].on_click_image = self.buttons[name].passive_image
+                self.buttons[name].can_be_clicked = False
+
+    def reload(self):
+        self.buttons = {}
+
+        for button in listdir(self.button_folder_path):
+            self.buttons[button] = Button(self.button_folder_path / button)
+
+        for button_name, button in zip(self.buttons, self.buttons.values()):
+            if button_name == "back":
+                button.rect.bottomright = (383, 215)
+            else:
+                world_num = int(button_name[0])
+                level_num = int(button_name[2])
+
+                button.rect.topleft = (
+                    self.padding[0] + (level_num - 1) * self.spacing[0],
+                    self.padding[1] + (world_num - 1) * self.spacing[1],
+                )
+
+        for name, unlocked in self.parent.config.unlocked_levels.items():
+            if not unlocked:
+                self.buttons[name].active_image = self.buttons[name].passive_image
+                self.buttons[name].on_click_image = self.buttons[name].passive_image
+                self.buttons[name].can_be_clicked = False
 
     def update(self, dt: float):
         mouse_pos: tuple[int, int] = get_mouse_pos()
@@ -82,6 +107,16 @@ class LevelSelection(Window):
                 )
                 self.parent.windows["game"] = window
                 self.parent.show_window("game")
+                self.parent.set_transitioning(
+                    self.parent.transition_circle_in,
+                    1,
+                    tuple(
+                        map(
+                            lambda x: x * self.scale_factor,
+                            self.parent.windows["game"].player.rect.center,
+                        )
+                    ),
+                )
 
     def draw(self):
         self.display_surface.fill((8, 169, 252))

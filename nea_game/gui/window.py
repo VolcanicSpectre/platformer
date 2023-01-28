@@ -18,6 +18,9 @@ class Window:
         ):
             raise ValueError("Display surface and screen must be proportional")
 
+    def reload(self):
+        pass
+
     def event_handler(self, events: list[Event]):
         """Passes down the event to the event_handler for any relvant operations
 

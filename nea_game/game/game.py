@@ -56,37 +56,59 @@ class Game(Window):
         )
 
     def event_handler(self, events: list[Event]):
+        if self.parent.is_transitioning:
+            return
         self.player.event_handler(events)
 
     def update(self, dt: float):
-        self.player.update(dt)
-        self.camera.update(self.player.rect)
-        self.check_level_finish()
+        if self.has_level_finished():
+            if self.parent.is_transition_done:
+                self.end_level()
+                self.parent.show_window("play_game")
 
-    def check_level_finish(self):
+            elif not self.parent.is_transitioning:
+                self.parent.set_transitioning(
+                    self.parent.transition_circle_out,
+                    2,
+                    tuple(
+                        map(lambda x: x * self.scale_factor, self.player.rect.center)
+                    ),
+                )
+
+            return
+        if not self.parent.is_transitioning:
+            self.player.update(dt)
+            self.camera.update(self.player.rect)
+
+    def has_level_finished(self):
         if self.player.rect.colliderect(
             self.world.levels[self.level_identifier].level_data["level_finish"].rect
         ):
-            level_finish = self.world.levels[self.level_identifier].level_data[
-                "level_finish"
-            ]
-            with (self.parent.config.directories["platformer"] / "config.json").open(
-                mode="r"
-            ) as settings_json:
-                new_settings_json = load_json(settings_json)
-                if level_finish.new_world:
-                    new_world = str(int(self.world_identifier) + 1)
-                else:
-                    new_world = self.world_identifier
-                new_level = level_finish.next_level_identifier[1:].replace("_", "-")
-                new_settings_json["unlocked_levels"][new_world + new_level] = True
+            return True
 
-            with (self.parent.config.directories["platformer"] / "config.json").open(
-                mode="w"
-            ) as settings_json:
-                dump(new_settings_json, settings_json, indent=4)
+        return False
 
-            self.parent.config.reload()
+    def end_level(self):
+        level_finish = self.world.levels[self.level_identifier].level_data[
+            "level_finish"
+        ]
+        with (self.parent.config.directories["platformer"] / "config.json").open(
+            mode="r"
+        ) as settings_json:
+            new_settings_json = load_json(settings_json)
+            if level_finish.new_world:
+                new_world = str(int(self.world_identifier) + 1)
+            else:
+                new_world = self.world_identifier
+            new_level = level_finish.next_level_identifier[1:].replace("_", "-")
+            new_settings_json["unlocked_levels"][new_world + new_level] = True
+
+        with (self.parent.config.directories["platformer"] / "config.json").open(
+            mode="w"
+        ) as settings_json:
+            dump(new_settings_json, settings_json, indent=4)
+
+        self.parent.config.reload()
 
     def draw(self):
         self.display_surface.fill((0, 0, 0))
@@ -115,4 +137,6 @@ class Game(Window):
         pygame.transform.scale(
             self.display_surface, self.screen.get_size(), dest_surface=self.screen
         )
+        if self.parent.is_transitioning:
+            self.parent.run_transition()
         pygame.display.flip()
