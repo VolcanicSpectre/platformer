@@ -32,7 +32,6 @@ class Settings(Window):
         super().__init__(screen, display_surface)
         self.parent = parent
 
-        self.parent.sound_manager.stop_bgm()
         self.title_image = load(
             action_button_folder_path.parent / "settings_title.png"
         ).convert_alpha()
@@ -41,6 +40,7 @@ class Settings(Window):
             action_button_folder_path.parent / "settings_text.png"
         ).convert_alpha()
 
+        self.music_icon = load(action_button_folder_path.parent / "music.png")
         self.buttons = {}
         self.action_buttons = {}
         self.sliders = {}
@@ -93,7 +93,6 @@ class Settings(Window):
 
         for action_button in self.action_buttons.values():
             if action_button.click_timer >= 0:
-
                 other_binds = [
                     other_action_button.key
                     for other_action_button in self.action_buttons.values()
@@ -116,7 +115,7 @@ class Settings(Window):
         self.display_surface.fill((8, 169, 252))
         self.display_surface.blit(self.title_image, (195, 5))
         self.display_surface.blit(self.text, (150, 44))
-
+        self.display_surface.blit(self.music_icon, (180, 176))
         for slider in self.sliders.values():
             self.display_surface.blit(slider.current_image, slider.rect.topleft)
         for button in self.buttons.values():
@@ -144,12 +143,11 @@ class Settings(Window):
             new_settings_json = load_json(settings_json)
 
             new_settings_json["music_volume"] = (
-                self.sliders["music_volume"].value
-                / self.sliders["music_volume"].max_value
-            )
+                self.sliders["music_volume"].value - 1
+            ) / self.sliders["music_volume"].max_value
             new_settings_json["sfx_volume"] = (
-                self.sliders["sfx_volume"].value / self.sliders["sfx_volume"].max_value
-            )
+                self.sliders["sfx_volume"].value - 1
+            ) / self.sliders["sfx_volume"].max_value
             new_settings_json["key_bindings"] = [
                 action_button.key for action_button in self.action_buttons.values()
             ]

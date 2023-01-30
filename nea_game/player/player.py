@@ -77,6 +77,7 @@ class Player(BaseEntity):
                 0
             ].get_size(),
         )
+
         self.old_rect = self.rect
 
         self.x_run_speed = 1.6
@@ -109,6 +110,15 @@ class Player(BaseEntity):
 
     def get_collisions(self) -> list[LevelTile]:
         return [tile for tile in self.level_data if self.rect.colliderect(tile.rect)]
+
+    def is_alive(self, level_height: int) -> bool:
+        if self.rect.y < 0 or self.rect.y > level_height:
+            return False
+        for collision in self.get_collisions():
+            if collision.collision_type == CollisionType.SPIKE:
+                return False
+
+        return True
 
     @property
     def is_grounded(self) -> bool:

@@ -90,12 +90,14 @@ class LevelSelection(Window):
             button.update(scaled_mouse_pos, mouse_clicked, dt)
 
         if self.buttons["back"].clicked:
+            self.parent.sound_manager.play_sound("click")
             self.parent.show_window("main_menu")
 
         for button_name, button in self.buttons.items():
             if button_name == "back":
                 continue
             if button.clicked:
+                self.parent.sound_manager.play_sound("click")
                 world_and_level = button_name.split("-")
                 window = Game(
                     self.parent,

@@ -76,11 +76,26 @@ class Game(Window):
                 )
 
             return
+
+        if not self.player.is_alive(self.camera.height):
+            if self.parent.is_transition_done:
+                self.parent.show_window("play_game")
+            elif not self.parent.is_transitioning:
+                self.parent.set_transitioning(
+                    self.parent.transition_circle_out,
+                    2,
+                    tuple(
+                        map(lambda x: x * self.scale_factor, self.player.rect.center)
+                    ),
+                )
+
         if not self.parent.is_transitioning:
+            self.parent.is_transition_done = False
             self.player.update(dt)
-            if self.player.state_machine.current_state == self.player.jump_state:
-                self.parent.sound_manager.play_sound("jump")
-            self.camera.update(self.player.rect)
+        
+        if self.player.state_machine.current_state == self.player.jump_state:
+            self.parent.sound_manager.play_sound("jump")
+        self.camera.update(self.player.rect)
 
     def has_level_finished(self):
         if self.player.rect.colliderect(

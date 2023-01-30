@@ -88,7 +88,7 @@ class NeaGame(Root):
                     max(circle_x, self.screen.get_width() - circle_x),
                     max(circle_y, self.screen.get_height() - circle_y),
                 )
-                self.current_transition_frame = self.transition_time * self.engine.fps
+                self.current_transition_frame = 80
 
             case self.transition_circle_in:
                 self.transition_start_radius = max(
