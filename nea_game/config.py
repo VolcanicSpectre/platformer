@@ -63,7 +63,8 @@ class NeaGameConfig:
         self.internal_fps = 30
 
         self.key_bindings = self.get_integer_list_setting("key_bindings")
-
+        self.music_volume = self.get_int_setting("music_volume")
+        self.sfx_volume = self.get_int_setting("sfx_volume")
         self.unlocked_levels = self.get_setting("unlocked_levels")
 
     def get_int_setting(self, setting: str) -> int:
@@ -143,6 +144,8 @@ class NeaGameConfig:
         self.resoloution = (width, height)
 
         self.fps = self.get_int_setting("fps")
-
+        
+        self.music_volume = self.get_int_setting("music_volume")
+        self.sfx_volume = self.get_int_setting("sfx_volume")
         self.key_bindings = self.get_integer_list_setting("key_bindings")
         self.unlocked_levels = self.get_setting("unlocked_levels")

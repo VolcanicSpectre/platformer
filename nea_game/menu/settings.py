@@ -9,6 +9,7 @@ from pygame.mouse import get_pos as get_mouse_pos, get_pressed as get_mouse_pres
 from pygame import Surface
 from nea_game.menu.action_button import ActionButton
 from nea_game.gui.button import Button
+from nea_game.gui.slider import Slider
 from nea_game.gui.window import Window
 
 if typing.TYPE_CHECKING:
@@ -18,6 +19,7 @@ if typing.TYPE_CHECKING:
 class Settings(Window):
     buttons: dict[str, Button]
     action_buttons: dict[str, ActionButton]
+    sliders: dict[str, Slider]
 
     def __init__(
         self,
@@ -30,6 +32,7 @@ class Settings(Window):
         super().__init__(screen, display_surface)
         self.parent = parent
 
+        self.parent.sound_manager.stop_bgm()
         self.title_image = load(
             action_button_folder_path.parent / "settings_title.png"
         ).convert_alpha()
@@ -40,6 +43,20 @@ class Settings(Window):
 
         self.buttons = {}
         self.action_buttons = {}
+        self.sliders = {}
+
+        self.sliders["music_volume"] = Slider(
+            action_button_folder_path.parent / "sliders",
+            0,
+            100,
+            self.parent.config.music_volume,
+        )
+        self.sliders["sfx_volume"] = Slider(
+            action_button_folder_path.parent / "sliders",
+            0,
+            100,
+            self.parent.config.sfx_volume,
+        )
         for button in listdir(action_button_folder_path.parent / "buttons/settings"):
             self.buttons[button] = Button(
                 (action_button_folder_path.parent / "buttons/settings") / button
@@ -58,6 +75,9 @@ class Settings(Window):
         for index, action_button in enumerate(self.action_buttons.values()):
             action_button.rect.topleft = (20, 20 + 40 * index)
 
+        self.sliders["music_volume"].set_topleft(195, 175)
+        self.sliders["sfx_volume"].set_topleft(195, 200)
+
     def update(self, dt: float):
         mouse_pos: tuple[int, int] = get_mouse_pos()
         scaled_mouse_pos: tuple[int, int] = (
@@ -65,6 +85,8 @@ class Settings(Window):
             mouse_pos[1] // self.scale_factor,
         )
         mouse_clicked = get_mouse_pressed()[0]
+        for slider in self.sliders.values():
+            slider.update(scaled_mouse_pos, mouse_clicked, dt)
 
         for button in self.buttons.values():
             button.update(scaled_mouse_pos, mouse_clicked, dt)
@@ -86,7 +108,7 @@ class Settings(Window):
             action_button.update(scaled_mouse_pos, mouse_clicked, dt)
 
         if self.buttons["back"].clicked:
-            self.save_controls()
+            self.save()
             self.parent.show_window("main_menu")
 
     def draw(self):
@@ -94,6 +116,8 @@ class Settings(Window):
         self.display_surface.blit(self.title_image, (195, 5))
         self.display_surface.blit(self.text, (150, 44))
 
+        for slider in self.sliders.values():
+            self.display_surface.blit(slider.current_image, slider.rect.topleft)
         for button in self.buttons.values():
             self.display_surface.blit(button.current_image, button.rect.topleft)
 
@@ -112,12 +136,14 @@ class Settings(Window):
         )
         pygame.display.flip()
 
-    def save_controls(self):
+    def save(self):
         with (self.parent.config.directories["platformer"] / "config.json").open(
             mode="r"
         ) as settings_json:
             new_settings_json = load_json(settings_json)
 
+            new_settings_json["music_volume"] = self.sliders["music_volume"].value
+            new_settings_json["sfx_volume"] = self.sliders["sfx_volume"].value
             new_settings_json["key_bindings"] = [
                 action_button.key for action_button in self.action_buttons.values()
             ]

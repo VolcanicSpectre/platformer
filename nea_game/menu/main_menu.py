@@ -62,6 +62,13 @@ class MainMenu(Window):
         self.buttons["exit"].rect.y = 185
         self.buttons["exit"].center_on_x_axis(self.display_surface.get_width())
 
+    def reload(self):
+        super().reload()
+        self.parent.sound_manager.set_bgm_volume(1)
+        self.parent.sound_manager.set_bgm(
+            self.parent.config.directories["assets"] / "music/bgm.wav"
+        )
+
     def update(self, dt: float):
         mouse_pos: tuple[int, int] = get_mouse_pos()
         scaled_mouse_pos: tuple[int, int] = (

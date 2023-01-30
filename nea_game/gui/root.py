@@ -1,9 +1,8 @@
-from typing import Callable
 import pygame
 from pygame import Surface
 from nea_game.gui.window import Window
 from nea_game.game.engine import Engine
-
+from nea_game.sound_manager import SoundManager
 
 class Root:
     screen: Surface
@@ -22,6 +21,7 @@ class Root:
         self.screen = pygame.display.set_mode(screen_resolution)
         self.display_surface = Surface(display_surafce_resolution)
         self.engine = Engine(fps)
+        self.sound_manager = SoundManager()
         self.windows = {}
 
     def show_window(self, window: str):
