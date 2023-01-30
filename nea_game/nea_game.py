@@ -1,4 +1,6 @@
 from typing import Callable
+from os.path import splitext
+from os import listdir
 from sys import exit as sys_exit
 from pygame.event import Event
 import pygame
@@ -34,6 +36,12 @@ class NeaGame(Root):
         self.current_transition_frame = 0
         self.is_transitioning = False
         self.is_transition_done = False
+
+        self.sound_manager.set_bgm(self.config.directories["music"] / "bgm.wav")
+        for sound_effect in listdir(self.config.directories["sfx"]):
+            self.sound_manager.load_sound(
+                splitext(sound_effect)[0], self.config.directories["sfx"] / sound_effect
+            )
 
         self.show_window("main_menu")
 

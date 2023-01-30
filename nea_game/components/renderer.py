@@ -23,9 +23,7 @@ class StaticRenderer:
 
 
 class AnimatedRenderer:
-    def __init__(
-        self, frames: dict[str, list[pygame.Surface]], current_frame_index: int = 0
-    ):
+    def __init__(self, frames: dict[str, list[pygame.Surface]]):
         """Creates an AnimatedRenderer component for an animated object
 
         Args:

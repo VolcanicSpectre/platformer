@@ -37,7 +37,9 @@ class NeaGameConfig:
         assets_folder = game_folder / "assets"
         background_folder = assets_folder / "background"
         buttons_folder = assets_folder / "buttons"
+        music_folder = assets_folder / "music"
         player_folder = assets_folder / "player"
+        sfx_folder = assets_folder / "sfx"
         worlds_folder = assets_folder / "worlds"
 
         self.directories = {
@@ -46,6 +48,8 @@ class NeaGameConfig:
             "background": background_folder,
             "buttons": buttons_folder,
             "player": player_folder,
+            "music": music_folder,
+            "sfx": sfx_folder,
             "worlds": worlds_folder,
             "platformer": platformer_folder,
         }
@@ -63,8 +67,8 @@ class NeaGameConfig:
         self.internal_fps = 30
 
         self.key_bindings = self.get_integer_list_setting("key_bindings")
-        self.music_volume = self.get_int_setting("music_volume")
-        self.sfx_volume = self.get_int_setting("sfx_volume")
+        self.music_volume = self.get_float_setting("music_volume")
+        self.sfx_volume = self.get_float_setting("sfx_volume")
         self.unlocked_levels = self.get_setting("unlocked_levels")
 
     def get_int_setting(self, setting: str) -> int:
@@ -144,8 +148,8 @@ class NeaGameConfig:
         self.resoloution = (width, height)
 
         self.fps = self.get_int_setting("fps")
-        
-        self.music_volume = self.get_int_setting("music_volume")
-        self.sfx_volume = self.get_int_setting("sfx_volume")
+
+        self.music_volume = self.get_float_setting("music_volume")
+        self.sfx_volume = self.get_float_setting("sfx_volume")
         self.key_bindings = self.get_integer_list_setting("key_bindings")
         self.unlocked_levels = self.get_setting("unlocked_levels")

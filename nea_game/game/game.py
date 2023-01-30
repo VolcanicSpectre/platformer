@@ -78,6 +78,8 @@ class Game(Window):
             return
         if not self.parent.is_transitioning:
             self.player.update(dt)
+            if self.player.state_machine.current_state == self.player.jump_state:
+                self.parent.sound_manager.play_sound("jump")
             self.camera.update(self.player.rect)
 
     def has_level_finished(self):

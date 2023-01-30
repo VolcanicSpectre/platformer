@@ -49,13 +49,13 @@ class Settings(Window):
             action_button_folder_path.parent / "sliders",
             0,
             100,
-            self.parent.config.music_volume,
+            int(self.parent.config.music_volume * 100),
         )
         self.sliders["sfx_volume"] = Slider(
             action_button_folder_path.parent / "sliders",
             0,
             100,
-            self.parent.config.sfx_volume,
+            int(self.parent.config.sfx_volume * 100),
         )
         for button in listdir(action_button_folder_path.parent / "buttons/settings"):
             self.buttons[button] = Button(
@@ -108,6 +108,7 @@ class Settings(Window):
             action_button.update(scaled_mouse_pos, mouse_clicked, dt)
 
         if self.buttons["back"].clicked:
+            self.parent.sound_manager.play_sound("click")
             self.save()
             self.parent.show_window("main_menu")
 
@@ -142,8 +143,13 @@ class Settings(Window):
         ) as settings_json:
             new_settings_json = load_json(settings_json)
 
-            new_settings_json["music_volume"] = self.sliders["music_volume"].value
-            new_settings_json["sfx_volume"] = self.sliders["sfx_volume"].value
+            new_settings_json["music_volume"] = (
+                self.sliders["music_volume"].value
+                / self.sliders["music_volume"].max_value
+            )
+            new_settings_json["sfx_volume"] = (
+                self.sliders["sfx_volume"].value / self.sliders["sfx_volume"].max_value
+            )
             new_settings_json["key_bindings"] = [
                 action_button.key for action_button in self.action_buttons.values()
             ]

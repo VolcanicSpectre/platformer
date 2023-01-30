@@ -36,7 +36,7 @@ class Button:
         self.clicked = False
         self.click_delay = 0.08
         self.click_timer = -1
-
+        
     def update(self, mouse_pos: tuple[int, int], mouse_clicked: bool, dt: float):
         """Updates the current_image attribute and the clicked flag
 

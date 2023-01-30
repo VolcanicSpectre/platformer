@@ -64,10 +64,8 @@ class MainMenu(Window):
 
     def reload(self):
         super().reload()
-        self.parent.sound_manager.set_bgm_volume(1)
-        self.parent.sound_manager.set_bgm(
-            self.parent.config.directories["assets"] / "music/bgm.wav"
-        )
+        self.parent.sound_manager.set_bgm_volume(self.parent.config.music_volume)
+        self.parent.sound_manager.set_sfx_volume(self.parent.config.sfx_volume)
 
     def update(self, dt: float):
         mouse_pos: tuple[int, int] = get_mouse_pos()
@@ -80,6 +78,7 @@ class MainMenu(Window):
             button.update(scaled_mouse_pos, mouse_clicked, dt)
 
         if self.buttons["play_game"].clicked:
+            self.parent.sound_manager.play_sound("click")
             window = LevelSelection(
                 self.parent,
                 self.screen,
@@ -90,6 +89,7 @@ class MainMenu(Window):
             self.parent.show_window("play_game")
 
         if self.buttons["settings"].clicked:
+            self.parent.sound_manager.play_sound("click")
             window = Settings(
                 self.parent,
                 self.screen,
@@ -101,6 +101,7 @@ class MainMenu(Window):
             self.parent.show_window("settings")
 
         if self.buttons["exit"].clicked:
+            self.parent.sound_manager.play_sound("click")
             pygame.quit()
             sys_exit()
 
