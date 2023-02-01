@@ -867,8 +867,14 @@
 							"defUid": 49,
 							"px": [216,0],
 							"fieldInstances": [
-								{ "__identifier": "NewWorld", "__value": false, "__type": "Bool", "__tile": null, "defUid": 51, "realEditorValues": [] },
-								{ "__identifier": "next_level_identifier", "__value": "", "__type": "String", "__tile": null, "defUid": 52, "realEditorValues": [] }
+								{ "__identifier": "NewWorld", "__value": false, "__type": "Bool", "__tile": null, "defUid": 51, "realEditorValues": [{
+									"id": "V_Bool",
+									"params": [ false ]
+								}] },
+								{ "__identifier": "next_level_identifier", "__value": "1_3", "__type": "String", "__tile": null, "defUid": 52, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["1_3"]
+								}] }
 							]
 						}
 					]
@@ -1499,8 +1505,14 @@
 							"defUid": 49,
 							"px": [720,0],
 							"fieldInstances": [
-								{ "__identifier": "NewWorld", "__value": false, "__type": "Bool", "__tile": null, "defUid": 51, "realEditorValues": [] },
-								{ "__identifier": "next_level_identifier", "__value": "", "__type": "String", "__tile": null, "defUid": 52, "realEditorValues": [] }
+								{ "__identifier": "NewWorld", "__value": true, "__type": "Bool", "__tile": null, "defUid": 51, "realEditorValues": [{
+									"id": "V_Bool",
+									"params": [ true ]
+								}] },
+								{ "__identifier": "next_level_identifier", "__value": "2_3", "__type": "String", "__tile": null, "defUid": 52, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["2_3"]
+								}] }
 							]
 						}
 					]

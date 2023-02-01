@@ -74,7 +74,7 @@ class Game(Window):
         if self.has_level_finished():
             if self.parent.is_transition_done:
                 self.end_level()
-                self.parent.show_window("play_game")
+                self.parent.show_window("level_selection")
 
             elif not self.parent.is_transitioning:
                 self.parent.set_transitioning(
