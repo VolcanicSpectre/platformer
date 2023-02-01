@@ -22,19 +22,19 @@ class LevelSelection(Window):
         self,
         parent: NeaGame,
         screen: Surface,
-        display: Surface,
-        button_folder_path: Path,
+        display_surface: Surface,
+        path: Path,
     ):
-        super().__init__(screen, display)
+        super().__init__(screen, display_surface)
         self.parent = parent
-        self.button_folder_path = button_folder_path
+        self.button_folder_path = path / "buttons"
         self.padding = (30, 50)
         self.spacing = (59, 38)
 
         self.buttons = {}
 
-        for button in listdir(button_folder_path):
-            self.buttons[button] = Button(button_folder_path / button)
+        for button in listdir(self.button_folder_path):
+            self.buttons[button] = Button(self.button_folder_path / button)
 
         for button_name, button in zip(self.buttons, self.buttons.values()):
             if button_name == "back":

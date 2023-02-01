@@ -12,7 +12,7 @@ class LevelTile(TilesetTile):
         size: int,
         px: tuple[int, int],
     ):
-        super().__init__(identifier, image, collision_type, size)
+        super().__init__(identifier, image, collision_type)
         self.rect.topleft = px
 
     @classmethod

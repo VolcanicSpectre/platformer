@@ -9,7 +9,9 @@ from pygame import Surface
 from nea_game.game.camera import Camera
 from nea_game.gui.window import Window
 from nea_game.menu.background_layer import BackgroundLayer
+from nea_game.menu.pause_menu import Pause
 from nea_game.ldtk_world_loader.world import World
+from nea_game.player.player_action_space import PlayerActionSpace
 from nea_game.player.player import Player
 
 if typing.TYPE_CHECKING:
@@ -56,8 +58,16 @@ class Game(Window):
         )
 
     def event_handler(self, events: list[Event]):
-        if self.parent.is_transitioning:
-            return
+        for event in events:
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                window = Pause(
+                    self.parent,
+                    self.screen,
+                    self.display_surface,
+                    self.parent.config.directories["gui"] / "pause",
+                )
+                self.parent.windows["pause"] = window
+                self.parent.show_window("pause")
         self.player.event_handler(events)
 
     def update(self, dt: float):
@@ -71,28 +81,55 @@ class Game(Window):
                     self.parent.transition_circle_out,
                     2,
                     tuple(
-                        map(lambda x: x * self.scale_factor, self.player.rect.center)
+                        map(
+                            lambda x: x * self.scale_factor,
+                            (
+                                self.player.rect.centerx - self.camera.scroll_x,
+                                self.player.rect.centery - self.camera.scroll_y,
+                            ),
+                        )
                     ),
                 )
 
             return
 
         if not self.player.is_alive(self.camera.height):
+            if self.player.input.get_action_down(PlayerActionSpace.DASH):
+                self.parent.is_transition_done = True
+                window = Game(
+                    self.parent,
+                    self.screen,
+                    self.display_surface,
+                    self.world_identifier,
+                    self.level_identifier,
+                    self.parent.config.directories["background"] / "sky_mountain",
+                )
+                self.parent.windows["game"] = window
+                self.parent.show_window("game")
+
             if self.parent.is_transition_done:
-                self.parent.show_window("play_game")
+                self.parent.show_window("level_selection")
+                self.parent.sound_manager.play_sound("click")
+
             elif not self.parent.is_transitioning:
                 self.parent.set_transitioning(
                     self.parent.transition_circle_out,
-                    2,
+                    1,
                     tuple(
-                        map(lambda x: x * self.scale_factor, self.player.rect.center)
+                        map(
+                            lambda x: x * self.scale_factor,
+                            (
+                                self.player.rect.centerx - self.camera.scroll_x,
+                                self.player.rect.centery - self.camera.scroll_y,
+                            ),
+                        )
                     ),
                 )
 
         if not self.parent.is_transitioning:
             self.parent.is_transition_done = False
             self.player.update(dt)
-        
+
         if self.player.state_machine.current_state == self.player.jump_state:
             self.parent.sound_manager.play_sound("jump")
         self.camera.update(self.player.rect)

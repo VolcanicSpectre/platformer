@@ -105,7 +105,7 @@ class Player(BaseEntity):
 
         self.can_dash = False
         self.dash_time = 0.1
-        self.dash_speed = 17
+        self.dash_speed = 13
         self.friction = 10
 
     def get_collisions(self) -> list[LevelTile]:
@@ -205,8 +205,11 @@ class Player(BaseEntity):
                         self.rb.velocity = Vector2D(self.rb.velocity.x, 0)
 
                 case CollisionType.PLATFORM:
-                    if self.rect.top <= collision.rect.bottom <= self.old_rect.top:
-                        self.rect.top = collision.rect.bottom
+                    if (
+                        self.rect.bottom >= collision.rect.top
+                        and self.old_rect.bottom <= collision.rect.top
+                    ):
+                        self.rect.bottom = collision.rect.top
                         self.y = self.rect.y
                         self.rb.velocity = Vector2D(self.rb.velocity.x, 0)
                 case _:

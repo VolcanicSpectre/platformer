@@ -12,7 +12,4 @@ def app():
 
 if __name__ == "__main__":
     config = NeaGameConfig()
-    if config.debug:
-        import ez_profile
-
     app()

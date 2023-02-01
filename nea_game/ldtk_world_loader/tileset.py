@@ -47,9 +47,20 @@ class Tileset:
             handle_image.set_clip(clip_rect)
             tile_image = self.image.subsurface(handle_image.get_clip())
 
-            self.tiles[tile_id] = TilesetTile(
-                tile_id,
-                tile_image,
-                getattr(CollisionType, collision_type.upper()),
-                self.grid_size,
-            )
+            if getattr(CollisionType, collision_type.upper()) == CollisionType.PLATFORM:
+                self.tiles[tile_id] = TilesetTile(
+                    tile_id,
+                    tile_image,
+                    getattr(CollisionType, collision_type.upper()),
+                    Rect((0, 0), (3, tile_image.get_height())),
+                )
+                self.tiles[tile_id] = TilesetTile(
+                    tile_id,
+                    tile_image,
+                    getattr(CollisionType, collision_type.upper()),
+                    Rect((0, 0), (3, tile_image.get_height())),
+                )
+            else:
+                self.tiles[tile_id] = TilesetTile(
+                    tile_id, tile_image, getattr(CollisionType, collision_type.upper())
+                )

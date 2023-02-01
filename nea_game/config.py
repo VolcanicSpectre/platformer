@@ -36,7 +36,7 @@ class NeaGameConfig:
         game_folder = platformer_folder.parent
         assets_folder = game_folder / "assets"
         background_folder = assets_folder / "background"
-        buttons_folder = assets_folder / "buttons"
+        gui_folder = assets_folder / "gui"
         music_folder = assets_folder / "music"
         player_folder = assets_folder / "player"
         sfx_folder = assets_folder / "sfx"
@@ -46,7 +46,7 @@ class NeaGameConfig:
             "game": game_folder,
             "assets": assets_folder,
             "background": background_folder,
-            "buttons": buttons_folder,
+            "gui": gui_folder,
             "player": player_folder,
             "music": music_folder,
             "sfx": sfx_folder,

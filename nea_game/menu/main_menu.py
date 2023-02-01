@@ -8,7 +8,7 @@ from pygame.image import load
 from pygame.mouse import get_pos as get_mouse_pos, get_pressed as get_mouse_pressed
 from pygame import Surface
 from nea_game.menu.level_selection import LevelSelection
-from nea_game.menu.settings import Settings
+from nea_game.menu.settings_menu import Settings
 from nea_game.menu.background_layer import BackgroundLayer
 from nea_game.gui.button import Button
 from nea_game.gui.title import Title
@@ -29,15 +29,13 @@ class MainMenu(Window):
         parent: NeaGame,
         screen: Surface,
         display_surface: Surface,
-        title_image_path: Path,
+        path: Path,
         background_image_layers_path: Path,
-        button_folder_path: Path,
         background_transparency_percentage: float = 1,
     ):
         super().__init__(screen, display_surface)
         self.parent = parent
         self.buttons = {}
-        self.title_image = load(title_image_path).convert_alpha()
 
         self.background_layers = [
             BackgroundLayer(load(background_image_layers_path / filename))
@@ -46,12 +44,12 @@ class MainMenu(Window):
         ]
         self.set_background_transparency_percentage(background_transparency_percentage)
 
-        self.title = Title(title_image_path)
+        self.title = Title(path / "title.png")
         self.title.rect.y = 0
         self.title.center_on_x_axis(self.display_surface.get_width())
 
-        for button in listdir(button_folder_path):
-            self.buttons[button] = Button(button_folder_path / button)
+        for button in listdir(path / "buttons"):
+            self.buttons[button] = Button(path / "buttons" / button)
 
         self.buttons["play_game"].rect.y = 115
         self.buttons["play_game"].center_on_x_axis(self.display_surface.get_width())
@@ -83,10 +81,10 @@ class MainMenu(Window):
                 self.parent,
                 self.screen,
                 self.display_surface,
-                self.parent.config.directories["assets"] / "buttons/level_selection",
+                self.parent.config.directories["gui"] / "level_selection",
             )
-            self.parent.windows["play_game"] = window
-            self.parent.show_window("play_game")
+            self.parent.windows["level_selection"] = window
+            self.parent.show_window("level_selection")
 
         if self.buttons["settings"].clicked:
             self.parent.sound_manager.play_sound("click")
@@ -94,7 +92,7 @@ class MainMenu(Window):
                 self.parent,
                 self.screen,
                 self.display_surface,
-                self.parent.config.directories["assets"] / "actions",
+                self.parent.config.directories["gui"] / "settings",
                 self.parent.config.key_bindings,
             )
             self.parent.windows["settings"] = window

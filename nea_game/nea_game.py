@@ -24,9 +24,8 @@ class NeaGame(Root):
             self,
             self.screen,
             self.display_surface,
-            config.directories["assets"] / "title.png",
+            config.directories["gui"] / "main_menu",
             config.directories["background"] / "sky_mountain",
-            config.directories["buttons"] / "main_menu",
         )
 
         self.transition: None | Callable[[], None]
@@ -58,9 +57,7 @@ class NeaGame(Root):
         events: list[Event]
         events = []
         for event in pygame.event.get():
-            if event.type == pygame.QUIT or (
-                event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE
-            ):
+            if event.type == pygame.QUIT:
                 pygame.quit()
                 sys_exit()
             else:
