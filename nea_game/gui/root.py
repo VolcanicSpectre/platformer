@@ -4,6 +4,7 @@ from nea_game.gui.window import Window
 from nea_game.game.engine import Engine
 from nea_game.sound_manager import SoundManager
 
+
 class Root:
     screen: Surface
     active_window: Window
@@ -30,5 +31,5 @@ class Root:
 
     def update(self):
         self.engine.update()
-        self.active_window.update(self.engine.dt)
+        self.active_window.update(self.engine.delta_time)
         self.active_window.draw()

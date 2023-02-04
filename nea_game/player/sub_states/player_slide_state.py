@@ -13,10 +13,10 @@ class PlayerSlideState(PlayerState):
         self.slide_direction = self.player.direction
 
     def input_handler(self):
-        self.move_input = self.player.input.get_axis_raw()
+        self.move_input = self.player.input_.get_axis_raw()
 
-    def update(self, dt: float):
-        if self.player.input.get_action_down(PlayerActionSpace.UP):
+    def update(self, delta_time: float):
+        if self.player.input_.get_action_down(PlayerActionSpace.UP):
             self.player.state_machine.change_state(self.player.wall_jump_state)
 
         if (
@@ -29,4 +29,6 @@ class PlayerSlideState(PlayerState):
             self.player.state_machine.change_state(self.player.idle_state)
 
         if not self.is_exiting_state:
-            self.player.rb.velocity = Vector2D(self.player.rb.velocity.x, self.player.wall_slide_velocity)
+            self.player.rigid_body.velocity = Vector2D(
+                self.player.rigid_body.velocity.x, self.player.wall_slide_velocity
+            )

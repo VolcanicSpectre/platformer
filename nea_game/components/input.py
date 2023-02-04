@@ -1,14 +1,15 @@
 from pygame.event import Event
 import pygame
-from nea_game.components.base_component import BaseComponent
 from nea_game.player.player_action_space import PlayerActionSpace
 from nea_game.calc.vector2d import Vector2D
 
 
-class Input(BaseComponent):
+class Input:
     """Provides an interface for accessing the inputs of a player given actions"""
 
+    action_space: type[PlayerActionSpace]
     actions: dict[PlayerActionSpace, int]
+    actions_performed_on_current_frame: dict[PlayerActionSpace, bool]
 
     def __init__(
         self, action_space: type[PlayerActionSpace], action_bindings: list[int]

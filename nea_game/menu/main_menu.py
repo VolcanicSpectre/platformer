@@ -65,7 +65,7 @@ class MainMenu(Window):
         self.parent.sound_manager.set_bgm_volume(self.parent.config.music_volume)
         self.parent.sound_manager.set_sfx_volume(self.parent.config.sfx_volume)
 
-    def update(self, dt: float):
+    def update(self, delta_time: float):
         mouse_pos: tuple[int, int] = get_mouse_pos()
         scaled_mouse_pos: tuple[int, int] = (
             mouse_pos[0] // self.scale_factor,
@@ -73,7 +73,7 @@ class MainMenu(Window):
         )
         mouse_clicked = get_mouse_pressed()[0]
         for button in self.buttons.values():
-            button.update(scaled_mouse_pos, mouse_clicked, dt)
+            button.update(scaled_mouse_pos, mouse_clicked, delta_time)
 
         if self.buttons["play_game"].clicked:
             self.parent.sound_manager.play_sound("click")

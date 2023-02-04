@@ -13,12 +13,22 @@ from nea_game.menu.pause_menu import Pause
 from nea_game.ldtk_world_loader.world import World
 from nea_game.player.player_action_space import PlayerActionSpace
 from nea_game.player.player import Player
+from nea_game.config import NeaGameConfig
 
 if typing.TYPE_CHECKING:
     from nea_game.nea_game import NeaGame
 
 
 class Game(Window):
+    parent: NeaGame
+    config: NeaGameConfig
+    world_identifier: str
+    level_identifier: str
+    world: World
+    background_layers: list[BackgroundLayer]
+    player: Player
+    camera: Camera
+
     def __init__(
         self,
         parent: NeaGame,
@@ -70,7 +80,7 @@ class Game(Window):
                 self.parent.show_window("pause")
         self.player.event_handler(events)
 
-    def update(self, dt: float):
+    def update(self, delta_time: float):
         if self.has_level_finished():
             if self.parent.is_transition_done:
                 self.end_level()
@@ -94,7 +104,7 @@ class Game(Window):
             return
 
         if not self.player.is_alive(self.camera.height):
-            if self.player.input.get_action_down(PlayerActionSpace.DASH):
+            if self.player.input_.get_action_down(PlayerActionSpace.DASH):
                 self.parent.is_transition_done = True
                 window = Game(
                     self.parent,
@@ -128,13 +138,13 @@ class Game(Window):
 
         if not self.parent.is_transitioning:
             self.parent.is_transition_done = False
-            self.player.update(dt)
+            self.player.update(delta_time)
 
         if self.player.state_machine.current_state == self.player.jump_state:
             self.parent.sound_manager.play_sound("jump")
         self.camera.update(self.player.rect)
 
-    def has_level_finished(self):
+    def has_level_finished(self) -> bool:
         if self.player.rect.colliderect(
             self.world.levels[self.level_identifier].level_data["level_finish"].rect
         ):

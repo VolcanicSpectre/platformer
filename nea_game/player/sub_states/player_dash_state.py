@@ -8,26 +8,26 @@ class PlayerDashState(PlayerAbilityState):
     def enter(self):
         super().enter()
 
-        move_input = self.player.input.get_axis_raw()
+        move_input = self.player.input_.get_axis_raw()
 
         if move_input == Vector2D(0, 0):
             self.is_ability_done = True
         else:
-            self.player.rb.velocity = Vector2D(0, 0)
+            self.player.rigid_body.velocity = Vector2D(0, 0)
             force = Vector2D(move_input.x, move_input.y).scale(self.player.dash_speed)
-            self.player.rb.add_force(force, force_mode=ForceMode.IMPULSE)
+            self.player.rigid_body.add_force(force, force_mode=ForceMode.IMPULSE)
             self.player.can_dash = False
 
     def exit(self):
         super().exit()
-        self.player.rb.velocity = Vector2D(
-            self.player.rb.velocity.x, self.player.rb.velocity.y * 0.2
+        self.player.rigid_body.velocity = Vector2D(
+            self.player.rigid_body.velocity.x, self.player.rigid_body.velocity.y * 0.2
         )
 
-    def update(self, dt: float):
+    def update(self, delta_time: float):
         if self.player.is_grounded:
             self.is_ability_done = True
 
         if perf_counter() - self.start_time > self.player.dash_time:
             self.is_ability_done = True
-        super().update(dt)
+        super().update(delta_time)

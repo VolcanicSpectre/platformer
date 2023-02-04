@@ -25,17 +25,62 @@ from nea_game.states.player_state_machine import StateMachine
 
 
 class Player(BaseEntity):
-    frames: dict[str, list[Surface]]
+    level_data: list[LevelTile]
+
+    idle_state: PlayerIdleState
+    run_state: PlayerRunState
+    land_state: PlayerLandState
+    dash_state: PlayerDashState
+    jump_state: PlayerJumpState
+    wall_jump_state: PlayerWallJumpState
+    slide_state: PlayerSlideState
+
+    renderer: AnimatedRenderer
+    input_: Input
+    rigid_body: RigidBody2D
+    state_machine: StateMachine
 
     direction: int
 
+    rect: Rect
+    old_rect: Rect
+
+    x_run_speed: float
+    acceleration_rate: float
+    jump_hang_acceleration_mult: float
+    jump_hang_max_speed_mult: float
+    deceleration_rate: float
+    air_acceleration_multiplier: float
+    velocity_power: float
+
+    jump_force: float
+    jump_hang_time_threshold: float
+    jump_hang_gravity_mult: float
+    jump_fast_fall_mult: float
+    coyote_time: float
+    jump_buffer_time: float
+    max_fall: float
+    land_animation_time: float
+
+    wall_jump_force: Vector2D
+    wall_jump_time: float
+    wall_jump_lerp: float
+
+    wall_slide_velocity: float
+
+    can_dash: bool
+    dash_time: float
+    dash_speed: float
+
+    friction: float
+
     def __init__(
-        self,
-        player_folder: Path,
-        level_data: list[LevelTile],
-        action_bindings: list[int],
-        internal_fps: int,
-        position: tuple[int, int],
+            self,
+            player_folder: Path,
+            level_data: list[LevelTile],
+            action_bindings: list[int],
+            internal_fps: int,
+            position: tuple[int, int],
     ):
         """Defines player movement constants and starts the player in the idle state
 
@@ -48,6 +93,7 @@ class Player(BaseEntity):
         """
         super().__init__(position)
         self.level_data = level_data
+
         self.idle_state = PlayerIdleState(self, "Idle")
         self.run_state = PlayerRunState(self, "Run")
         self.land_state = PlayerLandState(self, "Land")
@@ -56,7 +102,8 @@ class Player(BaseEntity):
         self.wall_jump_state = PlayerWallJumpState(self, "WallJump")
         self.in_air_state = PlayerInAirState(self, "InAir")
         self.slide_state = PlayerSlideState(self, "Slide")
-        frames = {}
+
+        frames: dict[str, list[Surface]] = {}
 
         for folder in listdir(player_folder):
             if isdir(player_folder / folder):
@@ -66,8 +113,8 @@ class Player(BaseEntity):
                 ]
 
         self.renderer = AnimatedRenderer(frames)
-        self.input = Input(PlayerActionSpace, action_bindings)
-        self.rb = RigidBody2D(4, 0.4, internal_fps)
+        self.input_ = Input(PlayerActionSpace, action_bindings)
+        self.rigid_body = RigidBody2D(4, 0.4, internal_fps)
         self.state_machine = StateMachine(self.idle_state)
 
         self.direction = 1
@@ -129,8 +176,8 @@ class Player(BaseEntity):
         ]:
             if collision.collision_type in (CollisionType.WALL, CollisionType.PLATFORM):
                 if (
-                    self.rect.bottom >= collision.rect.top
-                    and self.old_rect.bottom <= collision.rect.top
+                        self.rect.bottom >= collision.rect.top
+                        and self.old_rect.bottom <= collision.rect.top
                 ):
                     return True
 
@@ -145,8 +192,8 @@ class Player(BaseEntity):
         ]:
             if collision.collision_type == CollisionType.WALL:
                 if (
-                    self.rect.right >= collision.rect.left
-                    and self.old_rect.right <= collision.rect.left
+                        self.rect.right >= collision.rect.left
+                        and self.old_rect.right <= collision.rect.left
                 ):
                     return 1
 
@@ -157,8 +204,8 @@ class Player(BaseEntity):
         ]:
             if collision.collision_type == CollisionType.WALL:
                 if (
-                    self.rect.left <= collision.rect.right
-                    and self.old_rect.left >= collision.rect.right
+                        self.rect.left <= collision.rect.right
+                        and self.old_rect.left >= collision.rect.right
                 ):
                     return -1
         return 0
@@ -168,19 +215,23 @@ class Player(BaseEntity):
             match collision.collision_type:
                 case CollisionType.WALL:
                     if (
-                        self.rect.right >= collision.rect.left
-                        and self.old_rect.right <= collision.rect.left
+                            self.rect.right >= collision.rect.left
+                            and self.old_rect.right <= collision.rect.left
                     ):
                         self.rect.right = collision.rect.left
                         self.x = self.rect.x
-                        self.rb.velocity = Vector2D(0, self.rb.velocity.y)
+                        self.rigid_body.velocity = Vector2D(
+                            0, self.rigid_body.velocity.y
+                        )
                     if (
-                        self.rect.left <= collision.rect.right
-                        and self.old_rect.left >= collision.rect.right
+                            self.rect.left <= collision.rect.right
+                            and self.old_rect.left >= collision.rect.right
                     ):
                         self.rect.left = collision.rect.right
                         self.x = self.rect.x
-                        self.rb.velocity = Vector2D(0, self.rb.velocity.y)
+                        self.rigid_body.velocity = Vector2D(
+                            0, self.rigid_body.velocity.y
+                        )
                 case _:
                     pass
 
@@ -189,51 +240,57 @@ class Player(BaseEntity):
             match collision.collision_type:
                 case CollisionType.WALL:
                     if (
-                        self.rect.bottom >= collision.rect.top
-                        and self.old_rect.bottom <= collision.rect.top
+                            self.rect.bottom >= collision.rect.top
+                            and self.old_rect.bottom <= collision.rect.top
                     ):
                         self.rect.bottom = collision.rect.top
                         self.y = self.rect.y
-                        self.rb.velocity = Vector2D(self.rb.velocity.x, 0)
+                        self.rigid_body.velocity = Vector2D(
+                            self.rigid_body.velocity.x, 0
+                        )
 
                     if (
-                        self.rect.top <= collision.rect.bottom
-                        and self.old_rect.top >= collision.rect.bottom
+                            self.rect.top <= collision.rect.bottom
+                            and self.old_rect.top >= collision.rect.bottom
                     ):
                         self.rect.top = collision.rect.bottom
                         self.y = self.rect.y
-                        self.rb.velocity = Vector2D(self.rb.velocity.x, 0)
+                        self.rigid_body.velocity = Vector2D(
+                            self.rigid_body.velocity.x, 0
+                        )
 
                 case CollisionType.PLATFORM:
                     if (
-                        self.rect.bottom >= collision.rect.top
-                        and self.old_rect.bottom <= collision.rect.top
+                            self.rect.bottom >= collision.rect.top
+                            and self.old_rect.bottom <= collision.rect.top
                     ):
                         self.rect.bottom = collision.rect.top
                         self.y = self.rect.y
-                        self.rb.velocity = Vector2D(self.rb.velocity.x, 0)
+                        self.rigid_body.velocity = Vector2D(
+                            self.rigid_body.velocity.x, 0
+                        )
                 case _:
                     pass
 
     def event_handler(self, events: list[Event]):
-        self.input.update_actions_performed_on_current_frame(events)
+        self.input_.update_actions_performed_on_current_frame(events)
 
     def input_handler(self):
         self.state_machine.current_state.input_handler()
 
-    def update(self, dt: float):
+    def update(self, delta_time: float):
 
-        if self.input.get_axis_raw().x:
-            self.direction = int(self.input.get_axis_raw().x)
+        if self.input_.get_axis_raw().x:
+            self.direction = int(self.input_.get_axis_raw().x)
 
         self.old_rect = self.rect.copy()
         self.input_handler()
-        self.state_machine.current_state.update(dt)
+        self.state_machine.current_state.update(delta_time)
 
-        self.x += self.rb.velocity.x
+        self.x += self.rigid_body.velocity.x
         self.rect.x = int(self.x)
         self.handle_x_collisions()
 
-        self.y += self.rb.velocity.y
+        self.y += self.rigid_body.velocity.y
         self.rect.y = int(self.y)
         self.handle_y_collisions()

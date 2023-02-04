@@ -1,12 +1,15 @@
 from numpy import empty
+from typing import TypeVar, Generic
+
+T = TypeVar("T")
 
 
-class CircularQueue:
+class CircularQueue(Generic[T]):
     """
-    Provides a circular queue that has a maximum size and provids the methods associated with a circular queue 
+    Provides a circular queue that has a maximum size and provids the methods associated with a circular queue
     """
 
-    def __init__(self, max_size, dtype):
+    def __init__(self, max_size: int, dtype: type[T]):
         self.MAX_SIZE = max_size
         self.queue = empty(self.MAX_SIZE, dtype=dtype)
         self.front, self.rear = -1, -1
@@ -20,7 +23,7 @@ class CircularQueue:
     def is_empty(self):
         return self.front == -1
 
-    def enqueue(self, data):
+    def enqueue(self, data: T):
         if self.is_full():
             raise FullQueue
 
@@ -46,7 +49,7 @@ class CircularQueue:
 
 
 class EmptyQueue(Exception):
-    """ Raised when a queue is empty"""
+    """Raised when a queue is empty"""
 
 
 class FullQueue(Exception):

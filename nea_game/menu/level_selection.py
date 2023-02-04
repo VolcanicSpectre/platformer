@@ -78,7 +78,7 @@ class LevelSelection(Window):
                 self.buttons[name].on_click_image = self.buttons[name].passive_image
                 self.buttons[name].can_be_clicked = False
 
-    def update(self, dt: float):
+    def update(self, delta_time: float):
         mouse_pos: tuple[int, int] = get_mouse_pos()
         scaled_mouse_pos: tuple[int, int] = (
             mouse_pos[0] // self.scale_factor,
@@ -87,7 +87,7 @@ class LevelSelection(Window):
         mouse_clicked = get_mouse_pressed()[0]
 
         for button in self.buttons.values():
-            button.update(scaled_mouse_pos, mouse_clicked, dt)
+            button.update(scaled_mouse_pos, mouse_clicked, delta_time)
 
         if self.buttons["back"].clicked:
             self.parent.sound_manager.play_sound("click")

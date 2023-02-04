@@ -12,5 +12,5 @@ class BaseEntity:
         """
         self.x, self.y = position
 
-    def update(self, dt: float) -> None:
+    def update(self, delta_time: float) -> None:
         """Called each frame in order to update the entity"""

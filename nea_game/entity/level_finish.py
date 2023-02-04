@@ -3,6 +3,10 @@ from nea_game.entity.base_entity import BaseEntity
 
 
 class LevelFinish(BaseEntity):
+    rect: Rect
+    new_world: bool
+    next_level_identifier: str
+
     def __init__(
         self,
         position: tuple[int, int],

@@ -1,8 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="5f9d6df4-80da-4126-884e-58c448feba29" name="Changes" comment="commit master">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/circular_queue.py" beforeDir="false" afterPath="$PROJECT_DIR$/circular_queue.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nea_game/calc/vector2d.py" beforeDir="false" afterPath="$PROJECT_DIR$/nea_game/calc/vector2d.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nea_game/components/base_component.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/nea_game/components/input.py" beforeDir="false" afterPath="$PROJECT_DIR$/nea_game/components/input.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nea_game/components/renderer.py" beforeDir="false" afterPath="$PROJECT_DIR$/nea_game/components/renderer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nea_game/components/rigidbody2d.py" beforeDir="false" afterPath="$PROJECT_DIR$/nea_game/components/rigidbody2d.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nea_game/config.json" beforeDir="false" afterPath="$PROJECT_DIR$/nea_game/config.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nea_game/entity/base_entity.py" beforeDir="false" afterPath="$PROJECT_DIR$/nea_game/entity/base_entity.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nea_game/entity/level_finish.py" beforeDir="false" afterPath="$PROJECT_DIR$/nea_game/entity/level_finish.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nea_game/game/camera.py" beforeDir="false" afterPath="$PROJECT_DIR$/nea_game/game/camera.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nea_game/game/engine.py" beforeDir="false" afterPath="$PROJECT_DIR$/nea_game/game/engine.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nea_game/game/game.py" beforeDir="false" afterPath="$PROJECT_DIR$/nea_game/game/game.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nea_game/game/old_level.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/nea_game/game/oldgame.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/nea_game/game/render_object.py" beforeDir="false" afterPath="$PROJECT_DIR$/nea_game/game/render_object.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nea_game/gui/button.py" beforeDir="false" afterPath="$PROJECT_DIR$/nea_game/gui/button.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nea_game/gui/root.py" beforeDir="false" afterPath="$PROJECT_DIR$/nea_game/gui/root.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nea_game/gui/slider.py" beforeDir="false" afterPath="$PROJECT_DIR$/nea_game/gui/slider.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nea_game/gui/window.py" beforeDir="false" afterPath="$PROJECT_DIR$/nea_game/gui/window.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nea_game/menu/action_button.py" beforeDir="false" afterPath="$PROJECT_DIR$/nea_game/menu/action_button.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nea_game/menu/level_selection.py" beforeDir="false" afterPath="$PROJECT_DIR$/nea_game/menu/level_selection.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nea_game/menu/main_menu.py" beforeDir="false" afterPath="$PROJECT_DIR$/nea_game/menu/main_menu.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nea_game/menu/pause_menu.py" beforeDir="false" afterPath="$PROJECT_DIR$/nea_game/menu/pause_menu.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nea_game/menu/settings_menu.py" beforeDir="false" afterPath="$PROJECT_DIR$/nea_game/menu/settings_menu.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nea_game/player/player.py" beforeDir="false" afterPath="$PROJECT_DIR$/nea_game/player/player.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nea_game/player/sub_states/player_dash_state.py" beforeDir="false" afterPath="$PROJECT_DIR$/nea_game/player/sub_states/player_dash_state.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nea_game/player/sub_states/player_idle_state.py" beforeDir="false" afterPath="$PROJECT_DIR$/nea_game/player/sub_states/player_idle_state.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nea_game/player/sub_states/player_in_air_state.py" beforeDir="false" afterPath="$PROJECT_DIR$/nea_game/player/sub_states/player_in_air_state.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nea_game/player/sub_states/player_jump_state.py" beforeDir="false" afterPath="$PROJECT_DIR$/nea_game/player/sub_states/player_jump_state.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nea_game/player/sub_states/player_land_state.py" beforeDir="false" afterPath="$PROJECT_DIR$/nea_game/player/sub_states/player_land_state.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nea_game/player/sub_states/player_run_state.py" beforeDir="false" afterPath="$PROJECT_DIR$/nea_game/player/sub_states/player_run_state.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nea_game/player/sub_states/player_slide_state.py" beforeDir="false" afterPath="$PROJECT_DIR$/nea_game/player/sub_states/player_slide_state.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nea_game/player/sub_states/player_wall_jump_state.py" beforeDir="false" afterPath="$PROJECT_DIR$/nea_game/player/sub_states/player_wall_jump_state.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nea_game/player/super_states/player_ability_state.py" beforeDir="false" afterPath="$PROJECT_DIR$/nea_game/player/super_states/player_ability_state.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nea_game/player/super_states/player_grounded_state.py" beforeDir="false" afterPath="$PROJECT_DIR$/nea_game/player/super_states/player_grounded_state.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nea_game/states/player_state.py" beforeDir="false" afterPath="$PROJECT_DIR$/nea_game/states/player_state.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,16 +69,22 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/sl12d/platformer&quot;,
-    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settingsdialog.IDE.editor.colors&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "C:/Users/sl12d/platformer",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "settings.editor.selected.configurable": "reference.settings.ide.settings.uml",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RunManager" selected="Python.generation">
     <configuration name="generation" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Platformer" />
@@ -53,6 +98,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/generation.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
@@ -74,6 +120,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
@@ -95,6 +142,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/neural_network.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
@@ -116,6 +164,7 @@
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/../OneDrive/Python/Test/t.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
@@ -137,6 +186,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
@@ -164,6 +214,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1657468871341</updated>
+      <workItem from="1675510928704" duration="1332000" />
     </task>
     <task id="LOCAL-00001" summary="commit master">
       <created>1657485749145</created>
@@ -174,6 +225,9 @@
     </task>
     <option name="localTasksCounter" value="2" />
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">

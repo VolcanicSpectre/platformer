@@ -31,7 +31,7 @@ class Pause(Window):
         self.buttons["exit"].rect.y = 150
         self.buttons["exit"].center_on_x_axis(self.display_surface.get_width())
 
-    def update(self, dt: float):
+    def update(self, delta_time: float):
         mouse_pos: tuple[int, int] = get_mouse_pos()
         scaled_mouse_pos: tuple[int, int] = (
             mouse_pos[0] // self.scale_factor,
@@ -40,7 +40,7 @@ class Pause(Window):
         mouse_clicked = get_mouse_pressed()[0]
 
         for button in self.buttons.values():
-            button.update(scaled_mouse_pos, mouse_clicked, dt)
+            button.update(scaled_mouse_pos, mouse_clicked, delta_time)
 
         if self.buttons["resume"].clicked:
             self.parent.sound_manager.play_sound("click")

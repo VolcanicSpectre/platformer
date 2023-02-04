@@ -34,7 +34,7 @@ class Slider:
         self.rect.topleft = x, y
         self.bar_rect.topleft = x - 1, y - 1
 
-    def update(self, mouse_pos: tuple[int, int], mouse_clicked: bool, dt: float):
+    def update(self, mouse_pos: tuple[int, int], mouse_clicked: bool, delta_time: float):
         mouse_pos_x, mouse_pos_y = mouse_pos
         mouse_pos_in_mask = mouse_pos_x - self.rect.x, mouse_pos_y - self.rect.y
         self.dragging = False

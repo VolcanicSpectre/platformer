@@ -43,7 +43,7 @@ class ActionButton:
         self,
         mouse_pos: tuple[int, int],
         mouse_clicked: bool,
-        dt: float,
+        delta_time: float,
         other_binds: list[int] | None = None,
         event: Event | None = None,
     ):
@@ -71,7 +71,7 @@ class ActionButton:
             self.current_image = self.passive_image
 
         if self.click_timer >= 0:
-            self.click_timer += dt
+            self.click_timer += delta_time
             if event:
                 if event.type == pygame.KEYDOWN:
                     if self.update_key_image(event.key, other_binds):

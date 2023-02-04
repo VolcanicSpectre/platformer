@@ -37,7 +37,7 @@ class Button:
         self.click_delay = 0.08
         self.click_timer = -1
         
-    def update(self, mouse_pos: tuple[int, int], mouse_clicked: bool, dt: float):
+    def update(self, mouse_pos: tuple[int, int], mouse_clicked: bool, delta_time: float):
         """Updates the current_image attribute and the clicked flag
 
         Args:
@@ -64,7 +64,7 @@ class Button:
             self.click_timer = -1
 
         if self.click_timer >= 0:
-            self.click_timer += dt
+            self.click_timer += delta_time
 
     def center_on_x_axis(self, x_axis_width: int):
         self.rect.x = (x_axis_width - self.rect.width) // 2

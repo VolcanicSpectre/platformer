@@ -12,11 +12,11 @@ class PlayerAbilityState(PlayerState):
         self.start_time = perf_counter()
         self.is_ability_done = False
 
-    def update(self, dt: float):
-        super().update(dt)
+    def update(self, delta_time: float):
+        super().update(delta_time)
 
         if self.is_ability_done:
-            if self.player.is_grounded and self.player.rb.velocity.x == 0:
+            if self.player.is_grounded and self.player.rigid_body.velocity.x == 0:
                 self.player.state_machine.change_state(self.player.idle_state)
             else:
                 self.player.state_machine.change_state(self.player.in_air_state)

@@ -33,7 +33,7 @@ class PlayerState:
     def input_handler(self):
         """Handles the inputs"""
 
-    def update(self, dt: float) -> None:
+    def update(self, delta_time: float) -> None:
         """Called each frame"""
         if self.player.is_grounded:
             self.player.can_dash = True

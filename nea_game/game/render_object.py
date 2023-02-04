@@ -6,7 +6,7 @@ class RenderObject:
     y: int
     image: Surface
 
-    def __init__(self, x, y, image):
+    def __init__(self, x: int, y: int, image: Surface):
         self.x = x
         self.y = y
         self.image = image

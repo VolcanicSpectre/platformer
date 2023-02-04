@@ -17,10 +17,10 @@ class PlayerRunState(PlayerGroundedState):
         self.animation_frame_time = 0.05
         self.last_animation_index_change: float = perf_counter()
 
-    def update(self, dt: float):
-        super().update(dt)
+    def update(self, delta_time: float):
+        super().update(delta_time)
         if not self.is_exiting_state:
-            if near_zero(self.player.rb.velocity.x) and self.move_input.x == 0:
+            if near_zero(self.player.rigid_body.velocity.x) and self.move_input.x == 0:
                 self.player.state_machine.change_state(self.player.idle_state)
             else:
                 if (
@@ -32,7 +32,7 @@ class PlayerRunState(PlayerGroundedState):
                     )
                     self.last_animation_index_change = perf_counter()
                 target_speed = self.move_input.x * self.player.x_run_speed
-                speed_difference = target_speed - self.player.rb.velocity.x
+                speed_difference = target_speed - self.player.rigid_body.velocity.x
 
                 acceleration_rate = (
                     self.player.acceleration_rate
@@ -46,13 +46,15 @@ class PlayerRunState(PlayerGroundedState):
                     self.player.velocity_power,
                 ) * sign(speed_difference)
 
-                self.player.rb.add_force(Vector2D(1, 0).scale(movement), dt)
+                self.player.rigid_body.add_force(
+                    Vector2D(1, 0).scale(movement), delta_time
+                )
 
                 if abs(target_speed) == 0:
-                    friction = sign(self.player.rb.velocity.x) * min(
-                        abs(self.player.rb.velocity.x), self.player.friction
+                    friction = sign(self.player.rigid_body.velocity.x) * min(
+                        abs(self.player.rigid_body.velocity.x), self.player.friction
                     )
-                    self.player.rb.add_force(
+                    self.player.rigid_body.add_force(
                         Vector2D(self.move_input.x, 0).scale(friction),
                         force_mode=ForceMode.IMPULSE,
                     )

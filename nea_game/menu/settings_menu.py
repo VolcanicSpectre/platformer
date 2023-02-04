@@ -73,7 +73,7 @@ class Settings(Window):
         self.sliders["music_volume"].set_topleft(195, 175)
         self.sliders["sfx_volume"].set_topleft(195, 200)
 
-    def update(self, dt: float):
+    def update(self, delta_time: float):
         mouse_pos: tuple[int, int] = get_mouse_pos()
         scaled_mouse_pos: tuple[int, int] = (
             mouse_pos[0] // self.scale_factor,
@@ -81,10 +81,10 @@ class Settings(Window):
         )
         mouse_clicked = get_mouse_pressed()[0]
         for slider in self.sliders.values():
-            slider.update(scaled_mouse_pos, mouse_clicked, dt)
+            slider.update(scaled_mouse_pos, mouse_clicked, delta_time)
 
         for button in self.buttons.values():
-            button.update(scaled_mouse_pos, mouse_clicked, dt)
+            button.update(scaled_mouse_pos, mouse_clicked, delta_time)
 
         for action_button in self.action_buttons.values():
             if action_button.click_timer >= 0:
@@ -99,7 +99,7 @@ class Settings(Window):
                         scaled_mouse_pos, mouse_clicked, 0, other_binds, event
                     )
 
-            action_button.update(scaled_mouse_pos, mouse_clicked, dt)
+            action_button.update(scaled_mouse_pos, mouse_clicked, delta_time)
 
         if self.buttons["back"].clicked:
             self.parent.sound_manager.play_sound("click")

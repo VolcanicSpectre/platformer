@@ -4,6 +4,7 @@ from typing import NamedTuple
 from math import sqrt
 from nea_game.calc.near_zero import near_zero
 
+
 class Vector2D(NamedTuple):
 
     """Creates a 2 dimensional vector"""
@@ -32,7 +33,7 @@ class Vector2D(NamedTuple):
 
     def near_zero(self) -> Vector2D:
         return Vector2D(near_zero(self.x), near_zero(self.y))
-    
+
     def magnitude(self) -> float:
         """Returns the magnitude of the vector
 
