@@ -8,6 +8,7 @@ class BackgroundLayer:
     image: Surface
     sine_scale_factor: float
     sine_stretch_factor: float
+    sine_translation_factor: float
     x_scroll: float
 
     def __init__(self, image: Surface):

@@ -22,7 +22,8 @@ class NeaGameConfig:
     chunk_size: int
 
     key_bindings: list[int]
-
+    music_volume: float
+    sfx_volume: float
     unlocked_levels: dict[str, bool]
 
     def __init__(self):
@@ -66,7 +67,7 @@ class NeaGameConfig:
         self.fps = self.get_int_setting("fps")
         self.internal_fps = 30
 
-        self.key_bindings = self.get_integer_list_setting("key_bindings")
+        self.key_bindings = self.get_int_list_setting("key_bindings")
         self.music_volume = self.get_float_setting("music_volume")
         self.sfx_volume = self.get_float_setting("sfx_volume")
         self.unlocked_levels = self.get_setting("unlocked_levels")
@@ -113,7 +114,7 @@ class NeaGameConfig:
 
             raise ValueError
 
-    def get_integer_list_setting(self, setting: str) -> list[int]:
+    def get_int_list_setting(self, setting: str) -> list[int]:
         """Gets the relevant setting from config.json that is a list of integers
 
         Args:
@@ -151,5 +152,5 @@ class NeaGameConfig:
 
         self.music_volume = self.get_float_setting("music_volume")
         self.sfx_volume = self.get_float_setting("sfx_volume")
-        self.key_bindings = self.get_integer_list_setting("key_bindings")
+        self.key_bindings = self.get_int_list_setting("key_bindings")
         self.unlocked_levels = self.get_setting("unlocked_levels")

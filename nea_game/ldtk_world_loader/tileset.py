@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import Any
 from pygame.image import load
-from pygame import Rect
+from pygame import Rect, Surface
 from nea_game.ldtk_world_loader.collision_type import CollisionType
 from nea_game.ldtk_world_loader.tileset_tile import TilesetTile
 
@@ -14,6 +14,7 @@ class Tileset:
     spacing: int
     padding: int
 
+    image: Surface
     collision_types: list[dict[str, Any]]
     tiles: dict[int, TilesetTile]
 

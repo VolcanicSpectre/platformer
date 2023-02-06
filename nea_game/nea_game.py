@@ -10,6 +10,14 @@ from nea_game.menu.main_menu import MainMenu
 
 
 class NeaGame(Root):
+    config: NeaGameConfig
+    transition: None | Callable[[], None]
+    transition_start_radius: int
+    transition_circle_centre: tuple[int, int]
+    current_transition_frame: int
+    is_transitioning: bool
+    is_transition_done: bool
+
     def __init__(self, config: NeaGameConfig):
         self.config = config
 

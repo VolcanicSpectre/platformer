@@ -2,7 +2,10 @@ from nea_game.states.player_state import PlayerState
 
 
 class StateMachine:
-    def __init__(self, starting_state: PlayerState) -> None:
+    current_state: PlayerState
+    previous_state: PlayerState
+
+    def __init__(self, starting_state: PlayerState):
         """A state machine for an entity
 
         Args:
@@ -11,7 +14,7 @@ class StateMachine:
         self.current_state = starting_state
         self.previous_state = starting_state
 
-    def change_state(self, new_state: PlayerState) -> None:
+    def change_state(self, new_state: PlayerState):
         """Provides functionlaity for changing state
 
         Args:
@@ -21,4 +24,3 @@ class StateMachine:
         self.previous_state = self.current_state
         self.current_state = new_state
         self.current_state.enter()
-

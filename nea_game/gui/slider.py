@@ -1,10 +1,26 @@
 from pathlib import Path
 from pygame.image import load
 from pygame.mask import from_surface
-from pygame import Rect, Surface
+from pygame import Mask, Rect, Surface
 
 
 class Slider:
+    passive_bar: Surface
+    active_bar: Surface
+    handle_image: Surface
+
+    rect: Rect
+    mask: Mask
+
+    bar_rect: Rect
+    handle_rect: Rect
+    
+    min_value: int
+    max_value: int
+    value: int
+
+    dragging: bool
+
     def __init__(
         self,
         path: Path,
@@ -34,14 +50,14 @@ class Slider:
         self.rect.topleft = x, y
         self.bar_rect.topleft = x - 1, y - 1
 
-    def update(self, mouse_pos: tuple[int, int], mouse_clicked: bool, delta_time: float):
+    def update(self, mouse_pos: tuple[int, int], mouse_clicked: bool):
         mouse_pos_x, mouse_pos_y = mouse_pos
         mouse_pos_in_mask = mouse_pos_x - self.rect.x, mouse_pos_y - self.rect.y
         self.dragging = False
 
         self.dragging = (
             self.rect.collidepoint(mouse_pos)
-            and self.mask.get_at(mouse_pos_in_mask)
+            and self.mask.get_at(mouse_pos_in_mask) == 1
             and mouse_clicked
         )
 

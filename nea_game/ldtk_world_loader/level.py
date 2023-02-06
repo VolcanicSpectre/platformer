@@ -6,8 +6,12 @@ from nea_game.ldtk_world_loader.tileset import Tileset
 
 
 class Level:
+    data: dict[str, Any]
+    identifier: str
+    tileset: Tileset
     height: int
     width: int
+    level_data: LevelData
 
     def __init__(self, data: dict[str, Any], tileset: Tileset):
         self.data = data

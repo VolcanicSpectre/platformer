@@ -17,6 +17,14 @@ if typing.TYPE_CHECKING:
 
 
 class Settings(Window):
+    parent: NeaGame
+
+    title_image: Surface
+    text: Surface
+
+    music_icon: Surface
+    sound_icon: Surface
+
     buttons: dict[str, Button]
     action_buttons: dict[str, ActionButton]
     sliders: dict[str, Slider]
@@ -38,6 +46,7 @@ class Settings(Window):
 
         self.music_icon = load(path / "music.png")
         self.sound_icon = load(path / "sound.png")
+
         self.buttons = {}
         self.action_buttons = {}
         self.sliders = {}
@@ -81,7 +90,7 @@ class Settings(Window):
         )
         mouse_clicked = get_mouse_pressed()[0]
         for slider in self.sliders.values():
-            slider.update(scaled_mouse_pos, mouse_clicked, delta_time)
+            slider.update(scaled_mouse_pos, mouse_clicked)
 
         for button in self.buttons.values():
             button.update(scaled_mouse_pos, mouse_clicked, delta_time)

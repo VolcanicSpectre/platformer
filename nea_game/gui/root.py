@@ -8,8 +8,9 @@ from nea_game.sound_manager import SoundManager
 class Root:
     screen: Surface
     active_window: Window
-    windows: dict[str, Window]
     engine: Engine
+    sound_manager: SoundManager
+    windows: dict[str, Window]
 
     def __init__(
         self,

@@ -14,9 +14,12 @@ if typing.TYPE_CHECKING:
 
 
 class LevelSelection(Window):
-    buttons: dict[str, Button]
+    parent: NeaGame
+
+    button_folder_path: Path
     padding: tuple[int, int]
     spacing: tuple[int, int]
+    buttons: dict[str, Button]
 
     def __init__(
         self,

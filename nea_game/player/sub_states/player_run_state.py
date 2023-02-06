@@ -12,10 +12,12 @@ if typing.TYPE_CHECKING:
 
 
 class PlayerRunState(PlayerGroundedState):
-    def __init__(self, player: Player, state_name: str) -> None:
+    animation_frame_time: float
+    last_animation_index_change: float
+    def __init__(self, player: Player, state_name: str):
         super().__init__(player, state_name)
         self.animation_frame_time = 0.05
-        self.last_animation_index_change: float = perf_counter()
+        self.last_animation_index_change = perf_counter()
 
     def update(self, delta_time: float):
         super().update(delta_time)

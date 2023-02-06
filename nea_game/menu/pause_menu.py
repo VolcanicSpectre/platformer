@@ -13,6 +13,7 @@ if typing.TYPE_CHECKING:
 
 
 class Pause(Window):
+    parent: NeaGame
     buttons: dict[str, Button]
 
     def __init__(

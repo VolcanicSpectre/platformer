@@ -1,5 +1,5 @@
 from __future__ import annotations
-from os import listdir, path
+from os import listdir
 from pathlib import Path
 from sys import exit as sys_exit
 import typing
@@ -19,6 +19,8 @@ if typing.TYPE_CHECKING:
 
 
 class MainMenu(Window):
+    parent: NeaGame
+
     buttons: dict[str, Button]
     background_layers: list[BackgroundLayer]
     splash_screen_opacity: int
@@ -35,6 +37,7 @@ class MainMenu(Window):
     ):
         super().__init__(screen, display_surface)
         self.parent = parent
+        
         self.buttons = {}
 
         self.background_layers = [

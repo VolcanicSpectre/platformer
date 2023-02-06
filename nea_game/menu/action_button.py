@@ -80,7 +80,7 @@ class ActionButton:
         if self.click_timer >= self.click_time:
             self.click_timer = -1
 
-    def initial_update_key_image(self, key: int):
+    def initial_update_key_image(self, key: int) -> bool:
         key_name = get_key_name(key).replace(" ", "_")
         try:
             self.key_image = load(self.key_images_path / f"{key_name}-key.png")

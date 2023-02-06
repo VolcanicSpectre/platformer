@@ -75,12 +75,12 @@ class Player(BaseEntity):
     friction: float
 
     def __init__(
-            self,
-            player_folder: Path,
-            level_data: list[LevelTile],
-            action_bindings: list[int],
-            internal_fps: int,
-            position: tuple[int, int],
+        self,
+        player_folder: Path,
+        level_data: list[LevelTile],
+        action_bindings: list[int],
+        internal_fps: int,
+        position: tuple[int, int],
     ):
         """Defines player movement constants and starts the player in the idle state
 
@@ -176,8 +176,8 @@ class Player(BaseEntity):
         ]:
             if collision.collision_type in (CollisionType.WALL, CollisionType.PLATFORM):
                 if (
-                        self.rect.bottom >= collision.rect.top
-                        and self.old_rect.bottom <= collision.rect.top
+                    self.rect.bottom >= collision.rect.top
+                    and self.old_rect.bottom <= collision.rect.top
                 ):
                     return True
 
@@ -192,8 +192,8 @@ class Player(BaseEntity):
         ]:
             if collision.collision_type == CollisionType.WALL:
                 if (
-                        self.rect.right >= collision.rect.left
-                        and self.old_rect.right <= collision.rect.left
+                    self.rect.right >= collision.rect.left
+                    and self.old_rect.right <= collision.rect.left
                 ):
                     return 1
 
@@ -204,8 +204,8 @@ class Player(BaseEntity):
         ]:
             if collision.collision_type == CollisionType.WALL:
                 if (
-                        self.rect.left <= collision.rect.right
-                        and self.old_rect.left >= collision.rect.right
+                    self.rect.left <= collision.rect.right
+                    and self.old_rect.left >= collision.rect.right
                 ):
                     return -1
         return 0
@@ -215,8 +215,8 @@ class Player(BaseEntity):
             match collision.collision_type:
                 case CollisionType.WALL:
                     if (
-                            self.rect.right >= collision.rect.left
-                            and self.old_rect.right <= collision.rect.left
+                        self.rect.right >= collision.rect.left
+                        and self.old_rect.right <= collision.rect.left
                     ):
                         self.rect.right = collision.rect.left
                         self.x = self.rect.x
@@ -224,8 +224,8 @@ class Player(BaseEntity):
                             0, self.rigid_body.velocity.y
                         )
                     if (
-                            self.rect.left <= collision.rect.right
-                            and self.old_rect.left >= collision.rect.right
+                        self.rect.left <= collision.rect.right
+                        and self.old_rect.left >= collision.rect.right
                     ):
                         self.rect.left = collision.rect.right
                         self.x = self.rect.x
@@ -240,8 +240,8 @@ class Player(BaseEntity):
             match collision.collision_type:
                 case CollisionType.WALL:
                     if (
-                            self.rect.bottom >= collision.rect.top
-                            and self.old_rect.bottom <= collision.rect.top
+                        self.rect.bottom >= collision.rect.top
+                        and self.old_rect.bottom <= collision.rect.top
                     ):
                         self.rect.bottom = collision.rect.top
                         self.y = self.rect.y
@@ -250,8 +250,8 @@ class Player(BaseEntity):
                         )
 
                     if (
-                            self.rect.top <= collision.rect.bottom
-                            and self.old_rect.top >= collision.rect.bottom
+                        self.rect.top <= collision.rect.bottom
+                        and self.old_rect.top >= collision.rect.bottom
                     ):
                         self.rect.top = collision.rect.bottom
                         self.y = self.rect.y
@@ -261,8 +261,8 @@ class Player(BaseEntity):
 
                 case CollisionType.PLATFORM:
                     if (
-                            self.rect.bottom >= collision.rect.top
-                            and self.old_rect.bottom <= collision.rect.top
+                        self.rect.bottom >= collision.rect.top
+                        and self.old_rect.bottom <= collision.rect.top
                     ):
                         self.rect.bottom = collision.rect.top
                         self.y = self.rect.y

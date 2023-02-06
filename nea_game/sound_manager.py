@@ -4,11 +4,16 @@ import pygame
 
 
 class SoundManager:
+    sound_effects: dict[str, Sound]
+    bgm_volume: float
+    sfx_volume: float
+    current_bgm: Path
+
     def __init__(self):
         pygame.mixer.init()
-        self.sound_effects: dict[str, Sound] = {}
-        self.bgm_volume: float = 1.0
-        self.sfx_volume: float = 1.0
+        self.sound_effects = {}
+        self.bgm_volume = 1
+        self.sfx_volume = 1
         self.current_bgm: Path
 
     def load_sound(self, name: str, path: Path):

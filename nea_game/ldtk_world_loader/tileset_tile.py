@@ -4,6 +4,11 @@ from nea_game.ldtk_world_loader.collision_type import CollisionType
 
 
 class TilesetTile:
+    identifier: int
+    image: Surface
+    collision_type: CollisionType
+    rect: Rect
+
     def __init__(
         self,
         identifier: int,

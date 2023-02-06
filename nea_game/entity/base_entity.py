@@ -2,7 +2,7 @@ class BaseEntity:
     x: float
     y: float
 
-    def __init__(self, position: tuple[int, int]) -> None:
+    def __init__(self, position: tuple[int, int]):
         """Provides a template for all entities
 
         Args:
@@ -12,5 +12,5 @@ class BaseEntity:
         """
         self.x, self.y = position
 
-    def update(self, delta_time: float) -> None:
+    def update(self, delta_time: float):
         """Called each frame in order to update the entity"""

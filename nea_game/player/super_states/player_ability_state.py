@@ -5,7 +5,6 @@ from nea_game.states.player_state import PlayerState
 
 class PlayerAbilityState(PlayerState):
     move_input: Vector2D
-    start_time: float
     is_ability_done: bool
 
     def enter(self):
