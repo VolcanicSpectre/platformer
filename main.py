@@ -7,3 +7,6 @@ if __name__ == "__main__":
         system(f"python app.py --fname {config.debug_file}")
     else:
         system("python app.py")
+
+
+

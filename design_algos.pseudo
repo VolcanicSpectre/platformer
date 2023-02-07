@@ -1,0 +1,76 @@
+function lerp(a, b, lerp_amount) do
+    return ((a * (1 - lerp_amount)) + (b * lerp_amount))
+end
+
+function sign(flt) do
+    if flt >= 0 do
+        return 1
+    end 
+    else do return
+        return -1
+    end 
+end
+
+
+set scroll_x = scroll_x + int((entity_x - scroll_x  - int((display_surface_width + target_rect_width) / 2)) * 0.2)
+set scroll_y = scroll_y + int((entity_y - scroll_y  - int((display_surface_height + target_rect_height) / 2)) * 0.2)
+
+set scroll_x =  min(max(0, scroll_x), level_width - display_surface_width)
+set scroll_y =  min(max(0, scroll_y), level_height - display_surface_height)
+
+
+set tiles = []
+set player_position = [-1, -1]
+foreach (layer in layer_instances) do
+    switch (layer_identifier) do
+        case "AutoTiles":
+            foreach (tile in auto_tile_layer) do
+                //generate_level_tile
+                tiles.append(level_tile)
+            end
+            break
+
+        case "Tiles":
+            foreach (tile in tile_layer) do
+            //generate_level_tile
+            tiles.append(level_tile)
+            end
+            break
+
+        case "Entities":
+            foreach (entity in entity_instances) do
+                switch (entity_instance_identifier) do
+                    case "Player":
+                        set player_position = entity_position
+                        break
+
+                    case "Finish":
+                        //generate_level_finish_object
+                        set level_finish = level_finish
+                        break
+                end
+            end
+        
+    end
+end
+
+
+
+set target_speed = x_move_input * player_run_speed
+set speed_difference = target_speed - player_x_speed
+
+if abs(target_speed) > 0 do
+    set acceleration_rate = player_acceleration_rate
+end
+else do
+    set acceleration_rate = player_deceleration_rate
+end
+
+set movement = pow(abs(speed_difference) * acceleration_rate, self.player.velocity_power) * sign(speed_difference)
+//add the force the player with ForceMode FORCE and pass in delta_time
+
+if abs(target_speed) == 0 do
+    friction = sign(player_x_speed) * min(abs(player_x_speed), self.player.friction
+    )
+    //add the friction force to the player with ForceMode IMPULSE
+end

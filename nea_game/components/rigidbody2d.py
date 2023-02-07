@@ -48,7 +48,7 @@ class RigidBody2D:
         Args:
             force (Vector2D): The unscaled force that will act on the body
             delta_time (float): The time difference between when the previous frame that was drawn and the current frame was drawn
-            force_mode (ForceModes, optional): The mode that the force can be applied
+            force_mode (ForceModes, optional): Dictates the way that the force is applied
 
         Raises:
             ValueError: A ValueError is raised when the given force_mode is not a valid force_type

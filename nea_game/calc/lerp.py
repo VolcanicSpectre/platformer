@@ -1,4 +1,4 @@
-def lerp(a: float, b: float, lerp_amount: float) -> float:
+def lerp(flt_1: float, flt_2: float, lerp_amount: float) -> float:
     """Linearly interpolates between two points.
 
     Interpolates between the points a and b by the interpolant lerp_amount.
@@ -13,4 +13,4 @@ def lerp(a: float, b: float, lerp_amount: float) -> float:
         Returns:
             float: The interpolated value
     """
-    return (a * (1 - lerp_amount)) + (b * lerp_amount)
+    return ((flt_1 * (1 - lerp_amount)) + (flt_2 * lerp_amount))

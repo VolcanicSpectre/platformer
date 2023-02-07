@@ -14,6 +14,7 @@ if typing.TYPE_CHECKING:
 class PlayerRunState(PlayerGroundedState):
     animation_frame_time: float
     last_animation_index_change: float
+
     def __init__(self, player: Player, state_name: str):
         super().__init__(player, state_name)
         self.animation_frame_time = 0.05
@@ -33,12 +34,12 @@ class PlayerRunState(PlayerGroundedState):
                         self.player.renderer.frames[self.state_name]
                     )
                     self.last_animation_index_change = perf_counter()
+
                 target_speed = self.move_input.x * self.player.x_run_speed
                 speed_difference = target_speed - self.player.rigid_body.velocity.x
 
                 acceleration_rate = (
                     self.player.acceleration_rate
-                    * self.player.air_acceleration_multiplier
                     if abs(target_speed) > 0
                     else self.player.deceleration_rate
                 )
