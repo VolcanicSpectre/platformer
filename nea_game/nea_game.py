@@ -62,8 +62,7 @@ class NeaGame(Root):
         super().update()
 
     def get_events(self):
-        events: list[Event]
-        events = []
+        events: list[Event] = []
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
