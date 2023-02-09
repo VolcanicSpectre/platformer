@@ -7,6 +7,7 @@ from nea_game.sound_manager import SoundManager
 
 class Root:
     screen: Surface
+    display_surface: Surface
     active_window: Window
     engine: Engine
     sound_manager: SoundManager

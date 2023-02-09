@@ -74,3 +74,6 @@ if abs(target_speed) == 0 do
     )
     //add the friction force to the player with ForceMode IMPULSE
 end
+
+
+

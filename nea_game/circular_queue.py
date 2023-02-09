@@ -1,5 +1,5 @@
 from numpy import empty
-from typing import TypeVar, Generic
+from typing import TypeVar, Generic, Iterator
 
 T = TypeVar("T")
 
@@ -10,15 +10,15 @@ class CircularQueue(Generic[T]):
     """
 
     def __init__(self, max_size: int, dtype: type[T]):
-        self.MAX_SIZE = max_size
-        self.queue = empty(self.MAX_SIZE, dtype=dtype)
+        self.max_size = max_size
+        self.queue = empty(self.max_size, dtype=dtype)
         self.front, self.rear = -1, -1
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[T]:
         return iter(self.queue)
 
     def is_full(self):
-        return ((self.rear + 1) % self.MAX_SIZE) == self.front
+        return ((self.rear + 1) % self.max_size) == self.front
 
     def is_empty(self):
         return self.front == -1
@@ -31,7 +31,7 @@ class CircularQueue(Generic[T]):
             self.front = 0
             self.rear = 0
         else:
-            self.rear = (self.rear + 1) % self.MAX_SIZE
+            self.rear = (self.rear + 1) % self.max_size
 
         self.queue[self.rear] = data
 
@@ -44,7 +44,7 @@ class CircularQueue(Generic[T]):
             self.front = -1
             self.rear = -1
         else:
-            self.front = (self.front + 1) % self.MAX_SIZE
+            self.front = (self.front + 1) % self.max_size
         return temp
 
 

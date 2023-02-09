@@ -1,3 +1,4 @@
+import itertools
 from os.path import isdir
 from os import listdir
 from pathlib import Path
@@ -10,7 +11,6 @@ from nea_game.components.renderer import AnimatedRenderer
 from nea_game.components.rigidbody2d import RigidBody2D
 from nea_game.entity.base_entity import BaseEntity
 from nea_game.ldtk_world_loader.collision_type import CollisionType
-from nea_game.ldtk_world_loader.level_data import LevelData
 from nea_game.ldtk_world_loader.level_tile import LevelTile
 from nea_game.player.sub_states.player_dash_state import PlayerDashState
 from nea_game.player.sub_states.player_idle_state import PlayerIdleState
@@ -25,7 +25,7 @@ from nea_game.states.player_state_machine import StateMachine
 
 
 class Player(BaseEntity):
-    level_data: list[LevelTile]
+    chunks: dict[tuple[int, int], list[LevelTile]]
 
     idle_state: PlayerIdleState
     run_state: PlayerRunState
@@ -77,7 +77,7 @@ class Player(BaseEntity):
     def __init__(
         self,
         player_folder: Path,
-        level_data: list[LevelTile],
+        chunks: dict[tuple[int, int], list[LevelTile]],
         action_bindings: list[int],
         internal_fps: int,
         position: tuple[int, int],
@@ -86,13 +86,14 @@ class Player(BaseEntity):
 
         Args:
             player_folder (Path): The path to the player folder
+            chunks (dict[tuple[int, int], list[LevelTile]]) A dictionary that stores every tile in the the level
             action_bindings (list[int]): The list of the key bindings for the player actions
             level_data (list[LevelTile]): The data of the level
             x (int): The x position of the player
             y (int): The y position of the player
         """
         super().__init__(position)
-        self.level_data = level_data
+        self.chunks = chunks
 
         self.idle_state = PlayerIdleState(self, "Idle")
         self.run_state = PlayerRunState(self, "Run")
@@ -156,7 +157,11 @@ class Player(BaseEntity):
         self.friction = 10
 
     def get_collisions(self) -> list[LevelTile]:
-        return [tile for tile in self.level_data if self.rect.colliderect(tile.rect)]
+        return [
+            tile
+            for tile in itertools.chain(*self.chunks.values())
+            if self.rect.colliderect(tile.rect)
+        ]
 
     def is_alive(self, level_height: int) -> bool:
         if self.rect.y < 0 or self.rect.y > level_height:
@@ -171,7 +176,7 @@ class Player(BaseEntity):
     def is_grounded(self) -> bool:
         for collision in [
             tile
-            for tile in self.level_data
+            for tile in itertools.chain(*self.chunks.values())
             if self.rect.move(0, 1).colliderect(tile.rect)
         ]:
             if collision.collision_type in (CollisionType.WALL, CollisionType.PLATFORM):
@@ -187,7 +192,7 @@ class Player(BaseEntity):
     def is_touching_wall(self) -> int:
         for collision in [
             tile
-            for tile in self.level_data
+            for tile in itertools.chain(*self.chunks.values())
             if self.rect.move(1, 0).colliderect(tile.rect)
         ]:
             if collision.collision_type == CollisionType.WALL:
@@ -199,7 +204,7 @@ class Player(BaseEntity):
 
         for collision in [
             tile
-            for tile in self.level_data
+            for tile in itertools.chain(*self.chunks.values())
             if self.rect.move(-1, 0).colliderect(tile.rect)
         ]:
             if collision.collision_type == CollisionType.WALL:

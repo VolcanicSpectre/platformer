@@ -67,6 +67,8 @@ class NeaGameConfig:
         self.fps = self.get_int_setting("fps")
         self.internal_fps = 30
 
+        self.chunk_size = 8
+
         self.key_bindings = self.get_int_list_setting("key_bindings")
         self.music_volume = self.get_float_setting("music_volume")
         self.sfx_volume = self.get_float_setting("sfx_volume")

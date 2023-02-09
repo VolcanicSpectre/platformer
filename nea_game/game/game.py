@@ -1,4 +1,5 @@
 from __future__ import annotations
+import itertools
 from json import dump, load as load_json
 from os import listdir
 from pathlib import Path
@@ -7,13 +8,16 @@ import pygame
 from pygame.event import Event
 from pygame import Surface
 from nea_game.game.camera import Camera
+from nea_game.game.render_object import RenderObject
 from nea_game.gui.window import Window
 from nea_game.menu.background_layer import BackgroundLayer
 from nea_game.menu.pause_menu import Pause
+from nea_game.ldtk_world_loader.level_tile import LevelTile
 from nea_game.ldtk_world_loader.world import World
 from nea_game.player.player_action_space import PlayerActionSpace
 from nea_game.player.player import Player
 from nea_game.config import NeaGameConfig
+from nea_game.circular_queue import CircularQueue
 
 if typing.TYPE_CHECKING:
     from nea_game.nea_game import NeaGame
@@ -25,6 +29,7 @@ class Game(Window):
     world_identifier: str
     level_identifier: str
     world: World
+    render_queue: CircularQueue[RenderObject]
     background_layers: list[BackgroundLayer]
     player: Player
     camera: Camera
@@ -45,7 +50,12 @@ class Game(Window):
         self.world_identifier = world_identifier
         self.level_identifier = level_identifier
 
-        self.world = World(self.world_identifier, self.config.directories["worlds"])
+        self.world = World(
+            self.world_identifier,
+            self.config.directories["worlds"],
+            self.config.chunk_size,
+        )
+        self.render_queue = CircularQueue(400, RenderObject)
 
         self.background_layers = [
             BackgroundLayer(pygame.image.load(background_image_layers_path / filename))
@@ -55,7 +65,7 @@ class Game(Window):
 
         self.player = Player(
             self.config.directories["player"],
-            self.world.levels[self.level_identifier].level_data["tiles"],
+            self.world.levels[self.level_identifier].level_data["chunks"],
             self.config.key_bindings,
             self.config.internal_fps,
             self.world.levels[self.level_identifier].level_data["player_position"],
@@ -174,19 +184,60 @@ class Game(Window):
 
         self.parent.config.reload()
 
+    def get_visible_chunks(self) -> list[list[LevelTile]]:
+        """Returns the list of LevelTiles that are currently on the screen
+
+        Returns:
+            list[list[LevelTile]]: The LevelTile list for each chunk that is visible on the screen
+        """
+        visible_chunks: list[list[LevelTile]] = []
+
+        for chunk_x, chunk_y in self.world.levels[self.level_identifier].level_data[
+            "chunks"
+        ]:
+            if pygame.Rect(
+                chunk_x * self.config.chunk_size,
+                chunk_y * self.config.chunk_size,
+                self.config.chunk_size,
+                self.config.chunk_size,
+            ).colliderect(
+                pygame.Rect(
+                    self.camera.scroll_x,
+                    self.camera.scroll_y,
+                    self.config.internal_resoloution[0],
+                    self.config.internal_resoloution[1],
+                )
+            ):
+                visible_chunks.append(
+                    self.world.levels[self.level_identifier].level_data["chunks"][
+                        (chunk_x, chunk_y)
+                    ]
+                )
+
+        return visible_chunks
+
+    def update_render_queue(self):
+        for chunk in self.get_visible_chunks():
+            for tile in chunk:
+                self.render_queue.enqueue(
+                    RenderObject(tile.rect.x, tile.rect.y, tile.image)
+                )
+
     def draw(self):
         self.display_surface.fill((0, 0, 0))
+        self.update_render_queue()
 
         self.display_surface.blit(self.background_layers[0].image, (0, 0))
         for background_layer in self.background_layers[1:2]:
             self.display_surface.blit(background_layer.get_new_sub_image(), (0, 0))
 
-        for tile in self.world.levels[self.level_identifier].level_data["tiles"]:
+        while not self.render_queue.is_empty():
+            render_object = self.render_queue.dequeue()
             self.display_surface.blit(
-                tile.image,
+                render_object.image,
                 (
-                    tile.rect.left - self.camera.scroll_x,
-                    tile.rect.top - self.camera.scroll_y,
+                    render_object.x - self.camera.scroll_x,
+                    render_object.y - self.camera.scroll_y,
                 ),
             )
 
