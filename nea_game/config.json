@@ -3,13 +3,13 @@
     "y_resolution": 1080,
     "fps": 60,
     "music_volume": -0.01,
-    "sfx_volume": 0.96,
+    "sfx_volume": 0.92,
     "key_bindings": [
         119,
-        115,
+        110,
         97,
-        100,
-        32
+        98,
+        1073742049
     ],
     "unlocked_levels": {
         "1-1": true,

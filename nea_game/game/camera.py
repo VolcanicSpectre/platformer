@@ -1,7 +1,7 @@
 from pygame import Rect
 
 
-class Camera:
+class   Camera:
     height: int
     width: int
     display_surface_height: int

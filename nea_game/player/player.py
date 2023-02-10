@@ -33,6 +33,7 @@ class Player(BaseEntity):
     dash_state: PlayerDashState
     jump_state: PlayerJumpState
     wall_jump_state: PlayerWallJumpState
+    in_air_state: PlayerInAirState
     slide_state: PlayerSlideState
 
     renderer: AnimatedRenderer

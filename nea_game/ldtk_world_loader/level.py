@@ -11,6 +11,7 @@ class Level:
     tileset: Tileset
     height: int
     width: int
+    chunk_size: int
     level_data: LevelData
 
     def __init__(self, data: dict[str, Any], tileset: Tileset, chunk_size: int):

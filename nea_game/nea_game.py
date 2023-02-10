@@ -88,17 +88,11 @@ class NeaGame(Root):
 
         match transition:
             case self.transition_circle_out:
-                self.transition_start_radius = max(
-                    max(circle_x, self.screen.get_width() - circle_x),
-                    max(circle_y, self.screen.get_height() - circle_y),
-                )
+                self.transition_start_radius = max(circle_x, self.screen.get_width() - circle_x, circle_y, self.screen.get_height() - circle_y)
                 self.current_transition_frame = 80
 
             case self.transition_circle_in:
-                self.transition_start_radius = max(
-                    max(circle_x, self.screen.get_width() - circle_x),
-                    max(circle_y, self.screen.get_height() - circle_y),
-                )
+                self.transition_start_radius = max(circle_x, self.screen.get_width() - circle_x, circle_y, self.screen.get_height() - circle_y)
                 self.current_transition_frame = 0
 
             case _:

@@ -24,7 +24,7 @@ class MainMenu(Window):
     buttons: dict[str, Button]
     background_layers: list[BackgroundLayer]
     splash_screen_opacity: int
-    title: Titl     e
+    title: Title
 
     def __init__(
         self,

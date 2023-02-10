@@ -1,10 +1,12 @@
 from json import load
+from typing import Any
 from pathlib import Path
 from nea_game.ldtk_world_loader.level import Level
 from nea_game.ldtk_world_loader.tileset import Tileset
 
 
 class World:
+    data: dict[str, Any]
     tileset: Tileset
     levels: dict[str, Level]
 
@@ -14,5 +16,8 @@ class World:
 
         self.tileset = Tileset(self.data["defs"]["tilesets"][0], world_directory)
 
-        levels = [Level(level_data, self.tileset, chunk_size) for level_data in self.data["levels"]]
+        levels = [
+            Level(level_data, self.tileset, chunk_size)
+            for level_data in self.data["levels"]
+        ]
         self.levels = {level.identifier: level for level in levels}
