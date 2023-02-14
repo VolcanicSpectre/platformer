@@ -1,3 +1,7 @@
+"""Defines a linear interpolation function
+"""
+
+
 def lerp(flt_1: float, flt_2: float, lerp_amount: float) -> float:
     """Linearly interpolates between two points.
 
@@ -13,4 +17,4 @@ def lerp(flt_1: float, flt_2: float, lerp_amount: float) -> float:
         Returns:
             float: The interpolated value
     """
-    return ((flt_1 * (1 - lerp_amount)) + (flt_2 * lerp_amount))
+    return (flt_1 * (1 - lerp_amount)) + (flt_2 * lerp_amount)

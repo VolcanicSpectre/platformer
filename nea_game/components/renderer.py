@@ -4,6 +4,8 @@ from nea_game.states.player_state import PlayerState
 
 
 class StaticRenderer:
+    """Provides functionality for rendering a static entity"""
+
     static_frame: Surface
 
     def __init__(self, static_frame: Surface):
@@ -26,6 +28,8 @@ class StaticRenderer:
 
 
 class AnimatedRenderer:
+    """Provides functionality for rendering an animated entity with multiple states"""
+
     frames: dict[str, list[Surface]]
 
     def __init__(self, frames: dict[str, list[Surface]]):

@@ -8,7 +8,8 @@ from pygame.mask import from_surface
 
 
 class Button:
-
+    """Creates a button class that has a passive image, an image if the mouse is hovered over it and an image when the button has been clicked
+    """
     passive_image: Surface
     active_image: Surface
     on_click_image: Surface
@@ -67,4 +68,9 @@ class Button:
             self.click_timer += delta_time
 
     def center_on_x_axis(self, x_axis_width: int):
+        """Centres the buttons on the x-axis
+
+        Args:
+            x_axis_width (int): The width of the x-axis in pixels
+        """
         self.rect.x = (x_axis_width - self.rect.width) // 2

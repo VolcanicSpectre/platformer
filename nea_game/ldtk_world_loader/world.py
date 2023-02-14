@@ -6,6 +6,8 @@ from nea_game.ldtk_world_loader.tileset import Tileset
 
 
 class World:
+    """A class that generates a world data based on world.json file from the LDTK editor
+    """
     data: dict[str, Any]
     tileset: Tileset
     levels: dict[str, Level]

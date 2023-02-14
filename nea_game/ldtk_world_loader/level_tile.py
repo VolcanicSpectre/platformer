@@ -5,6 +5,8 @@ from nea_game.ldtk_world_loader.tileset_tile import TilesetTile
 
 
 class LevelTile(TilesetTile):
+    """A class to represent a tile within a level
+    """
     def __init__(
         self,
         identifier: int,

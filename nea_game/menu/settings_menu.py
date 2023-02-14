@@ -142,6 +142,9 @@ class Settings(Window):
         pygame.display.flip()
 
     def save(self):
+        """Saves the new settings to the config.json file
+        """
+        ###B: Writing to a JSON file###
         with (self.parent.config.directories["platformer"] / "config.json").open(
             mode="r"
         ) as settings_json:

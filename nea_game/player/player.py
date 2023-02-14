@@ -158,6 +158,11 @@ class Player(BaseEntity):
         self.friction = 10
 
     def get_collisions(self) -> list[LevelTile]:
+        """Returns a list of each LevelTile object that the player has collided with on the current frame
+
+        Returns:
+            list[LevelTile]: The list of LevelTile objects that the player has collided with on the current frame
+        """
         return [
             tile
             for tile in itertools.chain(*self.chunks.values())
@@ -165,6 +170,14 @@ class Player(BaseEntity):
         ]
 
     def is_alive(self, level_height: int) -> bool:
+        """A method to determine if the player is alive
+
+        Args:
+            level_height (int): The height of the level in pixels
+
+        Returns:
+            bool: Whether the player is alive or not
+        """
         if self.rect.y < 0 or self.rect.y > level_height:
             return False
         for collision in self.get_collisions():
@@ -175,6 +188,11 @@ class Player(BaseEntity):
 
     @property
     def is_grounded(self) -> bool:
+        """A method to determine if the player is grounded
+
+        Returns:
+            bool: Whether the player is alive or not
+        """
         for collision in [
             tile
             for tile in itertools.chain(*self.chunks.values())
@@ -191,6 +209,11 @@ class Player(BaseEntity):
 
     @property
     def is_touching_wall(self) -> int:
+        """A method to determine if the player is touching a wall
+
+        Returns:
+            int: The direction of the wall relative to the player
+        """
         for collision in [
             tile
             for tile in itertools.chain(*self.chunks.values())
@@ -217,6 +240,8 @@ class Player(BaseEntity):
         return 0
 
     def handle_x_collisions(self):
+        """Changes the x position of the player according to any collisions on the x axis
+        """
         for collision in self.get_collisions():
             match collision.collision_type:
                 case CollisionType.WALL:
@@ -242,6 +267,8 @@ class Player(BaseEntity):
                     pass
 
     def handle_y_collisions(self):
+        """Changes the y position of the player according to any collisions on the y axis
+        """
         for collision in self.get_collisions():
             match collision.collision_type:
                 case CollisionType.WALL:
@@ -279,13 +306,17 @@ class Player(BaseEntity):
                     pass
 
     def event_handler(self, events: list[Event]):
+        """Handles the events for the player
+
+        Args:
+            events (list[Event]): The list of events that have occurred on the current frame
+        """
         self.input_.update_actions_performed_on_current_frame(events)
 
     def input_handler(self):
         self.state_machine.current_state.input_handler()
 
     def update(self, delta_time: float):
-
         if self.input_.get_axis_raw().x:
             self.direction = int(self.input_.get_axis_raw().x)
 

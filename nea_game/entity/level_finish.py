@@ -3,6 +3,7 @@ from nea_game.entity.base_entity import BaseEntity
 
 
 class LevelFinish(BaseEntity):
+    """Creates an entity to assist with the transition of levels"""
     rect: Rect
     new_world: bool
     next_level_identifier: str

@@ -18,4 +18,9 @@ class Title:
         self.rect.topleft = 0, 0
 
     def center_on_x_axis(self, x_axis_width: int):
+        """Centres the buttons on the x-axis
+
+        Args:
+            x_axis_width (int): The width of the x-axis in pixels
+        """
         self.rect.x = (x_axis_width - self.rect.width) // 2

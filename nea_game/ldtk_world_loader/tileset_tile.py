@@ -4,6 +4,8 @@ from nea_game.ldtk_world_loader.collision_type import CollisionType
 
 
 class TilesetTile:
+    """A class to represent a tile in a tileset
+    """
     identifier: int
     image: Surface
     collision_type: CollisionType

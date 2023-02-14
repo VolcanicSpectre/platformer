@@ -7,6 +7,8 @@ from nea_game.ldtk_world_loader.tileset_tile import TilesetTile
 
 
 class Tileset:
+    """A class that stores the relevent data about a tileset
+    """
     grid_height: int
     grid_width: int
     grid_size: int

@@ -17,13 +17,33 @@ class CircularQueue(Generic[T]):
     def __iter__(self) -> Iterator[T]:
         return iter(self.queue)
 
-    def is_full(self):
+    def is_full(self) -> bool:
+        """A method that returns True if the queue is full
+
+        Returns:
+            bool: Whether the queue is full or not
+        """
         return ((self.rear + 1) % self.max_size) == self.front
 
-    def is_empty(self):
+    def is_empty(self) -> bool:
+        """A method that returns True if the queue is empty
+
+        Returns:
+            bool: Whether the queue is empty or not
+        """
         return self.front == -1
 
     def enqueue(self, data: T):
+        """Adds an item to the end of the queue
+
+        Args:
+            data (T): The item to be added to the end of the queue
+
+        Raises:
+            FullQueue: If the queue is full then a FullQueue exception is raised
+        """
+        ###A: Queue Operation###
+
         if self.is_full():
             raise FullQueue
 
@@ -35,7 +55,18 @@ class CircularQueue(Generic[T]):
 
         self.queue[self.rear] = data
 
-    def dequeue(self):
+    def dequeue(self) -> T:
+        """Removes the frontmost item from the queue and returns it
+
+        Raises:
+            EmptyQueue: If the queue is empty then an EmptyQueue exception is raised
+
+        Returns:
+            (T): The frontmost item in the queue
+        """
+
+        ###A: Queue Operation###
+
         if self.is_empty():
             raise EmptyQueue
 

@@ -6,6 +6,7 @@ from nea_game.player.super_states.player_ability_state import PlayerAbilityState
 
 class PlayerDashState(PlayerAbilityState):
     def enter(self):
+        ###A: Overriding the parent implementation of enter###
         super().enter()
 
         move_input = self.player.input_.get_axis_raw()
@@ -19,12 +20,14 @@ class PlayerDashState(PlayerAbilityState):
             self.player.can_dash = False
 
     def exit(self):
+        ###A: Overriding the parent implementation of exit###
         super().exit()
         self.player.rigid_body.velocity = Vector2D(
             self.player.rigid_body.velocity.x, self.player.rigid_body.velocity.y * 0.2
         )
 
     def update(self, delta_time: float):
+        ###A: Overriding the parent implementation of update###
         if self.player.is_grounded:
             self.is_ability_done = True
 

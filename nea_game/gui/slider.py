@@ -5,6 +5,9 @@ from pygame import Mask, Rect, Surface
 
 
 class Slider:
+    """
+    A class that allows a slider to be used for the user to specify a valeu between two endpoints
+    """
     passive_bar: Surface
     active_bar: Surface
     handle_image: Surface
@@ -47,10 +50,22 @@ class Slider:
         self.dragging = False
 
     def set_topleft(self, x: int, y: int):
+        """Sets the topleft of both parts of the slider
+
+        Args:
+            x (int): The x position of the slider
+            y (int): The y position of the slider
+        """
         self.rect.topleft = x, y
         self.bar_rect.topleft = x - 1, y - 1
 
     def update(self, mouse_pos: tuple[int, int], mouse_clicked: bool):
+        """Updates the value of the slider based on whether the slider is being dragged
+
+        Args:
+            mouse_pos (tuple[int, int]): The position of the mouse on the screen
+            mouse_clicked (bool): A boolean value stating whether the mouse is clicked or not on the current frame
+        """
         mouse_pos_x, mouse_pos_y = mouse_pos
         mouse_pos_in_mask = mouse_pos_x - self.rect.x, mouse_pos_y - self.rect.y
         self.dragging = False
@@ -66,6 +81,11 @@ class Slider:
 
     @property
     def current_image(self) -> Surface:
+        """Returns one surface showing the current value of the slider
+
+        Returns:
+            Surface: The current image of the slider
+        """
         current_image = self.passive_bar.copy()
         current_image.blit(self.passive_bar, self.bar_rect.topleft)
         current_image.blit(
@@ -91,4 +111,9 @@ class Slider:
         return current_image
 
     def set_value(self, value: int):
+        """Sets the value of the slider
+
+        Args:
+            value (int): The new value of the slider
+        """
         self.value = max(self.min_value, min(self.max_value, value))

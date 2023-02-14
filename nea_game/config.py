@@ -86,6 +86,7 @@ class NeaGameConfig:
         Returns:
             int: The value of the specified setting
         """
+        ###B: Parsing from a JSON file###
         with (self.directories["platformer"] / "config.json").open(
             mode="r"
         ) as settings_json:
@@ -107,6 +108,7 @@ class NeaGameConfig:
         Returns:
             list[int]: The value of the specified setting
         """
+        ###B: Parsing from a JSON file###
         with (self.directories["platformer"] / "config.json").open(
             mode="r"
         ) as settings_json:
@@ -128,6 +130,7 @@ class NeaGameConfig:
         Returns:
             list[int]: The value of the specified setting
         """
+        ###B: Parsing from a JSON file###
         with (self.directories["platformer"] / "config.json").open(
             mode="r"
         ) as settings_json:
@@ -138,6 +141,8 @@ class NeaGameConfig:
             raise ValueError
 
     def get_setting(self, setting: str) -> Any:
+
+        ###B: Parsing from a JSON file###
         with (self.directories["platformer"] / "config.json").open(
             mode="r"
         ) as settings_json:

@@ -24,6 +24,8 @@ if typing.TYPE_CHECKING:
 
 
 class Game(Window):
+    """Creates a window that allows a player to play the specified level, when the level is beaten the next one is unlocked by writing to the config.json file"""
+
     parent: NeaGame
     config: NeaGameConfig
     world_identifier: str
@@ -55,7 +57,9 @@ class Game(Window):
             self.config.directories["worlds"],
             self.config.chunk_size,
         )
-        self.render_queue = CircularQueue(400, RenderObject)
+        self.render_queue = CircularQueue(
+            400, RenderObject
+        )  # A: Circular queue to model render queue
 
         self.background_layers = [
             BackgroundLayer(pygame.image.load(background_image_layers_path / filename))
@@ -155,6 +159,11 @@ class Game(Window):
         self.camera.update(self.player.rect)
 
     def has_level_finished(self) -> bool:
+        """Checks if the level has finished
+
+        Returns:
+            bool: Whether the level has finished or not
+        """
         if self.player.rect.colliderect(
             self.world.levels[self.level_identifier].level_data["level_finish"].rect
         ):
@@ -163,6 +172,8 @@ class Game(Window):
         return False
 
     def end_level(self):
+        """Ends the level by unlocking the next level and reloading the config.json file
+        """
         level_finish = self.world.levels[self.level_identifier].level_data[
             "level_finish"
         ]
@@ -190,6 +201,7 @@ class Game(Window):
         Returns:
             list[list[LevelTile]]: The LevelTile list for each chunk that is visible on the screen
         """
+        ###B: Two Dimensional List###
         visible_chunks: list[list[LevelTile]] = []
 
         for chunk_x, chunk_y in self.world.levels[self.level_identifier].level_data[
@@ -217,6 +229,8 @@ class Game(Window):
         return visible_chunks
 
     def update_render_queue(self):
+        """Updates the render queue to only render the tiles in chunks that are currently visible
+        """
         for chunk in self.get_visible_chunks():
             for tile in chunk:
                 self.render_queue.enqueue(

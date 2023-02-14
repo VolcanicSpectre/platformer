@@ -9,13 +9,16 @@ class PlayerSlideState(PlayerState):
     move_input: Vector2D
 
     def enter(self):
+        ###A: Overriding the parent implementation of enter###
         super().enter()
         self.slide_direction = self.player.direction
 
     def input_handler(self):
+        ###A: Overriding the parent implementation of input_handler###
         self.move_input = self.player.input_.get_axis_raw()
 
     def update(self, delta_time: float):
+        ###A: Overriding the parent implementation of update###
         if self.player.input_.get_action_down(PlayerActionSpace.UP):
             self.player.state_machine.change_state(self.player.wall_jump_state)
 

@@ -81,6 +81,14 @@ class ActionButton:
             self.click_timer = -1
 
     def initial_update_key_image(self, key: int) -> bool:
+        """Updates the key image for the initial key bind
+
+        Args:
+            key (int): The int value for the key
+
+        Returns:
+            bool: Whether the key image was updated successfully
+        """
         key_name = get_key_name(key).replace(" ", "_")
         try:
             self.key_image = load(self.key_images_path / f"{key_name}-key.png")
@@ -103,7 +111,16 @@ class ActionButton:
         ).convert_alpha()
         return True
 
-    def update_key_image(self, key: int, other_binds: list[int] | None = None):
+    def update_key_image(self, key: int, other_binds: list[int] | None = None) -> bool:
+        """Updates the key image given a keybind and a list of the other key binds
+
+        Args:
+            key (int): The int value of the key
+            other_binds (list[int] | None, optional): The other key bindings. Defaults to None.
+
+        Returns:
+            bool: Whether the key image was updated successfully
+        """
         if other_binds is None:
             return False
 

@@ -1,7 +1,11 @@
 from pygame import Rect
 
 
-class   Camera:
+class Camera:
+    """
+    Provides a camera class that can adjust the scroll values on both axis in order to focus and move to smoothly a specific pygame.Rect
+    """
+
     height: int
     width: int
     display_surface_height: int

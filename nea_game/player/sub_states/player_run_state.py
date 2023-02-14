@@ -21,6 +21,7 @@ class PlayerRunState(PlayerGroundedState):
         self.last_animation_index_change = perf_counter()
 
     def update(self, delta_time: float):
+        ###A: Overriding the implementation of update###
         super().update(delta_time)
         if not self.is_exiting_state:
             if near_zero(self.player.rigid_body.velocity.x) and self.move_input.x == 0:
@@ -35,6 +36,7 @@ class PlayerRunState(PlayerGroundedState):
                     )
                     self.last_animation_index_change = perf_counter()
 
+                ###A: User Defined complex alogithm###
                 target_speed = self.move_input.x * self.player.x_run_speed
                 speed_difference = target_speed - self.player.rigid_body.velocity.x
 

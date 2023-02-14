@@ -53,6 +53,8 @@ class RigidBody2D:
         Raises:
             ValueError: A ValueError is raised when the given force_mode is not a valid force_type
         """
+        ###A: Uses physics equation f=ma###
+
         delta_time *= self.internal_fps
         match force_mode:
             case ForceMode.FORCE:

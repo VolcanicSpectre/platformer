@@ -45,6 +45,9 @@ class Vector2D(NamedTuple):
     def normalise(self) -> Vector2D:
         """Returns a vector with the same direction but a magnitude of 1
 
+        ###
+        A: Normalises a 2D vector
+        ###
         Returns:
             Vector2D: The vector with the same direction but a magnitude of 1
         """
@@ -94,6 +97,10 @@ class Vector2D(NamedTuple):
     def cross(self, other: Vector2D) -> float:
         """Calculates the cross product with the other vector
 
+        ###
+        A: Calculates the cross product with another vector
+        ###
+        
         Args:
             other (Vector2D): The other vector that is used to calculate the cross product
 

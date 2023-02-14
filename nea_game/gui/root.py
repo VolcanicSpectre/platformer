@@ -25,13 +25,21 @@ class Root:
         self.display_surface = Surface(display_surafce_resolution)
         self.engine = Engine(fps)
         self.sound_manager = SoundManager()
+        ###B: Dictionary used to store windows###
         self.windows = {}
 
     def show_window(self, window: str):
+        """Shows the specified window
+
+        Args:
+            window (str): The key of the window to be shown
+        """
         self.active_window = self.windows[window]
         self.active_window.reload()
 
     def update(self):
+        """Updates the delta_time variable and updates the active_window as well as drawing the active_window
+        """
         self.engine.update()
         self.active_window.update(self.engine.delta_time)
         self.active_window.draw()

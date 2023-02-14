@@ -7,6 +7,12 @@ if typing.TYPE_CHECKING:
 
 
 class PlayerState:
+    """
+    ###
+    A: Complex OOP Model to model player states
+    ###
+    """
+
     player: Player
     state_name: str
     animation_index: int

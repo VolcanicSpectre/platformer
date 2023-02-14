@@ -24,6 +24,15 @@ class Level:
         self.level_data = self.generate_level_data()
 
     def generate_level_data(self) -> LevelData:
+        """Generates a LevelData object based on the level definition in the world.json file
+
+        Raises:
+            ValueError: Raised if the player position has not been specified
+            ValueError: Raised if there is no level finish object
+
+        Returns:
+            LevelData: The data for a given level
+        """
         tiles: list[LevelTile] = []
         chunks: dict[tuple[int, int], list[LevelTile]] = {}
         player_position: tuple[int, int] = (-1, -1)
