@@ -5,6 +5,7 @@ class RenderObject:
     """
     A standardised object to be rendered onto the screen
     """
+
     x: int
     y: int
     image: Surface
