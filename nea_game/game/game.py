@@ -58,7 +58,7 @@ class Game(Window):
             self.config.chunk_size,
         )
         self.render_queue = CircularQueue(
-            400, RenderObject
+            1000, RenderObject
         )  # A: Circular queue to model render queue
 
         self.background_layers = [

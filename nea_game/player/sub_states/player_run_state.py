@@ -63,3 +63,8 @@ class PlayerRunState(PlayerGroundedState):
                         Vector2D(self.move_input.x, 0).scale(friction),
                         force_mode=ForceMode.IMPULSE,
                     )
+                
+                #TESTING
+                print(target_speed)
+                print(speed_difference)
+                print(movement)
