@@ -141,8 +141,8 @@ class Player(BaseEntity):
         self.jump_hang_time_threshold = 0.5
         self.jump_hang_gravity_mult = 0.6
         self.jump_fast_fall_mult = 2
-        self.coyote_time = 0.1
-        self.jump_buffer_time = 0.1
+        self.coyote_time = 0.1  # Increase to Exaggerated Value for Test
+        self.jump_buffer_time = 0.9  # Increase to Exaggerated Value for Test
         self.max_fall = 3
         self.land_animation_time = 0.15
 
@@ -240,8 +240,7 @@ class Player(BaseEntity):
         return 0
 
     def handle_x_collisions(self):
-        """Changes the x position of the player according to any collisions on the x axis
-        """
+        """Changes the x position of the player according to any collisions on the x axis"""
         for collision in self.get_collisions():
             match collision.collision_type:
                 case CollisionType.WALL:
@@ -267,8 +266,7 @@ class Player(BaseEntity):
                     pass
 
     def handle_y_collisions(self):
-        """Changes the y position of the player according to any collisions on the y axis
-        """
+        """Changes the y position of the player according to any collisions on the y axis"""
         for collision in self.get_collisions():
             match collision.collision_type:
                 case CollisionType.WALL:

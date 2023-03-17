@@ -64,7 +64,8 @@ class PlayerRunState(PlayerGroundedState):
                         force_mode=ForceMode.IMPULSE,
                     )
                 
-                #TESTING
+                # TESTING
                 print(target_speed)
                 print(speed_difference)
                 print(movement)
+                print()
