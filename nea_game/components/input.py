@@ -35,7 +35,7 @@ class Input:
             Vector2D: The vector of the directional inputs"""
 
         horizontal = (
-            -1
+            -1  
             if pygame.key.get_pressed()[self.actions[self.action_space.LEFT]]
             else 1
             * (
