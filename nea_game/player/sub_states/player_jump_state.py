@@ -7,6 +7,7 @@ class PlayerJumpState(PlayerAbilityState):
     def enter(self):
         ###A: Overriding the parent implementation of enter###
         super().enter()
+        self.player.rigid_body.velocity = Vector2D(self.player.rigid_body.velocity.x, 0)
         self.player.rigid_body.add_force(
             Vector2D(0, -1).scale(self.player.jump_force), force_mode=ForceMode.IMPULSE
         )
