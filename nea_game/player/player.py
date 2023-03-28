@@ -141,8 +141,8 @@ class Player(BaseEntity):
         self.jump_hang_time_threshold = 0.5
         self.jump_hang_gravity_mult = 0.6
         self.jump_fast_fall_mult = 2
-        self.coyote_time = 5  # Increase to Exaggerated Value for Test
-        self.jump_buffer_time = 0.9  # Increase to Exaggerated Value for Test
+        self.coyote_time = 0.1  # Increase to Exaggerated Value for Test
+        self.jump_buffer_time = 0.1  # Increase to Exaggerated Value for Test
         self.max_fall = 3
         self.land_animation_time = 0.15
 
